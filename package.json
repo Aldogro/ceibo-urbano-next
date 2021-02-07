@@ -6,11 +6,14 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
     "clsx": "latest",
+    "final-form": "^4.20.1",
     "firebase": "^8.2.6",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-final-form": "^6.5.2",
+    "validator": "^13.5.2"
   },
   "scripts": {
     "dev": "next",

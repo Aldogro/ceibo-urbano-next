@@ -9,10 +9,6 @@ import { firebase } from '../../firebase/client'
 function ProductHero(props) {
   const { classes } = props
 
-  const handleLogin = () => {
-    // firebase.auth().signInWithEmailAndPassword('email', 'password').then(response => console.log(response))
-  }
-
   const checkLogin = () => {
     console.log(firebase.auth().currentUser)
   }
@@ -37,31 +33,8 @@ function ProductHero(props) {
         size="large"
         className={classes.button}
         component="a"
-        onClick={handleLogin}
       >
         Comunicate con nosotros
-      </Button>
-
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        className={classes.button}
-        component="a"
-        onClick={checkLogin}
-      >
-        chequear que está logueado
-      </Button>
-
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        className={classes.button}
-        component="a"
-        onClick={handleLogout}
-      >
-        Logout
       </Button>
     </ProductHeroLayout>
   )

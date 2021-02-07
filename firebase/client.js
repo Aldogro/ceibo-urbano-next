@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
-
 if (typeof window !== 'undefined') {
   const firebaseConfig = {
     apiKey: process.env.apiKey,
@@ -16,4 +15,4 @@ if (typeof window !== 'undefined') {
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 }
 
-export { firebase };
+export { firebase }
