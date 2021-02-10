@@ -19,10 +19,12 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { AccountCircle, Clear } from '@material-ui/icons';
 import { firebase } from '../../firebase/client'
+import { useAuth } from '../../services/Auth.context'
 
 export default function PersistentDrawerLeft({ children }) {
   const classes = useStyles();
   const theme = useTheme();
+  const [auth, authDispatch] = useAuth()
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -35,6 +37,7 @@ export default function PersistentDrawerLeft({ children }) {
 
   const handleLogout = () => {
     firebase.auth().signOut()
+    authDispatch({ type: 'removeAuthDetails' })
   }
 
   return (
@@ -47,55 +50,76 @@ export default function PersistentDrawerLeft({ children }) {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
+          {
+            auth.user.email
+            ?
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            :
+            null
+          }
           <Typography variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
-          <Link
-            color="inherit"
-            href="/login"
-          >
-            <AccountCircle className={classes.gotoLogin} />
-          </Link>
-          <IconButton
-            color="inherit"
-            onClick={handleLogout}
-          >
-            <Clear className={classes.gotoLogin} />
-          </IconButton>
+          { auth.user.email
+            ?
+            <React.Fragment>
+              <Typography noWrap className={classes.gotoLogin}>
+                {auth.user.email}
+              </Typography>
+              <IconButton
+                color="inherit"
+                
+                onClick={handleLogout}
+              >
+                <Clear />
+              </IconButton>
+            </ React.Fragment>
+            :
+            <Link
+              color="inherit"
+              href="/login"
+            >
+              <AccountCircle className={classes.gotoLogin} />
+            </Link>
+          }
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+      {
+        auth.user.email
+        ?
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </div>
+          <List>
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        : null
+      }
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
@@ -166,6 +190,8 @@ const useStyles = makeStyles((theme) => ({
   },
   gotoLogin: {
     marginLeft: 'auto',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
   }
 }));

@@ -1,6 +1,6 @@
 import withRoot from './withRoot'
 // --- Post bootstrap -----
-import React from 'react'
+import React, { useState } from 'react'
 import { Field, Form } from 'react-final-form'
 import { makeStyles } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
@@ -9,13 +9,17 @@ import AppForm from './views/AppForm'
 import { email, required } from './components/form/validation'
 import RFTextField from './components/form/RFTextField'
 import FormButton from './components/form/FormButton'
+import Snackbar from '@material-ui/core/Snackbar'
 import { firebase } from '../firebase/client'
 import { useRouter } from 'next/router'
+import { useAuth } from '../services/Auth.context'
 
 function SignIn() {
   const classes = useStyles()
   const router = useRouter()
   const [sent, setSent] = React.useState(false)
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
+  const [authState, authDispatch] = useAuth()
 
   const validate = (values) => {
     const errors = required(['email', 'password'], values)
@@ -30,11 +34,22 @@ function SignIn() {
     return errors
   }
 
+  const handleCloseSnackbar = () => {
+    setOpenErrorSnackbar(false)
+  }
+
   const onSubmit = ({ email, password}) => {
-    firebase.auth().signInWithEmailAndPassword(email, password).then(response => {
-      console.log(response)
-      router.push('/')
-    })
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(response => {
+        authDispatch({
+          type: 'setAuthDetails',
+          payload: {
+            user: response.user,
+          },
+        })
+        router.push('/')
+      })
+      .catch(error => setOpenErrorSnackbar(true))
   }
 
   return (
@@ -90,6 +105,15 @@ function SignIn() {
           </Link>
         </Typography>
       </AppForm>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={openErrorSnackbar}
+        onClose={handleCloseSnackbar}
+        message="El email y/o la contraseña son incorrectos"
+      />
     </React.Fragment>
   )
 }
@@ -101,9 +125,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
-  },
-  feedback: {
-    marginTop: theme.spacing(2),
   },
 }))
 

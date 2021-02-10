@@ -4,18 +4,9 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Typography from '../components/Typography'
 import ProductHeroLayout from './ProductHeroLayout'
-import { firebase } from '../../firebase/client'
 
 function ProductHero(props) {
   const { classes } = props
-
-  const checkLogin = () => {
-    console.log(firebase.auth().currentUser)
-  }
-
-  const handleLogout = () => {
-    firebase.auth().signOut()
-  }
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
