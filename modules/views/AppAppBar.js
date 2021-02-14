@@ -110,12 +110,10 @@ export default function PersistentDrawerLeft({ children }) {
             </IconButton>
           </div>
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
+            <ListItem component="a" href="/products">
+              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemText primary="Productos" />
+            </ListItem>
           </List>
         </Drawer>
         : null
@@ -125,6 +123,7 @@ export default function PersistentDrawerLeft({ children }) {
           [classes.contentShift]: open,
         })}
       >
+        <div className={classes.drawerHeader} />
         {children}
       </main>
     </div>
@@ -180,6 +179,8 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
