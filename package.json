@@ -9,6 +9,7 @@
     "clsx": "latest",
     "final-form": "^4.20.1",
     "firebase": "^8.2.6",
+    "material-ui-dropzone": "^3.5.0",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
