@@ -15,8 +15,7 @@ import Link from 'next/link'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import ListIcon from '@material-ui/icons/List'
 import { AccountCircle, Clear } from '@material-ui/icons';
 import { firebase } from '../../firebase/client'
 import { useAuth } from '../../services/Auth.context'
@@ -111,7 +110,7 @@ export default function PersistentDrawerLeft({ children }) {
           </div>
           <List>
             <ListItem component="a" href="/products">
-              <ListItemIcon><InboxIcon /></ListItemIcon>
+              <ListItemIcon><ListIcon /></ListItemIcon>
               <ListItemText primary="Productos" />
             </ListItem>
           </List>

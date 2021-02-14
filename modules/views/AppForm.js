@@ -13,7 +13,7 @@ const styles = (theme) => ({
   paper: {
     padding: theme.spacing(4, 3),
     [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(8, 6),
+      padding: theme.spacing(2, 2),
     },
   },
 })
@@ -24,8 +24,10 @@ function AppForm(props) {
   return (
     <div className={classes.root}>
       <Container maxWidth="sm">
-        <Box mt={7} mb={12}>
-          <Paper className={classes.paper}>{children}</Paper>
+        <Box mt={2} mb={2}>
+          <Paper className={classes.paper}>
+            {children}
+          </Paper>
         </Box>
       </Container>
     </div>

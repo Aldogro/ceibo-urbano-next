@@ -56,7 +56,7 @@ function SignIn() {
     <React.Fragment>
       <AppForm>
         <React.Fragment>
-          <Typography variant="h3" gutterBottom marked="center" align="center">
+          <Typography variant="h4" gutterBottom marked="center" align="center">
             Ingresar
           </Typography>
         </React.Fragment>
@@ -73,11 +73,11 @@ function SignIn() {
                 margin="normal"
                 name="email"
                 required
-                size="large"
+                size="small"
               />
               <Field
                 fullWidth
-                size="large"
+                size="small"
                 component={RFTextField}
                 disabled={submitting || sent}
                 required
@@ -90,7 +90,7 @@ function SignIn() {
               <FormButton
                 className={classes.button}
                 disabled={submitting || sent}
-                size="large"
+                size="small"
                 color="secondary"
                 fullWidth
               >
@@ -120,7 +120,7 @@ function SignIn() {
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    marginTop: theme.spacing(6),
+    marginTop: theme.spacing(3),
   },
   button: {
     marginTop: theme.spacing(3),
