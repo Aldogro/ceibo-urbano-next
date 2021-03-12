@@ -11,92 +11,12 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import AppAppBar from '../../modules/views/AppAppBar'
 import Container from '@material-ui/core/Container'
-
-const items = [
-  {
-    id: 1,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-1.jpg',
-    price: 123,
-    cols: 2,
-  },
-  {
-    id: 2,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-2.jpg',
-    price: 123,
-  },
-  {
-    id: 3,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-3.jpg',
-    price: 123,
-  },
-  {
-    id: 4,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-4.jpg',
-    price: 123,
-  },
-  {
-    id: 5,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-  {
-    id: 6,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-  {
-    id: 7,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-  {
-    id: 8,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-  {
-    id: 9,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-    cols: 2,
-  },
-  {
-    id: 10,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-  {
-    id: 11,
-    name: 'Planta 1',
-    description: 'planta para interiores muy linda',
-    picture: '/plant-5.jpg',
-    price: 123,
-  },
-]
+import { useProduct } from '../../services/Product.context'
 
 const ListProductPage = () => {
   const classes = useStyles();
   const [auth, authDispatch] = useAuth()
+  const [productState, productDispatch] = useProduct()
   const router = useRouter()
 
   useEffect(() => {
@@ -104,6 +24,10 @@ const ListProductPage = () => {
       router.push('/login')
     }
   }, [])
+
+  useEffect(() => {
+    console.log(productState.products)
+  }, [productState.products])
 
   return (
     <React.Fragment>
@@ -115,7 +39,7 @@ const ListProductPage = () => {
               <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
                 <ListSubheader component="div">Listado de productos</ListSubheader>
               </GridListTile>
-              {items.map((tile) => (
+              {productState.products.map((tile) => (
                 <GridListTile key={tile.id} cols={tile.cols}>
                   <img src={tile.picture} alt={tile.name} />
                   <GridListTileBar
@@ -125,7 +49,13 @@ const ListProductPage = () => {
                       <IconButton
                         aria-label={`info about ${tile.title}`}
                         className={classes.icon}
-                        onClick={() => { router.push(`/products/${tile.id}/edit`) }}
+                        onClick={() => {
+                          // router.push(`/products/${tile.id}/edit`)
+                          productDispatch({
+                            type: 'SetProducts',
+                            payload: tile
+                          })
+                        }}
                       >
                         <EditIcon />
                       </IconButton>

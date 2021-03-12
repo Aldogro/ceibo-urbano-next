@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import { DropzoneArea } from 'material-ui-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
+import { useProduct } from '../../../services/Product.context'
 
-const FormProduct = () => {
+const FormProduct = ({ product }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [files, setFiles] = useState('')
+  const [productState, productDispatch] = useProduct()
 
   const handleNameChange = ({ target }) => setName(target.value)
   const handleDescriptionChange = ({ target }) => setDescription(target.value)
@@ -17,14 +19,24 @@ const FormProduct = () => {
 
   const classes = useStyles()
 
+  useEffect(() => {
+    setName(product.name)
+    setPrice(product.price)
+    setDescription(product.description)
+  }, [product])
+
   const onSubmit = (form) => {
     form.preventDefault()
     const formValue = {
       name,
       description,
       price,
-      files,
+      // files,
     }
+    productDispatch({
+      type: 'SetProducts',
+      payload: formValue
+    })
     console.log(formValue)
   }
 
