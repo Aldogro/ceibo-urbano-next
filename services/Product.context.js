@@ -1,123 +1,49 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
+
+import { db } from '../firebase/firebase.config'
 
 export const ProductStateContext = React.createContext({})
 
 const initialState = {
-  product: {
-    name: '',
-    price: '',
-    description: ''
-  },
-  products: [
-    {
-      id: 1,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-1.jpg',
-      price: 123,
-      cols: 2,
-    },
-    {
-      id: 2,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-2.jpg',
-      price: 123,
-    },
-    {
-      id: 3,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-3.jpg',
-      price: 123,
-    },
-    {
-      id: 4,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-4.jpg',
-      price: 123,
-    },
-    {
-      id: 5,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-    {
-      id: 6,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-    {
-      id: 7,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-    {
-      id: 8,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-    {
-      id: 9,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-      cols: 2,
-    },
-    {
-      id: 10,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-    {
-      id: 11,
-      name: 'Planta 1',
-      description: 'planta para interiores muy linda',
-      picture: '/plant-5.jpg',
-      price: 123,
-    },
-  ],
+  product: {},
+  products: [],
 }
 
-const ActionType = {
-  SetProduct: 'SetProduct',
-  SetProducts: 'SetProducts',
-  RemoveProduct: 'RemoveProduct',
-  EditProduct: 'EditProduct'
+export const ActionType = {
+  CREATE_PRODUCT: 'CREATE_PRODUCT',
+  GET_PRODUCT: 'GET_PRODUCT',
+  GET_PRODUCTS: 'GET_PRODUCTS',
+  SET_PRODUCT: 'SET_PRODUCT',
+  SET_PRODUCTS: 'SET_PRODUCTS',
+  DELETE_PRODUCT: 'DELETE_PRODUCT',
+  UPDATE_PRODUCT: 'UPDATE_PRODUCT',
 }
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case ActionType.SetProduct:
+    case ActionType.CREATE_PRODUCT:
+      const id = new Date().getTime().toString()
+      db.collection('products').doc(id).set({ ...action.payload, id })
+        .then(() => console.log('producto creado')) // FIX ME Agregar acá un toast que avise que se creó correctamente
+        .catch((error) => console.log(error)) // toast que avise que algo salió mal
+      return
+    case ActionType.SET_PRODUCT:
       return {
         ...state,
-        product: action.payload.product
+        product: action.payload
       }
-    case ActionType.RemoveProduct:
+    case ActionType.SET_PRODUCTS:
       return {
         ...state,
-        product: initialState.product
+        products: action.payload,
       }
-    case ActionType.SetProducts:
-      return {
-        ...state,
-        products: [...state.products, action.payload]
-      }
+    case ActionType.DELETE_PRODUCT:
+      db.collection('products').doc(action.payload.toString()).delete()
+        .then(() => console.log('elemento borrado')) // FIX ME Agregar acá un toast que avise que se borró
+        .catch((error) => console.log(error)) // toast que avise que algo salió mal
+      return
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
-
   }
 }
 

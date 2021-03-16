@@ -8,7 +8,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "clsx": "latest",
     "final-form": "^4.20.1",
-    "firebase": "^8.2.6",
+    "firebase": "^8.3.0",
     "material-ui-dropzone": "^3.5.0",
     "next": "latest",
     "prop-types": "latest",

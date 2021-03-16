@@ -54,7 +54,7 @@ function ProductCategories(props) {
       </Typography>
       <div className={classes.images}>
         {images.map((image) => (
-          <ButtonBase
+          {/* <ButtonBase
             key={image.title}
             className={classes.imageWrapper}
             style={{
@@ -79,7 +79,7 @@ function ProductCategories(props) {
                 <div className={classes.imageMarked} />
               </Typography>
             </div>
-          </ButtonBase>
+          </ButtonBase> */}
         ))}
       </div>
     </Container>

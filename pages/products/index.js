@@ -1,33 +1,46 @@
 import React, { useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles'
 import { useAuth } from '../../services/Auth.context'
 import { useRouter } from 'next/router'
 
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import AppAppBar from '../../modules/views/AppAppBar'
+import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
-import { useProduct } from '../../services/Product.context'
+import Grid from '@material-ui/core/Grid'
+
+import AppAppBar from '../../modules/views/AppAppBar'
+import { db } from '../../firebase/firebase.config'
+import { useProduct, ActionType } from '../../services/Product.context'
 
 const ListProductPage = () => {
   const classes = useStyles();
   const [auth, authDispatch] = useAuth()
   const [productState, productDispatch] = useProduct()
   const router = useRouter()
-
+  
   useEffect(() => {
     if (!auth.user.email) {
       router.push('/login')
     }
-  }, [])
+    db.collection('products')
+    .get()
+    .then(snapshot => productDispatch({
+      type: ActionType.SET_PRODUCTS,
+      payload: snapshot.docs.map(doc => doc.data()),
+    }))
+  }, [productState])
 
-  useEffect(() => {
-    console.log(productState.products)
-  }, [productState.products])
+  const handleDelete = (id) => {
+    productDispatch({
+      type: ActionType.DELETE_PRODUCT,
+      payload: id
+    })
+  }
 
   return (
     <React.Fragment>
@@ -35,37 +48,45 @@ const ListProductPage = () => {
       <Container maxWidth="lg">
         {auth.user.email ?
           <div className={classes.root}>
-            <GridList cellHeight={200} className={classes.gridList} cols={3}>
-              <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
-                <ListSubheader component="div">Listado de productos</ListSubheader>
-              </GridListTile>
-              {productState.products.map((tile) => (
-                <GridListTile key={tile.id} cols={tile.cols}>
-                  <img src={tile.picture} alt={tile.name} />
-                  <GridListTileBar
-                    title={`${tile.name} - $${tile.price}`}
-                    subtitle={<span>{tile.description}</span>}
-                    actionIcon={
-                      <IconButton
-                        aria-label={`info about ${tile.title}`}
-                        className={classes.icon}
-                        onClick={() => {
-                          // router.push(`/products/${tile.id}/edit`)
-                          productDispatch({
-                            type: 'SetProducts',
-                            payload: tile
-                          })
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    }
-                  />
-                </GridListTile>
+            <Typography className={classes.title} variant="h4">
+              Listado de productos
+              <Button color="primary" className={classes.floatRight} onClick={() => router.push('/products/add')}>
+                Agregar Producto
+              </Button>
+            </Typography>
+            <Grid container spacing={2}>
+              {productState?.products.map(product => (
+                <Grid item xs={+product.cols} key={product.id}>
+                  <Card>
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media}
+                        image={product.picture}
+                        title={product.name}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {product.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {product.description}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                      <Button size="small" color="primary" onClick={() => router.push(`/products/${product.id}/edit`)}>
+                        Editar
+                      </Button>
+                      <Button size="small" color="primary" onClick={() => handleDelete(product.id)}>
+                        Borrar
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
               ))}
-            </GridList>
+            </Grid>
           </div>
-          : <div />
+          : <div></div>
         }
       </Container>
     </React.Fragment>
@@ -76,17 +97,24 @@ export default ListProductPage
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
+  },
+  floatRight: {
+    float: 'right',
   },
   gridList: {
     width: 1200,
     height: 'auto',
   },
+  media: {
+    height: 140,
+  },
   icon: {
     color: 'rgba(255, 255, 255, 0.54)',
+  },
+  title: {
+    marginTop: '2rem',
+    marginBottom: '2rem',
   },
 }));

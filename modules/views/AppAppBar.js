@@ -17,7 +17,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListIcon from '@material-ui/icons/List'
 import { AccountCircle, Clear } from '@material-ui/icons';
-import { firebase } from '../../firebase/client'
+import { firebaseAuth } from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
 
 export default function PersistentDrawerLeft({ children }) {
@@ -35,7 +35,7 @@ export default function PersistentDrawerLeft({ children }) {
   };
 
   const handleLogout = () => {
-    firebase.auth().signOut()
+    firebaseAuth.signOut()
     authDispatch({ type: 'removeAuthDetails' })
   }
 
