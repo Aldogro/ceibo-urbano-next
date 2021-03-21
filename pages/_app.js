@@ -7,6 +7,7 @@ import theme from '../src/theme'
 import { AuthProvider } from '../services/Auth.context'
 import { ProductProvider } from '../services/Product.context'
 import { PromoProvider } from '../services/Promo.context'
+import { CartProvider } from '../services/Cart.context'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props
@@ -22,20 +23,22 @@ export default function MyApp(props) {
   return (
     <React.Fragment>
       <AuthProvider>
-        <ProductProvider>
-          <PromoProvider>
-            <Head>
-              <title>Ceibo Urbano</title>
-              <link rel="shortcut icon" href="/ceibo-urbano-iso-logo.svg" />
-              <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-            </Head>
-            <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </PromoProvider>
-        </ProductProvider>
+        <CartProvider>
+          <ProductProvider>
+            <PromoProvider>
+              <Head>
+                <title>Ceibo Urbano</title>
+                <link rel="shortcut icon" href="/ceibo-urbano-iso-logo.svg" />
+                <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+              </Head>
+              <ThemeProvider theme={theme}>
+                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                <CssBaseline />
+                <Component {...pageProps} />
+              </ThemeProvider>
+            </PromoProvider>
+          </ProductProvider>
+        </CartProvider>
       </AuthProvider>
     </React.Fragment>
   )

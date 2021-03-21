@@ -12,7 +12,7 @@ function ProductHero(props) {
     <ProductHeroLayout backgroundClassName={classes.background}>
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="increase priority" />
-      <Typography color="inherit" align="center" variant="h2" marked="center">
+      <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
         ¡Embellecé tu jardín!
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
@@ -46,6 +46,9 @@ const styles = (theme) => ({
   button: {
     minWidth: 200,
   },
+  h2: {
+    marginTop: '30px',
+  },
   h5: {
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(4),
@@ -54,7 +57,7 @@ const styles = (theme) => ({
     },
   },
   more: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(5),
   },
 })
 

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import MuiAppBar from '@material-ui/core/AppBar'
 
 function AppBar(props) {
-  return <MuiAppBar elevation={0} position="static" {...props} />
+  return <MuiAppBar position="static" {...props} />
 }
 
 AppBar.propTypes = {

@@ -14,11 +14,15 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+
+import Cart from '../components/Cart'
+
 import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/List'
 import LoyaltyIcon from '@material-ui/icons/Loyalty'
-import { Clear } from '@material-ui/icons'
+import ClearIcon from '@material-ui/icons/Clear'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+
 import app from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
 
@@ -76,23 +80,23 @@ export default function PersistentDrawerLeft({ children }) {
             null
           }
           <img src="/ceibo-urbano-iso-logo.svg" height="40" alt="logo" />
-          <Typography className={[classes.brand, classes.mainColor]} variant="h6" noWrap>
+          <Typography className={classes.brand} variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
           { auth.user.email
             ?
-            <React.Fragment>
-              <Typography noWrap className={[classes.gotoLogin, classes.mainColor]}>
+            <div className={classes.user}>
+              <Typography noWrap className={classes.userName}>
                 {auth.user.email}
               </Typography>
-              <IconButton className={classes.mainColor} onClick={handleLogout}>
-                <Clear />
+              <IconButton className={classes.logout} onClick={handleLogout}>
+                <ClearIcon />
               </IconButton>
-            </ React.Fragment>
+            </ div>
             :
             null
           }
-          <IconButton className={[classes.mainColor, classes.gotoLogin]} aria-label="open drawer" onClick={handleCartOpen}>
+          <IconButton className={classes.cartButton} aria-label="open drawer" onClick={handleCartOpen}>
             <ShoppingCartIcon />
           </IconButton>
         </Toolbar>
@@ -115,7 +119,7 @@ export default function PersistentDrawerLeft({ children }) {
             </IconButton>
           </div>
           <List>
-          <ListItem className={classes.listItem} component="a" href="/">
+            <ListItem className={classes.listItem} component="a" href="/">
               <ListItemIcon><HomeIcon className={classes.listItem} /></ListItemIcon>
               <ListItemText primary="Inicio" />
             </ListItem>
@@ -133,7 +137,6 @@ export default function PersistentDrawerLeft({ children }) {
       }
       <Drawer
           className={classes.cart}
-          variant="persistent"
           anchor="right"
           open={openCart}
           classes={{
@@ -144,8 +147,14 @@ export default function PersistentDrawerLeft({ children }) {
             <IconButton onClick={handleCartClose}>
               {theme.direction === 'ltr' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
+            <div className={classes.cartHeaderTitle}>
+              Carrito de compras
+              <ShoppingCartIcon />
+            </div>
           </div>
-          Aca va a estar el carrito de compras
+          <div className={classes.cartBody}>
+            <Cart />
+          </div>
         </Drawer>
       <main
         className={clsx(classes.content, {
@@ -159,15 +168,17 @@ export default function PersistentDrawerLeft({ children }) {
   )
 }
 
-const drawerWidth = 240
+const drawerWidth = 300
 
 const useStyles = makeStyles((theme) => ({
   bg: {
     backgroundColor: theme.palette.secondary.main,
     height: 100,
+    marginBottom: 0,
   },
   brand: {
     marginLeft: 16,
+    color: theme.palette.primary.main,
   },
   mainColor: {
     color: theme.palette.primary.main,
@@ -204,7 +215,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   cart: {
-    width: '300px',
+    width: drawerWidth,
   },
   drawerHeader: {
     display: 'flex',
@@ -212,6 +223,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
+    minHeight: '100px',
     justifyContent: 'flex-end',
   },
   cartHeader: {
@@ -220,6 +232,17 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
+  },
+  cartHeaderTitle: {
+    color: theme.palette.primary.main,
+    fontSize: '1.3rem',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-around',
+  },
+  cartBody: {
+    padding: theme.spacing(3),
   },
   content: {
     flexGrow: 1,
@@ -244,9 +267,23 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+    color: theme.palette.primary.main,
+  },
+  cartButton: {
+    color: theme.palette.primary.main,
+    marginLeft: 'auto',
   },
   listItem: {
     color: theme.palette.primary.main,
     fontWeight: 700,
+  },
+  user: {
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.primary.main,
+    margin: theme.spacing(0, 'auto'),
+  },
+  userName: {
+    fontSize: 10,
   }
 }))

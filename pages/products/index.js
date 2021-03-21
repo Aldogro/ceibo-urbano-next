@@ -53,6 +53,12 @@ const ListProductPage = () => {
       payload: selectedId
     })
     setDialogOpen(false)
+    app.firestore().collection('products')
+    .get()
+    .then(snapshot => productDispatch({
+      type: ActionType.SET_PRODUCTS,
+      payload: snapshot.docs.map(doc => doc.data()),
+    }))
   }
 
   return (

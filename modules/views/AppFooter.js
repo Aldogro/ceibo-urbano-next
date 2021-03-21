@@ -5,9 +5,9 @@ import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
 
-import FacebookIcon from '@material-ui/icons/Facebook';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import FacebookIcon from '@material-ui/icons/Facebook'
+import InstagramIcon from '@material-ui/icons/Instagram'
+import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 
 function Copyright() {
   const classes = useStyles()

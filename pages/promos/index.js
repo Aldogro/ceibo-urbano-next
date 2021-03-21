@@ -23,7 +23,7 @@ import app from '../../firebase/firebase.config'
 import { usePromo, ActionType } from '../../services/Promo.context'
 
 const ListPromoPage = () => {
-  const classes = useStyles();
+  const classes = useStyles()
   const [auth, authDispatch] = useAuth()
   const [promoState, promoDispatch] = usePromo()
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -53,6 +53,12 @@ const ListPromoPage = () => {
       payload: selectedId
     })
     setDialogOpen(false)
+    app.firestore().collection('promos')
+    .get()
+    .then(snapshot => promoDispatch({
+      type: ActionType.SET_PROMOS,
+      payload: snapshot.docs.map(doc => doc.data()),
+    }))
   }
 
   return (
