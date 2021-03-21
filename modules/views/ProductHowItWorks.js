@@ -13,7 +13,7 @@ function ProductHowItWorks(props) {
     <section className={classes.root}>
       <Container className={classes.container}>
         <img
-          src="/color-icon.svg"
+          src="/ceibo-urbano-iso-logo-transp.svg"
           className={classes.curvyLines}
           alt="curvy lines"
         />
@@ -63,16 +63,6 @@ function ProductHowItWorks(props) {
             </Grid>
           </Grid>
         </div>
-        <Button
-          color="secondary"
-          size="large"
-          variant="contained"
-          className={classes.button}
-          component="a"
-          href="/"
-        >
-          Get started
-        </Button>
       </Container>
     </section>
   )

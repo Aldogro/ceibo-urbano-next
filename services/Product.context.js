@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useReducer } from 'react'
+import React, { useContext, useReducer } from 'react'
 
-import { db } from '../firebase/firebase.config'
+import app from '../firebase/firebase.config'
 
 export const ProductStateContext = React.createContext({})
 
@@ -23,7 +23,7 @@ const reducer = (state, action) => {
   switch (action.type) {
     case ActionType.CREATE_PRODUCT:
       const id = new Date().getTime().toString()
-      db.collection('products').doc(id).set({ ...action.payload, id })
+      app.firestore().collection('products').doc(id).set({ ...action.payload, id })
         .then(() => console.log('producto creado')) // FIX ME Agregar acá un toast que avise que se creó correctamente
         .catch((error) => console.log(error)) // toast que avise que algo salió mal
       return
@@ -38,7 +38,7 @@ const reducer = (state, action) => {
         products: action.payload,
       }
     case ActionType.DELETE_PRODUCT:
-      db.collection('products').doc(action.payload.toString()).delete()
+      app.firestore().collection('products').doc(action.payload.toString()).delete()
         .then(() => console.log('elemento borrado')) // FIX ME Agregar acá un toast que avise que se borró
         .catch((error) => console.log(error)) // toast que avise que algo salió mal
       return

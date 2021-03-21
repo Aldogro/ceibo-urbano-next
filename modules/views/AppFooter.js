@@ -4,16 +4,22 @@ import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
-import TextField from '../components/TextField'
+
+import FacebookIcon from '@material-ui/icons/Facebook';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 
 function Copyright() {
+  const classes = useStyles()
   return (
     <React.Fragment>
-      {'© '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Ceibo Urbano
-      </Link>{' '}
-      {new Date().getFullYear()}
+      <div className={classes.subtitle}>
+        {'© '}
+        <Link href="/">
+          Ceibo Urbano
+        </Link>{' '}
+        {new Date().getFullYear()}
+      </div>
     </React.Fragment>
   )
 }
@@ -37,6 +43,11 @@ export default function AppFooter() {
       <Container className={classes.container}>
         <Grid container spacing={5}>
           <Grid item xs={12}>
+            <Grid className={classes.textCenter}  item>
+              <img height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
+              <p className={classes.title}>CEIBO URBANO</p>
+              <p className={classes.subtitle}>Vivero</p>
+            </Grid>
             <Grid
               container
               direction="column"
@@ -51,16 +62,13 @@ export default function AppFooter() {
                 align="center"
               >
                 <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <img src="/facebook.svg" alt="Facebook" />
-                </a>
-                <a href="https://twitter.com/MaterialUI" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <img src="/twitter.svg" alt="Twitter" />
+                  <FacebookIcon className={classes.icon} />
                 </a>
                 <a href="https://api.whatsapp.com/send?phone=+5493416871302" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <img src="/whatsapp.svg" alt="Whatsapp" />
+                  <WhatsAppIcon className={classes.icon} />
                 </a>
                 <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <img src="/instagram.svg" alt="Instagram" />
+                  <InstagramIcon className={classes.icon} />
                 </a>
               </Grid>
               <Grid item>
@@ -102,6 +110,7 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       opacity: 0.8,
     },
+    color: theme.palette.primary.main,
   },
   list: {
     margin: 0,
@@ -116,4 +125,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     width: 150,
   },
+  subtitle: {
+    fontSize: 16,
+    color: theme.palette.primary.main,
+    marginTop: 0,
+  },
+  textCenter: {
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 20,
+    color: theme.palette.primary.main,
+    marginBottom: 0,
+  }
 }))

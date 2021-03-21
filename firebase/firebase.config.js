@@ -13,33 +13,8 @@ const config = {
   measurementId: process.env.measurementId,  
 }
 
-const app = firebase.initializeApp(config)
-
-/* const loadFirebase = () => {
-  try {
-    const config = {
-      apiKey: process.env.apiKey,
-      authDomain: process.env.authDomain,
-      projectId: process.env.projectId,
-      storageBucket: process.env.storageBucket,
-      messagingSenderId: process.env.messagingSenderId,
-      appId: process.env.appId,
-      measurementId: process.env.measurementId,  
-    }
-
-    firebase.initializeApp(config)
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-    
-  }
-  catch (error) {
-    console.log('Firebase initialization error', error.stack)
-  }
-
-  return firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(config)
 }
 
-const app = loadFirebase() */
-
-export const db = app.firestore()
-export const firebaseAuth = app.auth()
-export const firestorage = app.storage()
+export default firebase

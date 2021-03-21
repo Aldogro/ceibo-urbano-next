@@ -1,41 +1,52 @@
-import React, { useEffect } from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Link from 'next/link'
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import React from 'react'
+import clsx from 'clsx'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import Drawer from '@material-ui/core/Drawer'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import List from '@material-ui/core/List'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/List'
-import { AccountCircle, Clear } from '@material-ui/icons';
-import { firebaseAuth } from '../../firebase/firebase.config'
+import LoyaltyIcon from '@material-ui/icons/Loyalty'
+import { Clear } from '@material-ui/icons'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import app from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
 
 export default function PersistentDrawerLeft({ children }) {
-  const classes = useStyles();
-  const theme = useTheme();
+  const classes = useStyles()
+  const theme = useTheme()
   const [auth, authDispatch] = useAuth()
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
+  const [openCart, setOpenCart] = React.useState(false)
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
+    setOpen(true)
+  }
+  
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
+
+  const handleCartOpen = () => {
+    setOpenCart(true)
+  }
+  
+  const handleCartClose = () => {
+    setOpenCart(false)
+  }
 
   const handleLogout = () => {
-    firebaseAuth.signOut()
+    app.auth().signOut()
     authDispatch({ type: 'removeAuthDetails' })
   }
 
@@ -48,7 +59,7 @@ export default function PersistentDrawerLeft({ children }) {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
+        <Toolbar className={classes.bg}>
           {
             auth.user.email
             ?
@@ -64,31 +75,26 @@ export default function PersistentDrawerLeft({ children }) {
             :
             null
           }
-          <Typography variant="h6" noWrap>
+          <img src="/ceibo-urbano-iso-logo.svg" height="40" alt="logo" />
+          <Typography className={[classes.brand, classes.mainColor]} variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
           { auth.user.email
             ?
             <React.Fragment>
-              <Typography noWrap className={classes.gotoLogin}>
+              <Typography noWrap className={[classes.gotoLogin, classes.mainColor]}>
                 {auth.user.email}
               </Typography>
-              <IconButton
-                color="inherit"
-                
-                onClick={handleLogout}
-              >
+              <IconButton className={classes.mainColor} onClick={handleLogout}>
                 <Clear />
               </IconButton>
             </ React.Fragment>
             :
-            <Link
-              color="inherit"
-              href="/login"
-            >
-              <AccountCircle className={classes.gotoLogin} />
-            </Link>
+            null
           }
+          <IconButton className={[classes.mainColor, classes.gotoLogin]} aria-label="open drawer" onClick={handleCartOpen}>
+            <ShoppingCartIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       {
@@ -109,14 +115,38 @@ export default function PersistentDrawerLeft({ children }) {
             </IconButton>
           </div>
           <List>
-            <ListItem component="a" href="/products">
-              <ListItemIcon><ListIcon /></ListItemIcon>
+          <ListItem className={classes.listItem} component="a" href="/">
+              <ListItemIcon><HomeIcon className={classes.listItem} /></ListItemIcon>
+              <ListItemText primary="Inicio" />
+            </ListItem>
+            <ListItem className={classes.listItem} component="a" href="/products">
+              <ListItemIcon><ListIcon className={classes.listItem} /></ListItemIcon>
               <ListItemText primary="Productos" />
+            </ListItem>
+            <ListItem className={classes.listItem} component="a" href="/promos">
+              <ListItemIcon><LoyaltyIcon className={classes.listItem} /></ListItemIcon>
+              <ListItemText primary="Promos" />
             </ListItem>
           </List>
         </Drawer>
         : null
       }
+      <Drawer
+          className={classes.cart}
+          variant="persistent"
+          anchor="right"
+          open={openCart}
+          classes={{
+            paper: classes.cart,
+          }}
+        >
+          <div className={classes.cartHeader}>
+            <IconButton onClick={handleCartClose}>
+              {theme.direction === 'ltr' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </div>
+          Aca va a estar el carrito de compras
+        </Drawer>
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
@@ -126,12 +156,22 @@ export default function PersistentDrawerLeft({ children }) {
         {children}
       </main>
     </div>
-  );
+  )
 }
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
+  bg: {
+    backgroundColor: theme.palette.secondary.main,
+    height: 100,
+  },
+  brand: {
+    marginLeft: 16,
+  },
+  mainColor: {
+    color: theme.palette.primary.main,
+  },
   root: {
     display: 'flex',
   },
@@ -151,6 +191,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    color: theme.palette.primary.main,
   },
   hide: {
     display: 'none',
@@ -162,6 +203,9 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: drawerWidth,
   },
+  cart: {
+    width: '300px',
+  },
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
@@ -169,6 +213,13 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
+  },
+  cartHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
   },
   content: {
     flexGrow: 1,
@@ -193,5 +244,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+  },
+  listItem: {
+    color: theme.palette.primary.main,
+    fontWeight: 700,
   }
-}));
+}))

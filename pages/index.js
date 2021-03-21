@@ -14,11 +14,11 @@ export default function Index() {
       <AppAppBar />
       <ProductHero />
       <ProductValues />
-      {/* <ProductCategories /> */}
-      {/* <ProductHowItWorks /> */}
+      <ProductCategories />
+      <ProductHowItWorks />
       {/* <ProductCTA /> */}
-      {/* <ProductSmokingHero />
-      <AppFooter /> */}
+      <ProductSmokingHero />
+      <AppFooter />
     </React.Fragment>
   )
 }

@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import { DropzoneArea } from 'material-ui-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
-import { firestorage } from '../../../firebase/firebase.config'
+import app from '../../../firebase/firebase.config'
 import { useRouter } from 'next/router'
 
 const FormProduct = ({ product = {}, onSubmit }) => {
@@ -46,17 +46,17 @@ const FormProduct = ({ product = {}, onSubmit }) => {
 
   const onFileChanges = (files) => {
     if (files.length) {
-      firestorage.ref().child('/images').child(files[0].name).put(files[0])
-        .then(snapshot => firestorage.ref(snapshot.metadata.fullPath).getDownloadURL())
+      app.storage().ref().child('/images').child(files[0].name).put(files[0])
+        .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
         .then(url => setPicture(url))
     }
   }
 
   return (
     <React.Fragment>
-        <form className={classes.root} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
+        <form onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
           <Grid container spacing={3} cols={1}>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 className={classes.fullWidth}
                 id="Name"
@@ -66,7 +66,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={handleNameChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 className={classes.fullWidth}
                 id="Price"
@@ -76,7 +76,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={handlePriceChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 className={classes.fullWidth}
                 id="cols"
@@ -86,7 +86,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={handleColsChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <TextField
                 className={classes.fullWidth}
                 id="Description"
@@ -95,7 +95,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={handleDescriptionChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <DropzoneArea
                 acceptedFiles={['image/*']}
                 filesLimit={1}
@@ -104,7 +104,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
               />
             </Grid>
             {picture
-              ? <Grid item xs={6}>
+              ? <Grid item xs={12} lg={6}>
                 <div className={classes.contain}>
                   <img
                     className={classes.fullWidth}
@@ -117,7 +117,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
             }
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.actions}>
             <Button
               className={classes.floatRight}
               variant="contained"
@@ -143,10 +143,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
 export default FormProduct
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
+  actions: {
+    margin: theme.spacing('20px', 'auto'),
   },
   contain: {
     maxHeight: '250px',

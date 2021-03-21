@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useProduct, ActionType } from '../../../services/Product.context'
-import { db } from '../../../firebase/firebase.config'
+import app from '../../../firebase/firebase.config'
 
 const EditProductPage = () => {
   const [productState, productDispatch] = useProduct()
@@ -16,7 +16,7 @@ const EditProductPage = () => {
   useEffect(() => {
     const { id } = router.query
     if (router.query.id) {
-      db.collection('products').doc(id).get()
+      app.firestore().collection('products').doc(id).get()
         .then(snapshot => {
           productDispatch({
             type: ActionType.SET_PRODUCT,
@@ -27,7 +27,7 @@ const EditProductPage = () => {
   }, [router.query])
 
   const updateProduct = (data) => {
-    db.collection('products').doc(router.query.id).update(data)
+    app.firestore().collection('products').doc(router.query.id).update(data)
       .then(() => router.push('/products')) // FIX ME agregar toast que avise que se editó correctamente
       .catch(error => console.log(error)) // toast que avise que algo salió mal
   }
@@ -35,7 +35,7 @@ const EditProductPage = () => {
   return (
     <React.Fragment>
       <AppAppBar />
-      <Container maxWidth="lg">
+      <Container className={classes.container}>
         <Typography className={classes.title} variant="h4">
           Editar Productos
         </Typography>
@@ -51,6 +51,9 @@ const EditProductPage = () => {
 export default EditProductPage
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    margin: theme.spacing('70px', 'auto'),
+  },
   title: {
     marginTop: '2rem',
     marginBottom: '2rem',

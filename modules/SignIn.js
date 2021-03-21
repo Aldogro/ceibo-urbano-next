@@ -10,7 +10,7 @@ import { email, required } from './components/form/validation'
 import RFTextField from './components/form/RFTextField'
 import FormButton from './components/form/FormButton'
 import Snackbar from '@material-ui/core/Snackbar'
-import { firebaseAuth } from '../firebase/firebase.config'
+import app from '../firebase/firebase.config'
 import { useRouter } from 'next/router'
 import { useAuth } from '../services/Auth.context'
 
@@ -39,7 +39,7 @@ function SignIn() {
   }
 
   const onSubmit = ({ email, password}) => {
-    firebaseAuth.signInWithEmailAndPassword(email, password)
+    app.auth().signInWithEmailAndPassword(email, password)
       .then(response => {
         authDispatch({
           type: 'setAuthDetails',

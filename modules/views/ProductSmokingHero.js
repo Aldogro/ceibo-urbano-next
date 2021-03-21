@@ -18,7 +18,7 @@ function ProductSmokingHero(props) {
       <Typography variant="subtitle1" className={classes.link}>
         ¡Estamos para ayudarte! Comunicate con nosotros a través de whatsapp o nuestras redes sociales
       </Typography>
-      <img src="/plant-leaf.svg" className={classes.colorIcon} alt="color-icon" />
+      <img src="/ceibo-urbano-iso-logo.svg" className={classes.colorIcon} alt="color-icon" />
     </Container>
   )
 }

@@ -1,51 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
+import { useProduct, ActionType } from '../../services/Product.context'
+import app from '../../firebase/firebase.config'
 
 function ProductCategories(props) {
   const { classes } = props
+  const [productState, productDispatch] = useProduct()
 
-  const images = [
-    {
-      url: '/plant-1.jpg',
-      title: 'Promo 1',
-    },
-    {
-      url: '/plant-2.jpg',
-      title: 'Promo 2',
-    },
-    {
-      url: '/plant-3.jpg',
-      title: 'Promo 3',
-    },
-    {
-      url: '/plant-4.jpg',
-      title: 'Promo 4',
-    },
-    {
-      url: '/plant-5.jpg',
-      title: 'Promo 5',
-    },
-    {
-      url: '/plant-6.jpg',
-      title: 'Promo 6',
-    },
-    {
-      url: '/plant-7.jpg',
-      title: 'Promo 7',
-    },
-    {
-      url: '/plant-8.jpg',
-      title: 'Promo 8',
-    },
-    {
-      url: '/plant-9.jpg',
-      title: 'Promo 9',
-    },
-  ]
+  useEffect(() => {
+    app.firestore().collection('products')
+    .get()
+    .then(snapshot => productDispatch({
+      type: ActionType.SET_PRODUCTS,
+      payload: snapshot.docs.map(doc => doc.data()),
+    }))
+  }, [])
 
   return (
     <Container className={classes.root} component="section">
@@ -53,9 +26,9 @@ function ProductCategories(props) {
         ¡Aprovechá todas nuestras promociones!
       </Typography>
       <div className={classes.images}>
-        {images.map((image) => (
-          {/* <ButtonBase
-            key={image.title}
+        {productState.products.map((product) => (
+          <ButtonBase
+            key={product.name}
             className={classes.imageWrapper}
             style={{
               width: '33.333%',
@@ -64,7 +37,7 @@ function ProductCategories(props) {
             <div
               className={classes.imageSrc}
               style={{
-                backgroundImage: `url(${image.url})`,
+                backgroundImage: `url(${product.picture})`,
               }}
             />
             <div className={classes.imageBackdrop} />
@@ -75,11 +48,19 @@ function ProductCategories(props) {
                 color="inherit"
                 className={classes.imageTitle}
               >
-                {image.title}
+                {product.name}
                 <div className={classes.imageMarked} />
               </Typography>
+              <Typography
+                component="h3"
+                variant="h6"
+                color="inherit"
+              >
+                ${product.price}
+              </Typography>
+              <ButtonBase>Agregar al carrito</ButtonBase>
             </div>
-          </ButtonBase> */}
+          </ButtonBase>
         ))}
       </div>
     </Container>
@@ -108,7 +89,6 @@ const styles = (theme) => ({
     height: '40vh',
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
-      height: 100,
     },
     '&:hover': {
       zIndex: 1,
@@ -130,6 +110,7 @@ const styles = (theme) => ({
     top: 0,
     bottom: 0,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     color: theme.palette.common.white,
@@ -156,6 +137,7 @@ const styles = (theme) => ({
   imageTitle: {
     position: 'relative',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px 14px`,
+    marginBottom: '12px'
   },
   imageMarked: {
     height: 3,

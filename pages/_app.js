@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../src/theme'
 import { AuthProvider } from '../services/Auth.context'
 import { ProductProvider } from '../services/Product.context'
-import { PromotionProvider } from '../services/Promotions.context'
+import { PromoProvider } from '../services/Promo.context'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props
@@ -23,10 +23,10 @@ export default function MyApp(props) {
     <React.Fragment>
       <AuthProvider>
         <ProductProvider>
-          <PromotionProvider>
+          <PromoProvider>
             <Head>
               <title>Ceibo Urbano</title>
-              <link rel="shortcut icon" href="/plant-leaf.svg" />
+              <link rel="shortcut icon" href="/ceibo-urbano-iso-logo.svg" />
               <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
             </Head>
             <ThemeProvider theme={theme}>
@@ -34,7 +34,7 @@ export default function MyApp(props) {
               <CssBaseline />
               <Component {...pageProps} />
             </ThemeProvider>
-          </PromotionProvider>
+          </PromoProvider>
         </ProductProvider>
       </AuthProvider>
     </React.Fragment>

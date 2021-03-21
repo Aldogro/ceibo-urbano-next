@@ -12,7 +12,7 @@ function ProductValues(props) {
     <section className={classes.root}>
       <Container className={classes.container}>
         <img
-          src="/color-icon.svg"
+          src="/ceibo-urbano-iso-logo-transp.svg"
           className={classes.curvyLines}
           alt="curvy lines"
         />
