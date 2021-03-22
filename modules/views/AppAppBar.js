@@ -106,16 +106,17 @@ export default function PersistentDrawerLeft({ children }) {
         ?
         <Drawer
           className={classes.drawer}
-          variant="persistent"
           anchor="left"
           open={open}
           classes={{
             paper: classes.drawerPaper,
           }}
+          onClose={handleDrawerClose}
         >
           <div className={classes.drawerHeader}>
+            <img className={classes.drawerBrand} src="/ceibo-urbano-logo-horizontal.svg" />
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              <ClearIcon />
             </IconButton>
           </div>
           <List>
@@ -142,10 +143,11 @@ export default function PersistentDrawerLeft({ children }) {
           classes={{
             paper: classes.cart,
           }}
+          onClose={handleCartClose}
         >
           <div className={classes.cartHeader}>
             <IconButton onClick={handleCartClose}>
-              {theme.direction === 'ltr' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              <ClearIcon />
             </IconButton>
             <div className={classes.cartHeaderTitle}>
               Carrito de compras
@@ -211,11 +213,18 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
   },
+  drawerBrand: {
+    height: 30,
+    marginLeft: theme.spacing(5),
+  },
   drawerPaper: {
     width: drawerWidth,
   },
   cart: {
-    width: drawerWidth,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '500px',
+    },
   },
   drawerHeader: {
     display: 'flex',
@@ -224,7 +233,7 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     minHeight: '100px',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   cartHeader: {
     display: 'flex',
