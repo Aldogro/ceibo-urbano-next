@@ -83,9 +83,10 @@ const Cart = () => {
         color="primary"
         variant="contained"
         className={classes.send}
+        disabled={cartState.items.length < 1}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+5493413668923&text=¡Hola!, mi pedido:%0A%0A${generateText()}`}
+        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!, mi pedido:%0A%0A${generateText()}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
