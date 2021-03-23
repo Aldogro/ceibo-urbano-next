@@ -34,7 +34,6 @@ const reducer = (state, action) => {
       }
     case ActionType.REMOVE_AMOUNT:
       const idx = state.items.indexOf(action.payload)
-      console.log(idx)
       state.items.filter(item => item.id === action.payload.id)[0].amount -= 1
       if (state.items.filter(item => item.id === action.payload.id)[0].amount < 1) {
         state.items.splice(idx, 1)

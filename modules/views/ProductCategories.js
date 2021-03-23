@@ -3,9 +3,9 @@ import { withStyles } from '@material-ui/core/styles'
 import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
 import Button from '@material-ui/core/Button'
-import ButtonBase from '@material-ui/core/ButtonBase'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
+import Chip from '@material-ui/core/Chip'
 import PropTypes from 'prop-types'
 import app from '../../firebase/firebase.config'
 
@@ -28,6 +28,11 @@ function ProductCategories(props) {
       type: CartActionType.ADD_ITEM,
       payload: product,
     })
+  }
+
+  const getCartItems = (product) => {
+    const item = cartState.items.filter(item => item.id === product.id)
+    return item[0]?.amount
   }
 
   return (
@@ -68,7 +73,14 @@ function ProductCategories(props) {
               >
                 ${product.price}
               </Typography>
-              <Button color="secondary" onClick={() => handleOnAddToCart(product)}>Agregar al carrito</Button>
+              <Button color="secondary" onClick={() => handleOnAddToCart(product)}>
+                Agregar al carrito
+                {
+                  getCartItems(product)
+                  ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
+                  : null
+                }
+              </Button>
             </div>
           </div>
         ))}
@@ -158,6 +170,9 @@ const styles = (theme) => ({
     left: 'calc(50% - 9px)',
     transition: theme.transitions.create('opacity'),
   },
+  chip: {
+    marginLeft: theme.spacing(2),
+  }
 })
 
 

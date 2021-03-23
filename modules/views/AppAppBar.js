@@ -1,6 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+
 import Drawer from '@material-ui/core/Drawer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
@@ -12,6 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import Chip from '@material-ui/core/Chip'
 
 import Cart from '../components/Cart'
 
@@ -28,6 +31,7 @@ export default function PersistentDrawerLeft({ children }) {
   const classes = useStyles()
   const theme = useTheme()
   const [auth, authDispatch] = useAuth()
+  const [cartState, cartDispatch] = useCart()
   const [open, setOpen] = React.useState(false)
   const [openCart, setOpenCart] = React.useState(false)
 
@@ -50,6 +54,12 @@ export default function PersistentDrawerLeft({ children }) {
   const handleLogout = () => {
     app.auth().signOut()
     authDispatch({ type: 'removeAuthDetails' })
+  }
+
+  const getCartItems = () => {
+    let temp = 0
+    cartState.items.forEach(item => temp += item.amount)
+    return temp
   }
 
   return (
@@ -95,7 +105,10 @@ export default function PersistentDrawerLeft({ children }) {
             null
           }
           <IconButton className={classes.cartButton} aria-label="open drawer" onClick={handleCartOpen}>
-            <ShoppingCartIcon />
+            <div className={classes.cartIcon}>
+              <Chip color="primary" label={getCartItems()} />
+              <ShoppingCartIcon />
+            </div>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -208,15 +221,28 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   drawer: {
-    width: drawerWidth,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+    },
     flexShrink: 0,
   },
   drawerBrand: {
-    height: 30,
+    height: 40,
+    textAlign: 'center',
     marginLeft: theme.spacing(5),
+    [theme.breakpoints.up('sm')]: {
+      height: 40,
+    },
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+    },
+  },
+  cartIcon: {
+    position: 'relative',
   },
   cart: {
     width: '100%',
