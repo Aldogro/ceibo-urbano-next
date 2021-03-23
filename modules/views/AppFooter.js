@@ -64,7 +64,7 @@ export default function AppFooter() {
                 <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
                   <FacebookIcon className={classes.icon} />
                 </a>
-                <a href="https://api.whatsapp.com/send?phone=+5493416871302" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0A¿Podrían mandarme las últimas promociones?" target="_blank" rel="noopener noreferrer" className={classes.icon}>
                   <WhatsAppIcon className={classes.icon} />
                 </a>
                 <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>

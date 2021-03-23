@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '../components/Typography'
+import Stepper from '../components/Stepper'
 
 function ProductSmokingHero(props) {
   const { classes } = props
@@ -11,14 +12,14 @@ function ProductSmokingHero(props) {
   return (
     <Container className={classes.root} component="section">
       <Button className={classes.button}>
-        <Typography variant="h4" component="span">
-          ¿Tenés preguntas?
+        <Typography className={classes.buttonText} variant="h4" component="span">
+          ¿Cómo comprar?
         </Typography>
       </Button>
       <Typography variant="subtitle1" className={classes.link}>
-        ¡Estamos para ayudarte! Comunicate con nosotros a través de whatsapp o nuestras redes sociales
+        No necesitás crear una cuenta, ni registrarte, ni ingresar ningún dato personal.
       </Typography>
-      <img src="/ceibo-urbano-iso-logo.svg" className={classes.colorIcon} alt="color-icon" />
+      <Stepper />
     </Container>
   )
 }
@@ -34,6 +35,7 @@ const styles = (theme) => ({
     alignItems: 'center',
     marginTop: theme.spacing(9),
     marginBottom: theme.spacing(9),
+    backgroundImage: '/ceibo-urbano-iso-logo-transp.svg',
   },
   button: {
     border: '4px solid currentColor',
@@ -41,9 +43,15 @@ const styles = (theme) => ({
     height: 'auto',
     padding: theme.spacing(2, 5),
   },
+  buttonText: {
+    fontSize: '20px',
+  },
   link: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
+    textAlign: 'center',
+    fontSize: '25px',
+    color: theme.palette.primary.main,
   },
   colorIcon: {
     width: 60,

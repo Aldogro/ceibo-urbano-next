@@ -1,24 +1,34 @@
 import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
+import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+import Button from '@material-ui/core/Button'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
-import { useProduct, ActionType } from '../../services/Product.context'
+import PropTypes from 'prop-types'
 import app from '../../firebase/firebase.config'
 
 function ProductCategories(props) {
   const { classes } = props
   const [productState, productDispatch] = useProduct()
+  const [cartState, cartDispatch] = useCart()
 
   useEffect(() => {
     app.firestore().collection('products')
     .get()
     .then(snapshot => productDispatch({
-      type: ActionType.SET_PRODUCTS,
+      type: ProductActionType.SET_PRODUCTS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
   }, [])
+
+  const handleOnAddToCart = (product) => {
+    cartDispatch({
+      type: CartActionType.ADD_ITEM,
+      payload: product,
+    })
+  }
 
   return (
     <Container className={classes.root} component="section">
@@ -27,7 +37,7 @@ function ProductCategories(props) {
       </Typography>
       <div className={classes.images}>
         {productState.products.map((product) => (
-          <ButtonBase
+          <div
             key={product.name}
             className={classes.imageWrapper}
             style={{
@@ -58,9 +68,9 @@ function ProductCategories(props) {
               >
                 ${product.price}
               </Typography>
-              <ButtonBase>Agregar al carrito</ButtonBase>
+              <Button color="secondary" onClick={() => handleOnAddToCart(product)}>Agregar al carrito</Button>
             </div>
-          </ButtonBase>
+          </div>
         ))}
       </div>
     </Container>
