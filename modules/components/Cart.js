@@ -14,7 +14,6 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 const Cart = () => {
   const classes = useStyles();
-  const [paymentMethod, setPaymentMethod] = useState('')
   const [cartState, cartDispatch] = useCart()
 
   const onAmountAdd = (item) => {
@@ -46,12 +45,21 @@ const Cart = () => {
     return total
   }
 
-  const generateText = () => {
-    let temp = ''
+  const generateTextForWhatsapp = () => {
+    let temp = '¡Hola!, mi pedido:%0A%0A'
     cartState.items.forEach(item => {
       temp += `_*${item.name}*_: $${item.price} x${item.amount} - _*$${item.price * item.amount}*_%0A`
     })
-    temp += `%0AMétodo de pago: *${paymentMethod}*%0A*Precio TOTAL $${getTotal()}*`
+    temp += `%0AMétodo de pago: *${cartState.paymentMethod}*%0A%0A*Precio TOTAL $${getTotal()}*`
+    return temp
+  }
+
+  const generateTextForEmail = () => {
+    let temp = '¡Hola!, mi pedido:\n\n'
+    cartState.items.forEach(item => {
+      temp += `${item.name}: $${item.price} x${item.amount} - $${item.price * item.amount}\n`
+    })
+    temp += `\nMétodo de pago: ${cartState.paymentMethod}\n\nPrecio TOTAL $${getTotal()}`
     return temp
   }
 
@@ -60,6 +68,12 @@ const Cart = () => {
       type: ActionType.SET_PAYMENT_METHOD,
       payload: e.target.value,
     })
+  }
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generateTextForEmail())
+      .then(() => console.log('Se copió al portapapeles')) // #FIX ME --> Agregar toast o notificación avisando que salió todo bien
+      .catch(() => console.log('Algo salió mal'))
   }
 
   return (
@@ -106,12 +120,14 @@ const Cart = () => {
         disabled={cartState.items.length < 1 || !cartState.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!, mi pedido:%0A%0A${generateText()}`}
+        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=${generateTextForWhatsapp()}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
       </Button>
-
+      <br />
+      <hr />
+      * Si no tenés whatsapp, no te preocupes, podés copiar el contenido del Carrito para enviarlo por email haciendo <Button onClick={copyToClipboard}>click aquí</Button>
     </div>
   )
 }

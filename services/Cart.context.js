@@ -19,20 +19,22 @@ const reducer = (state, action) => {
     case ActionType.ADD_ITEM:
       if (state.items.filter(item => item.id === action.payload.id).length === 0)  {
         return {
+          ...state,
           items: [
             ...state.items,
             {
               ...action.payload,
               amount: 1
             }
-          ]
+          ],
         }
       }
       state.items.filter(item => item.id === action.payload.id)[0].amount += 1
       return {
+        ...state,
         items: [
           ...state.items,
-        ]
+        ],
       }
     case ActionType.REMOVE_AMOUNT:
       const idx = state.items.indexOf(action.payload)
@@ -41,23 +43,23 @@ const reducer = (state, action) => {
         state.items.splice(idx, 1)
       }
       return {
+        ...state,
         items: [
           ...state.items,
-        ]
+        ],
       }
     case ActionType.REMOVE_ITEM:
       const index = state.items.indexOf(action.payload)
       state.items.splice(index, 1)
       return {
-        items: [
-          ...state.items,
-        ]
-      }
-    case ActionType.SET_PAYMENT_METHOD:
-      return {
+        ...state,
         items: [
           ...state.items,
         ],
+      }
+    case ActionType.SET_PAYMENT_METHOD:
+      return {
+        ...state,
         paymentMethod: action.payload,
       }
     default:

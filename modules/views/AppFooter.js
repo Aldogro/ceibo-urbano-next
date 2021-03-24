@@ -40,51 +40,53 @@ export default function AppFooter() {
   const classes = useStyles()
 
   return (
-    <Typography component="footer" className={classes.root}>
-      <Container className={classes.container}>
-        <Grid container spacing={5}>
-          <Grid item xs={12}>
-            <Grid className={classes.textCenter}  item>
-              <img height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
-              <p className={classes.title}>CEIBO URBANO</p>
-              <p className={classes.subtitle}>Vivero</p>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              align="center"
-              className={classes.iconsWrapper}
-            >
+    <>
+      <Typography component="footer" className={classes.root}>
+        <Container className={classes.container}>
+          <Grid container spacing={5}>
+            <Grid item xs={12}>
+              <Grid className={classes.textCenter}  item>
+                <img height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
+                <p className={classes.title}>CEIBO URBANO</p>
+                <p className={classes.subtitle}>Vivero</p>
+              </Grid>
               <Grid
                 container
-                className={classes.icons}
+                direction="column"
                 justify="center"
                 align="center"
+                className={classes.iconsWrapper}
               >
-                <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <FacebookIcon className={classes.icon} />
-                </a>
-                <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0A¿Podrían mandarme las últimas promociones?" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <WhatsAppIcon className={classes.icon} />
-                </a>
-                <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
-                  <InstagramIcon className={classes.icon} />
-                </a>
-              </Grid>
-              <Grid item>
-                <Copyright />
+                <Grid
+                  container
+                  className={classes.icons}
+                  justify="center"
+                  align="center"
+                >
+                  <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                    <FacebookIcon className={classes.icon} />
+                  </a>
+                  <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0AMi nombre es" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                    <WhatsAppIcon className={classes.icon} />
+                  </a>
+                  <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                    <InstagramIcon className={classes.icon} />
+                  </a>
+                </Grid>
+                <Grid item>
+                  <Copyright />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Container>
-      <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0A¿Podrían mandarme las últimas promociones?" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+        </Container>
+      </Typography>
+      <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0AMi nombre es" target="_blank" rel="noopener noreferrer">
         <Fab className={classes.whatsappFab} color="primary" aria-label="add">
           <WhatsAppIcon style={{fontSize: '35px'}} />
         </Fab>
       </a>
-    </Typography>
+    </>
   )
 }
 

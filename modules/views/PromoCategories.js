@@ -110,7 +110,7 @@ const styles = (theme) => ({
     position: 'relative',
     display: 'block',
     borderRadius: 0,
-    height: '40vh',
+    height: '350px',
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
     },
