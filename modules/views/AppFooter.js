@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
+import Fab from '@material-ui/core/Fab'
 
 import FacebookIcon from '@material-ui/icons/Facebook'
 import InstagramIcon from '@material-ui/icons/Instagram'
@@ -78,6 +79,11 @@ export default function AppFooter() {
           </Grid>
         </Grid>
       </Container>
+      <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0A¿Podrían mandarme las últimas promociones?" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+        <Fab className={classes.whatsappFab} color="primary" aria-label="add">
+          <WhatsAppIcon style={{fontSize: '35px'}} />
+        </Fab>
+      </a>
     </Typography>
   )
 }
@@ -137,5 +143,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     color: theme.palette.primary.main,
     marginBottom: 0,
-  }
+  },
+  whatsappFab: {
+    position: 'fixed',
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
+  },
 }))

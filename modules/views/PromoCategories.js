@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
+import { usePromo, ActionType as PromoActionType } from '../../services/Promo.context'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
@@ -9,41 +9,41 @@ import Chip from '@material-ui/core/Chip'
 import PropTypes from 'prop-types'
 import app from '../../firebase/firebase.config'
 
-function ProductCategories(props) {
+function PromoCategories(props) {
   const { classes } = props
-  const [productState, productDispatch] = useProduct()
+  const [promoState, promoDispatch] = usePromo()
   const [cartState, cartDispatch] = useCart()
 
   useEffect(() => {
-    app.firestore().collection('products')
+    app.firestore().collection('promos')
     .get()
-    .then(snapshot => productDispatch({
-      type: ProductActionType.SET_PRODUCTS,
+    .then(snapshot => promoDispatch({
+      type: PromoActionType.SET_PROMOS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
   }, [])
 
-  const handleOnAddToCart = (product) => {
+  const handleOnAddToCart = (promo) => {
     cartDispatch({
       type: CartActionType.ADD_ITEM,
-      payload: product,
+      payload: promo,
     })
   }
 
-  const getCartItems = (product) => {
-    const item = cartState.items.filter(item => item.id === product.id)
+  const getCartItems = (promo) => {
+    const item = cartState.items.filter(item => item.id === promo.id)
     return item[0]?.amount
   }
 
   return (
     <Container className={classes.root} component="section">
       <Typography variant="h4" marked="center" align="center" component="h2">
-        ¡Aprovechá todas nuestros productos!
+        ¡Aprovechá todas nuestras promociones!
       </Typography>
       <div className={classes.images}>
-        {productState.products.map((product) => (
+        {promoState.promos.map((promo) => (
           <div
-            key={product.name}
+            key={promo.name}
             className={classes.imageWrapper}
             style={{
               width: '33.333%',
@@ -52,7 +52,7 @@ function ProductCategories(props) {
             <div
               className={classes.imageSrc}
               style={{
-                backgroundImage: `url(${product.picture})`,
+                backgroundImage: `url(${promo.picture})`,
               }}
             />
             <div className={classes.imageBackdrop} />
@@ -63,7 +63,7 @@ function ProductCategories(props) {
                 color="inherit"
                 className={classes.imageTitle}
               >
-                {product.name}
+                {promo.name}
                 <div className={classes.imageMarked} />
               </Typography>
               <Typography
@@ -71,13 +71,16 @@ function ProductCategories(props) {
                 variant="h6"
                 color="inherit"
               >
-                ${product.price}
+                ${promo.price}
               </Typography>
-              <Button color="secondary" onClick={() => handleOnAddToCart(product)}>
+              <Typography>
+                <div className={classes.description}>{promo.description}</div>
+              </Typography>
+              <Button color="secondary" onClick={() => handleOnAddToCart(promo)}>
                 Agregar al carrito
                 {
-                  getCartItems(product)
-                  ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
+                  getCartItems(promo)
+                  ? <Chip className={classes.chip} color="primary" label={getCartItems(promo)} />
                   : null
                 }
               </Button>
@@ -89,7 +92,7 @@ function ProductCategories(props) {
   )
 }
 
-ProductCategories.propTypes = {
+PromoCategories.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
@@ -106,7 +109,6 @@ const styles = (theme) => ({
   imageWrapper: {
     position: 'relative',
     display: 'block',
-    padding: 0,
     borderRadius: 0,
     height: '40vh',
     [theme.breakpoints.down('sm')]: {
@@ -161,6 +163,9 @@ const styles = (theme) => ({
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px 14px`,
     marginBottom: '12px'
   },
+  description: {
+    padding: theme.spacing(0, 2),
+  },
   imageMarked: {
     height: 3,
     width: 18,
@@ -176,4 +181,4 @@ const styles = (theme) => ({
 })
 
 
-export default withStyles(styles)(ProductCategories)
+export default withStyles(styles)(PromoCategories)

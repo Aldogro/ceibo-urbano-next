@@ -2,6 +2,7 @@ import React, { isValidElement, useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import { DropzoneArea } from 'material-ui-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
 import app from '../../../firebase/firebase.config'
@@ -87,8 +88,10 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <TextareaAutosize
+                aria-label="empty textarea"
                 className={classes.fullWidth}
+                placeholder="Description"
                 id="Description"
                 label="Descripción"
                 value={description}

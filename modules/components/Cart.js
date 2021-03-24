@@ -96,6 +96,9 @@ const Cart = () => {
       </RadioGroup>
       * Selecciona algún método de pago para poder realizar el pedido.
       <hr />
+      <br />
+      Envíos gratis en Rosario con tu compra superior a $500 🎉🚛🚀
+      <br /><br/>
       <Button
         color="primary"
         variant="contained"
