@@ -4,12 +4,14 @@ export const CartStateContext = React.createContext({})
 
 const initialState = {
   items: [],
+  paymentMethod: ''
 }
 
 export const ActionType = {
   ADD_ITEM: 'ADD_ITEM',
   REMOVE_AMOUNT: 'REMOVE_AMOUNT',
   REMOVE_ITEM: 'REMOVE_ITEM',
+  SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
 }
 
 const reducer = (state, action) => {
@@ -50,6 +52,13 @@ const reducer = (state, action) => {
         items: [
           ...state.items,
         ]
+      }
+    case ActionType.SET_PAYMENT_METHOD:
+      return {
+        items: [
+          ...state.items,
+        ],
+        paymentMethod: action.payload,
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)

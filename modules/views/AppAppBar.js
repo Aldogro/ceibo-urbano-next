@@ -106,7 +106,10 @@ export default function PersistentDrawerLeft({ children }) {
           }
           <IconButton className={classes.cartButton} aria-label="open drawer" onClick={handleCartOpen}>
             <div className={classes.cartIcon}>
-              <Chip color="primary" label={getCartItems()} />
+              { getCartItems() > 0
+                ? <Chip color="primary" label={getCartItems()} />
+                : null
+              }
               <ShoppingCartIcon />
             </div>
           </IconButton>

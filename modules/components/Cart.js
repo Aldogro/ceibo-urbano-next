@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useCart, ActionType } from '../../services/Cart.context'
 import Button from '@material-ui/core/Button'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import Typography from '../components/Typography'
 import IconButton from '@material-ui/core/IconButton'
@@ -11,6 +14,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 const Cart = () => {
   const classes = useStyles();
+  const [paymentMethod, setPaymentMethod] = useState('')
   const [cartState, cartDispatch] = useCart()
 
   const onAmountAdd = (item) => {
@@ -47,8 +51,15 @@ const Cart = () => {
     cartState.items.forEach(item => {
       temp += `_*${item.name}*_: $${item.price} x${item.amount} - _*$${item.price * item.amount}*_%0A`
     })
-    temp += `%0A*Precio TOTAL $${getTotal()}*`
+    temp += `%0AMétodo de pago: *${paymentMethod}*%0A*Precio TOTAL $${getTotal()}*`
     return temp
+  }
+
+  const handlePaymentMethodChange = (e) => {
+    cartDispatch({
+      type: ActionType.SET_PAYMENT_METHOD,
+      payload: e.target.value,
+    })
   }
 
   return (
@@ -79,11 +90,17 @@ const Cart = () => {
       <Typography variant="h4" gutterBottom marked="center" align="center">
         Total: ${getTotal()}
       </Typography>
+      <RadioGroup aria-label="quiz" color="primary" name="quiz" value={cartState.paymentMethod} onChange={handlePaymentMethodChange}>
+        <FormControlLabel value="Mercado Pago" control={<Radio color="primary" />} label="Mercado Pago" />
+        <FormControlLabel value="Efectivo" control={<Radio color="primary" />} label="Efectivo" />
+      </RadioGroup>
+      * Selecciona algún método de pago para poder realizar el pedido.
+      <hr />
       <Button
         color="primary"
         variant="contained"
         className={classes.send}
-        disabled={cartState.items.length < 1}
+        disabled={cartState.items.length < 1 || !cartState.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
         href={`https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!, mi pedido:%0A%0A${generateText()}`}
@@ -91,6 +108,7 @@ const Cart = () => {
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
       </Button>
+
     </div>
   )
 }
