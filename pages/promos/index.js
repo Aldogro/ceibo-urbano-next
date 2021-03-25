@@ -17,6 +17,8 @@ import Dialog from '../../modules/components/Dialog'
 
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../modules/views/AppAppBar'
 import app from '../../firebase/firebase.config'
@@ -34,17 +36,26 @@ const ListPromoPage = () => {
     if (!auth.user.email) {
       router.push('/login')
     }
+    getPromos()
+  }, [])
+
+  const getPromos = () => {
     app.firestore().collection('promos')
     .get()
     .then(snapshot => promoDispatch({
       type: ActionType.SET_PROMOS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
-  }, [])
+  }
 
   const handleDelete = (id) => {
     setDialogOpen(true)
     setSelectedId(id)
+  }
+
+  const handlePublish = ({ id, publish }) => {
+    app.firestore().collection('promos').doc(id).update({ publish: !publish })
+      .then(() => getPromos()) // FIX ME agregar toast que avise lo que pasa
   }
   
   const confirmDelete = () => {
@@ -53,12 +64,7 @@ const ListPromoPage = () => {
       payload: selectedId
     })
     setDialogOpen(false)
-    app.firestore().collection('promos')
-    .get()
-    .then(snapshot => promoDispatch({
-      type: ActionType.SET_PROMOS,
-      payload: snapshot.docs.map(doc => doc.data()),
-    }))
+    getPromos()
   }
 
   return (
@@ -104,6 +110,9 @@ const ListPromoPage = () => {
                       </IconButton>
                       <IconButton size="small" color="primary" onClick={() => handleDelete(promo.id)}>
                         <DeleteForeverIcon />
+                      </IconButton>
+                      <IconButton size="small" color="primary" onClick={() => handlePublish(promo)}>
+                        {promo.publish ? <VisibilityIcon /> : <VisibilityOffIcon />}
                       </IconButton>
                     </CardActions>
                   </Card>

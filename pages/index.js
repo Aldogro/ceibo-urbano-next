@@ -14,9 +14,9 @@ export default function Index() {
     <React.Fragment>
       <AppAppBar />
       <ProductHero />
-      <ProductSmokingHero />
-      <ProductValues />
       <ProductCategories />
+      <ProductValues />
+      <ProductSmokingHero />
       <ProductHowItWorks />
       <PromoCategories />
       {/* <ProductCTA /> */}

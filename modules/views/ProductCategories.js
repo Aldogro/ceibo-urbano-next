@@ -1,8 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+
+import Grid from '@material-ui/core/Grid'
+import Backdrop from '@material-ui/core/Backdrop'
+import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
 import Chip from '@material-ui/core/Chip'
@@ -13,15 +22,26 @@ function ProductCategories(props) {
   const { classes } = props
   const [productState, productDispatch] = useProduct()
   const [cartState, cartDispatch] = useCart()
+  const [fullScreenImage, setFullScreenImage] = useState(false)
+  const [selectedImage, setSelectedImage] = useState('')
 
   useEffect(() => {
+    getProducts()
+  }, [])
+
+  const handleFullSizeImage = (image) => {
+    setSelectedImage(image)
+    setFullScreenImage(true)
+  }
+
+  const getProducts = () => {
     app.firestore().collection('products')
     .get()
     .then(snapshot => productDispatch({
       type: ProductActionType.SET_PRODUCTS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
-  }, [])
+  }
 
   const handleOnAddToCart = (product) => {
     cartDispatch({
@@ -37,54 +57,49 @@ function ProductCategories(props) {
 
   return (
     <Container className={classes.root} component="section">
-      <Typography variant="h4" marked="center" align="center" component="h2">
-        ¡Aprovechá todas nuestros productos!
+      <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
+        ¡Aprovechá todos nuestros productos!
       </Typography>
-      <div className={classes.images}>
+      <Backdrop className={classes.backdrop} open={fullScreenImage} onClick={() => setFullScreenImage(false)}>
+        <img src={selectedImage} />
+      </Backdrop>
+      <Grid container spacing={2}>
         {productState.products.map((product) => (
-          <div
-            key={product.name}
-            className={classes.imageWrapper}
-            style={{
-              width: '33.333%',
-            }}
-          >
-            <div
-              className={classes.imageSrc}
-              style={{
-                backgroundImage: `url(${product.picture})`,
-              }}
-            />
-            <div className={classes.imageBackdrop} />
-            <div className={classes.imageButton}>
-              <Typography
-                component="h3"
-                variant="h6"
-                color="inherit"
-                className={classes.imageTitle}
-              >
-                {product.name}
-                <div className={classes.imageMarked} />
-              </Typography>
-              <Typography
-                component="h3"
-                variant="h6"
-                color="inherit"
-              >
-                ${product.price}
-              </Typography>
-              <Button color="secondary" onClick={() => handleOnAddToCart(product)}>
-                Agregar al carrito
+          product.publish
+          ?
+          <Grid item xs={12} lg={+product.cols} key={product.id}>
+            <Card>
+              <CardActionArea onClick={() => handleFullSizeImage(product.picture)}>
+                <CardMedia
+                  className={classes.media}
+                  image={product.picture}
+                  title={product.name}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {product.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    {product.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Button size="small" color="primary" onClick={() => handleOnAddToCart(product)}>
+                  Agregar al carrito
+                  <AddCircleIcon color="primary" className={classes.chip} />
+                </Button>
                 {
                   getCartItems(product)
                   ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
                   : null
                 }
-              </Button>
-            </div>
-          </div>
+              </CardActions>
+            </Card>
+          </Grid>
+          : null
         ))}
-      </div>
+      </Grid>
     </Container>
   )
 }
@@ -172,6 +187,16 @@ const styles = (theme) => ({
   },
   chip: {
     marginLeft: theme.spacing(2),
+  },
+  media: {
+    height: 140,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+  title: {
+    marginBottom: theme.spacing(4),
   }
 })
 

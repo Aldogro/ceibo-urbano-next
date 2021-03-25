@@ -3,6 +3,8 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import { DropzoneArea } from 'material-ui-dropzone'
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import app from '../../../firebase/firebase.config'
 import { useRouter } from 'next/router'
@@ -13,11 +15,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
   const [price, setPrice] = useState('')
   const [cols, setCols] = useState('')
   const [picture, setPicture] = useState('')
-
-  const handleNameChange = ({ target }) => setName(target.value)
-  const handleDescriptionChange = ({ target }) => setDescription(target.value)
-  const handlePriceChange = ({ target }) => setPrice(target.value)
-  const handleColsChange = ({ target }) => setCols(target.value)
+  const [publish, setPublish] = useState(false)
 
   const router = useRouter()
 
@@ -29,6 +27,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
       price,
       cols,
       picture,
+      publish,
     })
   }
 
@@ -39,6 +38,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
       setPrice(product.price)
       setCols(product.cols)
       setPicture(product.picture)
+      setPublish(product.publish)
     }
   }, [product])
 
@@ -56,6 +56,18 @@ const FormProduct = ({ product = {}, onSubmit }) => {
     <React.Fragment>
         <form onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
           <Grid container spacing={3} cols={1}>
+            <Grid item xs={12} lg={3}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={publish}
+                    onChange={({ target }) => setPublish(target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Publicar"
+              />
+            </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 className={classes.fullWidth}
@@ -63,7 +75,17 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 label="Nombre"
                 value={name}
                 required
-                onChange={handleNameChange}
+                onChange={({ target }) => setName(target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                className={classes.fullWidth}
+                id="cols"
+                label="Columnas"
+                type="number"
+                value={cols}
+                onChange={({ target }) => setCols(target.value)}
               />
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -73,17 +95,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 label="Precio"
                 type="number"
                 value={price}
-                onChange={handlePriceChange}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <TextField
-                className={classes.fullWidth}
-                id="cols"
-                label="Columnas"
-                type="number"
-                value={cols}
-                onChange={handleColsChange}
+                onChange={({ target }) => setPrice(target.value)}
               />
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -92,7 +104,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 id="Description"
                 label="Descripción"
                 value={description}
-                onChange={handleDescriptionChange}
+                onChange={({ target }) => setDescription(target.value)}
               />
             </Grid>
             <Grid item xs={12} lg={6}>

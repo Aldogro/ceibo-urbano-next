@@ -17,6 +17,8 @@ import Dialog from '../../modules/components/Dialog'
 
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../modules/views/AppAppBar'
 import app from '../../firebase/firebase.config'
@@ -34,13 +36,22 @@ const ListProductPage = () => {
     if (!auth.user.email) {
       router.push('/login')
     }
+    getProducts()
+  }, [])
+
+  const getProducts = () => {
     app.firestore().collection('products')
     .get()
     .then(snapshot => productDispatch({
       type: ActionType.SET_PRODUCTS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
-  }, [])
+  }
+
+  const handlePublish = ({ id, publish }) => {
+    app.firestore().collection('products').doc(id).update({ publish: !publish })
+      .then(() => getProducts()) // FIX ME agregar toast que avise lo que pasa
+  }
 
   const handleDelete = (id) => {
     setDialogOpen(true)
@@ -53,12 +64,7 @@ const ListProductPage = () => {
       payload: selectedId
     })
     setDialogOpen(false)
-    app.firestore().collection('products')
-    .get()
-    .then(snapshot => productDispatch({
-      type: ActionType.SET_PRODUCTS,
-      payload: snapshot.docs.map(doc => doc.data()),
-    }))
+    getProducts()
   }
 
   return (
@@ -104,6 +110,9 @@ const ListProductPage = () => {
                       </IconButton>
                       <IconButton size="small" color="primary" onClick={() => handleDelete(product.id)}>
                         <DeleteForeverIcon />
+                      </IconButton>
+                      <IconButton size="small" color="primary" onClick={() => handlePublish(product)}>
+                        {product.publish ? <VisibilityIcon /> : <VisibilityOffIcon />}
                       </IconButton>
                     </CardActions>
                   </Card>

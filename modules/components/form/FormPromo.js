@@ -1,8 +1,10 @@
-import React, { isValidElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { DropzoneArea } from 'material-ui-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
 import app from '../../../firebase/firebase.config'
@@ -14,11 +16,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
   const [price, setPrice] = useState('')
   const [cols, setCols] = useState('')
   const [picture, setPicture] = useState('')
-
-  const handleNameChange = ({ target }) => setName(target.value)
-  const handleDescriptionChange = ({ target }) => setDescription(target.value)
-  const handlePriceChange = ({ target }) => setPrice(target.value)
-  const handleColsChange = ({ target }) => setCols(target.value)
+  const [publish, setPublish] = useState(false)
 
   const router = useRouter()
 
@@ -30,6 +28,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
       price,
       cols,
       picture,
+      publish
     })
   }
 
@@ -40,6 +39,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
       setPrice(promo.price)
       setCols(promo.cols)
       setPicture(promo.picture)
+      setPublish(promo.publish)
     }
   }, [promo])
 
@@ -57,6 +57,18 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     <React.Fragment>
         <form className={classes.root} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
           <Grid container spacing={3} cols={1}>
+            <Grid item xs={12} lg={3}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={publish}
+                    onChange={({ target }) => setPublish(target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Publicar"
+              />
+            </Grid>
             <Grid item xs={12} md={6}>
               <TextField
                 className={classes.fullWidth}
@@ -64,7 +76,17 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 label="Nombre"
                 value={name}
                 required
-                onChange={handleNameChange}
+                onChange={({ target }) => setName(target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                className={classes.fullWidth}
+                id="cols"
+                label="Columnas"
+                type="number"
+                value={cols}
+                onChange={({ target }) => setCols(target.value)}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -74,28 +96,18 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 label="Precio"
                 type="number"
                 value={price}
-                onChange={handlePriceChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                className={classes.fullWidth}
-                id="cols"
-                label="Columnas"
-                type="number"
-                value={cols}
-                onChange={handleColsChange}
+                onChange={({ target }) => setPrice(target.value)}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <TextareaAutosize
                 aria-label="empty textarea"
                 className={classes.fullWidth}
-                placeholder="Description"
+                placeholder="Descripción"
                 id="Description"
                 label="Descripción"
                 value={description}
-                onChange={handleDescriptionChange}
+                onChange={({ target }) => setDescription(target.value)}
               />
             </Grid>
             <Grid item xs={12} md={6}>
