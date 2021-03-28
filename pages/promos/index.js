@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useAuth } from '../../services/Auth.context'
 import { useRouter } from 'next/router'
+import { usePromo, ActionType } from '../../services/Promo.context'
+import { useSnackbar } from 'notistack'
 
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
@@ -21,8 +23,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../modules/views/AppAppBar'
-import app from '../../firebase/firebase.config'
-import { usePromo, ActionType } from '../../services/Promo.context'
+import { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
 
 const ListPromoPage = () => {
   const classes = useStyles()
@@ -31,6 +32,8 @@ const ListPromoPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
   const router = useRouter()
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   
   useEffect(() => {
     if (!auth.user.email) {
@@ -40,31 +43,35 @@ const ListPromoPage = () => {
   }, [])
 
   const getPromos = () => {
-    app.firestore().collection('promos')
-    .get()
+    getCollection('promos')
     .then(snapshot => promoDispatch({
       type: ActionType.SET_PROMOS,
       payload: snapshot.docs.map(doc => doc.data()),
     }))
   }
 
+  const handlePublish = ({ id, publish }) => {
+    publishItem({ id, publish, collection: 'promos' })
+      .then(() => {
+        enqueueSnackbar('Se actualizó el estado correctamente', { variant: 'success'})
+        getPromos()
+      })
+      .catch(() => enqueueSnackbar('Ha sucedido un error', { variant: 'error'}))
+  }
+
   const handleDelete = (id) => {
     setDialogOpen(true)
     setSelectedId(id)
   }
-
-  const handlePublish = ({ id, publish }) => {
-    app.firestore().collection('promos').doc(id).update({ publish: !publish })
-      .then(() => getPromos()) // FIX ME agregar toast que avise lo que pasa
-  }
   
   const confirmDelete = () => {
-    promoDispatch({
-      type: ActionType.DELETE_PROMO,
-      payload: selectedId
-    })
-    setDialogOpen(false)
-    getPromos()
+    deleteItem({ selectedId, collection: 'promos' })
+      .then(() => {
+        enqueueSnackbar('Se eliminó la promo correctamente', { variant: 'success'})
+        setDialogOpen(false)
+        getPromos()
+      })
+      .catch((error) => enqueueSnackbar('Ha sucedido un error', { variant: 'error'}))
   }
 
   return (

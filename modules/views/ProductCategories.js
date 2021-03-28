@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 import Grid from '@material-ui/core/Grid'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -24,6 +25,8 @@ function ProductCategories(props) {
   const [cartState, cartDispatch] = useCart()
   const [fullScreenImage, setFullScreenImage] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
+
+  const skeletons = ['a', 'b', 'c']
 
   useEffect(() => {
     getProducts()
@@ -64,41 +67,58 @@ function ProductCategories(props) {
         <img src={selectedImage} />
       </Backdrop>
       <Grid container spacing={2}>
-        {productState.products.map((product) => (
-          product.publish
+        {!productState.products.length
           ?
-          <Grid item xs={12} lg={+product.cols} key={product.id}>
-            <Card>
-              <CardActionArea onClick={() => handleFullSizeImage(product.picture)}>
-                <CardMedia
-                  className={classes.media}
-                  image={product.picture}
-                  title={product.name}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {product.name}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    {product.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-              <CardActions>
-                <Button size="small" color="primary" onClick={() => handleOnAddToCart(product)}>
-                  Agregar al carrito
-                  <AddCircleIcon color="primary" className={classes.chip} />
-                </Button>
-                {
-                  getCartItems(product)
-                  ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
-                  : null
-                }
-              </CardActions>
-            </Card>
-          </Grid>
-          : null
-        ))}
+          skeletons.map((skeleton) => (
+            <Grid item xs={12} lg={4}>
+              <Skeleton variant="rect" key={skeleton} width={'100%'} height={118} />
+              <Skeleton variant="text" />
+              <Skeleton width="60%" />
+              <br/>
+              <Skeleton />
+            </Grid>
+          ))
+          :
+          productState.products.map((product) => (
+            product.publish
+            ?
+            <Grid item xs={12} lg={+product.cols} key={product.id}>
+              <Card>
+                <CardActionArea onClick={() => handleFullSizeImage(product.picture)}>
+                  <CardMedia
+                    className={classes.media}
+                    image={product.picture}
+                    title={product.name}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {product.name}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      ${product.price}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {product.description}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+                <CardActions>
+                  <Button size="small" color="primary" onClick={() => handleOnAddToCart(product)}>
+                    Agregar al carrito
+                    <AddCircleIcon color="primary" className={classes.chip} />
+                  </Button>
+                  {
+                    getCartItems(product)
+                    ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
+                    : null
+                  }
+                </CardActions>
+              </Card>
+            </Grid>
+            : null
+          ))
+        }
+        
       </Grid>
     </Container>
   )

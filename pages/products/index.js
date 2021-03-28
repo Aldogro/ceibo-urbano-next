@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useAuth } from '../../services/Auth.context'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
+import { useProduct, ActionType } from '../../services/Product.context'
 
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
@@ -21,8 +23,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../modules/views/AppAppBar'
-import app from '../../firebase/firebase.config'
-import { useProduct, ActionType } from '../../services/Product.context'
+import { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
 
 const ListProductPage = () => {
   const classes = useStyles();
@@ -30,6 +31,9 @@ const ListProductPage = () => {
   const [productState, productDispatch] = useProduct()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+
   const router = useRouter()
   
   useEffect(() => {
@@ -40,8 +44,7 @@ const ListProductPage = () => {
   }, [])
 
   const getProducts = () => {
-    app.firestore().collection('products')
-    .get()
+    getCollection('products')
     .then(snapshot => productDispatch({
       type: ActionType.SET_PRODUCTS,
       payload: snapshot.docs.map(doc => doc.data()),
@@ -49,8 +52,12 @@ const ListProductPage = () => {
   }
 
   const handlePublish = ({ id, publish }) => {
-    app.firestore().collection('products').doc(id).update({ publish: !publish })
-      .then(() => getProducts()) // FIX ME agregar toast que avise lo que pasa
+    publishItem({ id, publish, collection: 'products' })
+      .then(() => {
+        enqueueSnackbar('Se actualizó el estado correctamente', { variant: 'success'})
+        getProducts()
+      })
+      .catch(() => enqueueSnackbar('Ha sucedido un error', { variant: 'error'}))
   }
 
   const handleDelete = (id) => {
@@ -59,12 +66,13 @@ const ListProductPage = () => {
   }
   
   const confirmDelete = () => {
-    productDispatch({
-      type: ActionType.DELETE_PRODUCT,
-      payload: selectedId
-    })
-    setDialogOpen(false)
-    getProducts()
+    deleteItem({ selectedId, collection: 'products' })
+      .then(() => {
+        enqueueSnackbar('El producto se eliminó correctamente', { variant: 'success'})
+        setDialogOpen(false)
+        getProducts()
+      })
+      .catch((error) => enqueueSnackbar('Ha sucedido un error', { variant: 'error'}))
   }
 
   return (
@@ -96,8 +104,11 @@ const ListProductPage = () => {
                         title={product.name}
                       />
                       <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
+                        <Typography className={classes.productName} gutterBottom variant="h5" component="h2">
                           {product.name}
+                        </Typography>
+                        <Typography className={classes.productPrice} gutterBottom variant="h4" component="h2">
+                          ${product.price}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                           {product.description}
@@ -153,5 +164,18 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: '2rem',
     marginBottom: '2rem',
+  },
+  productName: {
+    display: 'inline-block',
+  },
+  productPrice: {
+    display: 'inline-block',
+    float: 'right',
+  },
+  alert: {
+    position: 'fixed',
+    left: theme.spacing(2),
+    bottom: theme.spacing(2),
+    zIndex: theme.zIndex.drawer + 1
   },
 }));

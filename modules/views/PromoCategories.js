@@ -14,6 +14,8 @@ function PromoCategories(props) {
   const [promoState, promoDispatch] = usePromo()
   const [cartState, cartDispatch] = useCart()
 
+  const skeletons = [0, 1, 2]
+
   useEffect(() => {
     app.firestore().collection('promos')
     .get()

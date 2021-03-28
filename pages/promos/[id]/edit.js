@@ -1,35 +1,46 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { usePromo, ActionType } from '../../../services/Promo.context'
+import { makeStyles } from '@material-ui/core/styles'
+import { useSnackbar } from 'notistack'
+
 import AppAppBar from '../../../modules/views/AppAppBar'
 import FormPromo from '../../../modules/components/form/FormPromo'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import { usePromo, ActionType } from '../../../services/Promo.context'
-import app from '../../../firebase/firebase.config'
+
+import { getItem, editItem } from '../../../firebase/firebase.config'
 
 const EditPromoPage = () => {
   const [promoState, promoDispatch] = usePromo()
   const classes = useStyles()
   const router = useRouter()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   useEffect(() => {
     const { id } = router.query
     if (router.query.id) {
-      app.firestore().collection('promos').doc(id).get()
-        .then(snapshot => {
-          promoDispatch({
-            type: ActionType.SET_PROMO,
-            payload: snapshot.data(),
-          })
-        })
+      getPromo(id)
     }
   }, [router.query])
 
+  const getPromo = (id) => {
+    getItem({ collection: 'promos', id })
+      .then(snapshot => {
+        promoDispatch({
+          type: ActionType.SET_PROMO,
+          payload: snapshot.data(),
+        })
+      })
+  }
+
   const updatePromo = (data) => {
-    app.firestore().collection('promos').doc(router.query.id).update(data)
-      .then(() => router.push('/promos')) // FIX ME agregar toast que avise que se editó correctamente
-      .catch(error => console.log(error)) // toast que avise que algo salió mal
+    editItem({ collection: 'promos', id: router.query.id, data })
+    .then(() => {
+      enqueueSnackbar('Se ha editado la promo correctamente', { variant: 'success'})
+      router.push('/promos')
+    })
+    .catch((error) => enqueueSnackbar('Ha ocurrido un error', { variant: 'error'}))
   }
 
   return (

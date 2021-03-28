@@ -1,23 +1,28 @@
 import React from 'react'
+
 import { useRouter } from 'next/router'
+import { makeStyles } from '@material-ui/core/styles'
+import { useSnackbar } from 'notistack'
+
 import AppAppBar from '../../modules/views/AppAppBar'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import FormPromo from '../../modules/components/form/FormPromo'
-import { makeStyles } from '@material-ui/core/styles'
-import { usePromo, ActionType } from '../../services/Promo.context'
+
+import { createItem } from '../../firebase/firebase.config'
 
 const AddPromoPage = () => {
   const router = useRouter()
-  const [promoState, promoDispatch] = usePromo('')
   const classes = useStyles()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const createPromo = (data) => {
-    promoDispatch({
-      type: ActionType.CREATE_PROMO,
-      payload: data
-    })
-    router.push('/promos')
+    createItem({ collection: 'promos', data })
+      .then(() => {
+        enqueueSnackbar('Se ha creado la promo correctamente', { variant: 'success'})
+        router.push('/promos')
+      })
+      .catch((error) => enqueueSnackbar('Ha ocurrido un error', { variant: 'error'}))
   }
 
   return (

@@ -3,6 +3,8 @@ import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
 
+import Link from 'next/link'
+
 import Drawer from '@material-ui/core/Drawer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
@@ -134,18 +136,24 @@ export default function PersistentDrawerLeft({ children }) {
             </IconButton>
           </div>
           <List>
-            <ListItem className={classes.listItem} component="a" href="/">
-              <ListItemIcon><HomeIcon className={classes.listItem} /></ListItemIcon>
-              <ListItemText primary="Inicio" />
-            </ListItem>
-            <ListItem className={classes.listItem} component="a" href="/products">
-              <ListItemIcon><ListIcon className={classes.listItem} /></ListItemIcon>
-              <ListItemText primary="Productos" />
-            </ListItem>
-            <ListItem className={classes.listItem} component="a" href="/promos">
-              <ListItemIcon><LoyaltyIcon className={classes.listItem} /></ListItemIcon>
-              <ListItemText primary="Promos" />
-            </ListItem>
+            <Link href="/">
+              <ListItem className={classes.listItem} component="a">
+                <ListItemIcon><HomeIcon className={classes.listItem} /></ListItemIcon>
+                <ListItemText primary="Inicio" />
+              </ListItem>
+            </Link>
+            <Link href="/products">
+              <ListItem className={classes.listItem} component="a">
+                <ListItemIcon><ListIcon className={classes.listItem} /></ListItemIcon>
+                <ListItemText primary="Productos" />
+              </ListItem>
+            </Link>
+            <Link href="/promos">
+              <ListItem className={classes.listItem} component="a">
+                <ListItemIcon><LoyaltyIcon className={classes.listItem} /></ListItemIcon>
+                <ListItemText primary="Promos" />
+              </ListItem>
+            </Link>
           </List>
         </Drawer>
         : null
@@ -310,6 +318,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
   },
   listItem: {
+    cursor: 'pointer',
     color: theme.palette.primary.main,
     fontWeight: 700,
   },

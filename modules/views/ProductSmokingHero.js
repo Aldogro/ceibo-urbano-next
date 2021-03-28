@@ -44,13 +44,19 @@ const styles = (theme) => ({
     padding: theme.spacing(2, 5),
   },
   buttonText: {
-    fontSize: '20px',
+    fontSize: '14px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
   },
   link: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
     textAlign: 'center',
-    fontSize: '25px',
+    fontSize: '14px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '25px',
+    },
     color: theme.palette.primary.main,
   },
   colorIcon: {

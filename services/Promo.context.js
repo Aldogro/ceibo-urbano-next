@@ -1,5 +1,4 @@
 import React, { useContext, useReducer } from 'react'
-
 import app from '../firebase/firebase.config'
 
 export const PromoStateContext = React.createContext({})
@@ -11,21 +10,18 @@ const initialState = {
 
 export const ActionType = {
   CREATE_PROMO: 'CREATE_PROMO',
-  GET_PROMO: 'GET_PROMO',
-  GET_PROMOS: 'GET_PROMOS',
   SET_PROMO: 'SET_PROMO',
   SET_PROMOS: 'SET_PROMOS',
-  DELETE_PROMO: 'DELETE_PROMO',
-  UPDATE_PROMO: 'UPDATE_PROMO',
 }
+
 
 const reducer = (state, action) => {
   switch (action.type) {
     case ActionType.CREATE_PROMO:
       const id = new Date().getTime().toString()
       app.firestore().collection('promos').doc(id).set({ ...action.payload, id })
-        .then(() => console.log('promo creada')) // FIX ME Agregar acá un toast que avise que se creó correctamente
-        .catch((error) => console.log(error)) // toast que avise que algo salió mal
+        .then(() => console.log('promo agregada'))
+        .catch((error) => console.log('error al agregar una promo'))
       return
     case ActionType.SET_PROMO:
       return {
@@ -37,11 +33,6 @@ const reducer = (state, action) => {
         ...state,
         promos: action.payload || [],
       }
-    case ActionType.DELETE_PROMO:
-      app.firestore().collection('promos').doc(action.payload.toString()).delete()
-        .then(() => console.log('promo borrada')) // FIX ME Agregar acá un toast que avise que se borró
-        .catch((error) => console.log(error)) // toast que avise que algo salió mal
-      return
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
   }

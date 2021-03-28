@@ -1,35 +1,67 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
-function getSteps() {
-  return [
-    'Seleccioná los productos o promociones',
-    'Seleccioná las cantidades',
-    'Hacé el pedido a través de whatsapp con un solo click',
-    'Pagá cuando recibís tu pedido'
-  ];
-}
+import Timeline from '@material-ui/lab/Timeline'
+import TimelineItem from '@material-ui/lab/TimelineItem'
+import TimelineSeparator from '@material-ui/lab/TimelineSeparator'
+import TimelineDot from '@material-ui/lab/TimelineDot'
+import TimelineContent from '@material-ui/lab/TimelineContent'
+import TimelineConnector from '@material-ui/lab/TimelineConnector'
+import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'
+
+import Typography from '@material-ui/core/Typography'
 
 export default function VerticalLinearStepper() {
-  const classes = useStyles();
-  const steps = getSteps();
+  const classes = useStyles()
+  const steps = [
+    {
+      title: 'Elegí',
+      text: 'Seleccioná los productos o promociones',
+      connector: true,
+    },
+    {
+      title: 'Agregá',
+      text: 'Seleccioná las cantidades de los productos o promociones',
+      icon: 'FastFood',
+      connector: true,
+    },
+    {
+      title: 'Seleccioná',
+      text: 'Elegí el medio de pago',
+      connector: true,
+    },
+    {
+      title: 'Pedí',
+      text: 'Hacé el pedido a través de whatsapp con un solo click',
+      connector: true,
+    },
+    
+    {
+      title: 'Recibí',
+      text: '¡Te lo llevamos hasta tu casa!',
+      connector: false,
+    },
+  ]
 
   return (
     <div className={classes.root}>
-      <Stepper activeStep={steps.length} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>
-              <div className={classes.stepText}>
-                {label}
-              </div>
-            </StepLabel>
-          </Step>
+      <Timeline align="alternate">
+        {steps.map((step, index) => (
+          <TimelineItem key={step.title + index}>
+            
+            <TimelineOppositeContent>
+              <Typography variant="p" component="h4">{step.title}</Typography>
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot color="primary" className={classes.dot}>{index + 1}</TimelineDot>
+              {step.connector ? <TimelineConnector className={classes.connector} /> : null}
+            </TimelineSeparator>
+            <TimelineContent>
+              <Typography variant="p" color="textSecondary">{step.text}</Typography>
+            </TimelineContent>
+          </TimelineItem>
         ))}
-      </Stepper>
+      </Timeline>
     </div>
   );
 }
@@ -37,11 +69,20 @@ export default function VerticalLinearStepper() {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
+    maringLeft: '-100px',
+    fontSize: '12px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
   },
-  stepText: {
-    fontSize: '20px',
-    marginLeft: theme.spacing(2),
+  connector: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  dot: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '30px',
+    width: '30px',
   }
 }));

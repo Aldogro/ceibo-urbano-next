@@ -17,4 +17,19 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
 }
 
+export const getItem = ({ collection, id }) => firebase.firestore().collection(collection).doc(id).get()
+
+export const createItem = ({ collection, data }) => {
+  const id = new Date().getTime().toString()
+  return firebase.firestore().collection(collection).doc(id).set({ ...data, id })
+}
+
+export const editItem = ({ collection, id, data }) => firebase.firestore().collection(collection).doc(id).update(data)
+
+export const publishItem = ({ collection, id, publish }) => firebase.firestore().collection(collection).doc(id).update({ publish: !publish })
+
+export const deleteItem = ({ collection, selectedId }) => firebase.firestore().collection(collection).doc(selectedId.toString()).delete()
+
+export const getCollection = (collection) => firebase.firestore().collection(collection).get()
+
 export default firebase

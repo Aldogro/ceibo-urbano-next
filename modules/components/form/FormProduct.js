@@ -56,7 +56,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
     <React.Fragment>
         <form onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
           <Grid container spacing={3} cols={1}>
-            <Grid item xs={12} lg={3}>
+            <Grid item xs={12} lg={12}>
               <FormControlLabel
                 control={
                   <Switch
@@ -68,7 +68,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 label="Publicar"
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={5}>
               <TextField
                 className={classes.fullWidth}
                 id="Name"
@@ -78,7 +78,16 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={({ target }) => setName(target.value)}
               />
             </Grid>
-            <Grid item xs={12} lg={3}>
+            <Grid item xs={12} lg={7}>
+              <TextField
+                className={classes.fullWidth}
+                id="Description"
+                label="Descripción"
+                value={description}
+                onChange={({ target }) => setDescription(target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
               <TextField
                 className={classes.fullWidth}
                 id="cols"
@@ -88,7 +97,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onChange={({ target }) => setCols(target.value)}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={4}>
               <TextField
                 className={classes.fullWidth}
                 id="Price"
@@ -96,15 +105,6 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 type="number"
                 value={price}
                 onChange={({ target }) => setPrice(target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <TextField
-                className={classes.fullWidth}
-                id="Description"
-                label="Descripción"
-                value={description}
-                onChange={({ target }) => setDescription(target.value)}
               />
             </Grid>
             <Grid item xs={12} lg={6}>

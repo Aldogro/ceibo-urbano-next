@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { useRouter } from 'next/router'
+
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
-import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import Switch from '@material-ui/core/Switch'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { DropzoneArea } from 'material-ui-dropzone'
-import { makeStyles } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
+
 import app from '../../../firebase/firebase.config'
-import { useRouter } from 'next/router'
 
 const FormPromo = ({ promo = {}, onSubmit }) => {
   const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [cols, setCols] = useState('')
+  const [discount, setDiscount] = useState('')
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
+  const [products, setProducts] = useState([])
 
   const router = useRouter()
 
@@ -24,24 +28,38 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     e.preventDefault()
     onSubmit({
       name,
-      description,
       price,
       cols,
+      discount,
       picture,
-      publish
+      publish,
+      products,
     })
   }
 
   useEffect(() => {
     if (Object.keys(promo).length !== 0) {
       setName(promo.name)
-      setDescription(promo.description)
       setPrice(promo.price)
       setCols(promo.cols)
+      setDiscount(promo.discount)
       setPicture(promo.picture)
       setPublish(promo.publish)
+      setProducts(promo.products)
     }
   }, [promo])
+
+  const addProduct = () => {
+    const product = [{
+      name: 'Nombre',
+      price: 0,
+    }]
+    setProducts(products.concat(product))
+  }
+
+  const onRemoveProduct = (product) => {
+    setProducts(products.filter(_product => _product !== product))
+  }
 
   const classes = useStyles()
 
@@ -53,11 +71,32 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     }
   }
 
+  const productNameChange = (target, index) => {
+    let temp = products
+    temp[index].name = target.value
+    setProducts(temp)
+  }
+
+  const productPriceChange = (target, index) => {
+    let temp = products
+    temp[index].price = +target.value
+    setProducts(temp)
+    getTotalPrice()
+  }
+
+  const getTotalPrice = () => {
+    let temp = 0
+    products.forEach(product => {
+      temp += product.price
+    })
+    setPrice(Math.ceil(temp - ((discount * temp) / 100)))
+  }
+
   return (
     <React.Fragment>
         <form className={classes.root} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
           <Grid container spacing={3} cols={1}>
-            <Grid item xs={12} lg={3}>
+            <Grid item xs={12} lg={12}>
               <FormControlLabel
                 control={
                   <Switch
@@ -69,7 +108,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 label="Publicar"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={8}>
               <TextField
                 className={classes.fullWidth}
                 id="Name"
@@ -79,7 +118,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 onChange={({ target }) => setName(target.value)}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={4}>
               <TextField
                 className={classes.fullWidth}
                 id="cols"
@@ -89,26 +128,57 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 onChange={({ target }) => setCols(target.value)}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
+              <TextField
+                className={classes.fullWidth}
+                id="discount"
+                label="Descuento %"
+                type="number"
+                value={discount}
+                onChange={({ target }) => {
+                  setDiscount(target.value)
+                  getTotalPrice()
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
               <TextField
                 className={classes.fullWidth}
                 id="Price"
-                label="Precio"
+                label={`$${price} - automático`}
+                disabled
                 type="number"
-                value={price}
-                onChange={({ target }) => setPrice(target.value)}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextareaAutosize
-                aria-label="empty textarea"
-                className={classes.fullWidth}
-                placeholder="Descripción"
-                id="Description"
-                label="Descripción"
-                value={description}
-                onChange={({ target }) => setDescription(target.value)}
-              />
+            <Grid item xs={12} md={12} className={classes.products}>
+              {products.map((product, index) => (
+                <Grid container spacing={3} cols={1} key={index}>
+                  <Grid item xs={12} md={7}>
+                    <TextField
+                      className={classes.fullWidth}
+                      id="Name"
+                      label={product.name || 'Nombre'}
+                      required
+                      onChange={({target}) => productNameChange(target, index)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      className={classes.fullWidth}
+                      id="Price"
+                      label={product.price || 'Precio $'}
+                      type="number"
+                      onChange={({target}) => productPriceChange(target, index)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <IconButton onClick={() => onRemoveProduct(product)}>
+                      <ClearIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
+              <Button onClick={addProduct}>Agregar Producto</Button>
             </Grid>
             <Grid item xs={12} md={6}>
               <DropzoneArea
@@ -175,5 +245,5 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
     float: 'right',
     marginLeft: 16,
-  }
+  },
 }))

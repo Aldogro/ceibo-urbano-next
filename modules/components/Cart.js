@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
+
 import { makeStyles } from '@material-ui/core/styles'
 import { useCart, ActionType } from '../../services/Cart.context'
+import { useSnackbar } from 'notistack'
+
 import Button from '@material-ui/core/Button'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -15,6 +18,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 const Cart = () => {
   const classes = useStyles();
   const [cartState, cartDispatch] = useCart()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const onAmountAdd = (item) => {
     cartDispatch({
@@ -72,8 +76,8 @@ const Cart = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generateTextForEmail())
-      .then(() => console.log('Se copió al portapapeles')) // #FIX ME --> Agregar toast o notificación avisando que salió todo bien
-      .catch(() => console.log('Algo salió mal'))
+      .then(() => enqueueSnackbar('Se ha copiado correctamente el contenido del carrito', { variant: 'success'}))
+      .catch(() => enqueueSnackbar('Ocurrió un error al intentar copiar el contenido del carrito', { variant: 'error'}))
   }
 
   return (
@@ -127,7 +131,10 @@ const Cart = () => {
       </Button>
       <br />
       <hr />
-      * Si no tenés whatsapp, no te preocupes, podés copiar el contenido del Carrito para enviarlo por email haciendo <Button onClick={copyToClipboard}>click aquí</Button>
+      * Si no tenés whatsapp, no te preocupes, podés copiar el contenido del Carrito para enviarlo por email haciendo
+      <Button disabled={cartState.items.length < 1 || !cartState.paymentMethod} onClick={copyToClipboard}>
+        click aquí
+      </Button>
     </div>
   )
 }
