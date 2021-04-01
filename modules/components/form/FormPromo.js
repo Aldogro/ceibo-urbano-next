@@ -12,16 +12,19 @@ import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 
 import app from '../../../firebase/firebase.config'
+import { Typography } from '@material-ui/core'
 
 const FormPromo = ({ promo = {}, onSubmit }) => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
+  const [partialPrice, setPartialPrice] = useState('')
   const [cols, setCols] = useState('')
   const [discount, setDiscount] = useState('')
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
   const [products, setProducts] = useState([])
-
+  
+  const classes = useStyles()
   const router = useRouter()
 
   const handleOnSubmit = (e) => {
@@ -29,6 +32,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     onSubmit({
       name,
       price,
+      partialPrice,
       cols,
       discount,
       picture,
@@ -41,6 +45,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     if (Object.keys(promo).length !== 0) {
       setName(promo.name)
       setPrice(promo.price)
+      setPartialPrice(promo.partialPrice)
       setCols(promo.cols)
       setDiscount(promo.discount)
       setPicture(promo.picture)
@@ -60,8 +65,6 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
   const onRemoveProduct = (product) => {
     setProducts(products.filter(_product => _product !== product))
   }
-
-  const classes = useStyles()
 
   const onFileChanges = (files) => {
     if (files.length) {
@@ -89,6 +92,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     products.forEach(product => {
       temp += product.price
     })
+    setPartialPrice(temp)
     setPrice(Math.ceil(temp - ((discount * temp) / 100)))
   }
 
@@ -151,8 +155,9 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               />
             </Grid>
             <Grid item xs={12} md={12} className={classes.products}>
+              <Typography>Productos</Typography>
               {products.map((product, index) => (
-                <Grid container spacing={3} cols={1} key={index}>
+                <Grid className={classes.productContainer} container cols={1} key={index}>
                   <Grid item xs={12} md={7}>
                     <TextField
                       className={classes.fullWidth}
@@ -172,13 +177,13 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                     />
                   </Grid>
                   <Grid item xs={12} md={1}>
-                    <IconButton onClick={() => onRemoveProduct(product)}>
+                    <IconButton className={classes.removeProduct} onClick={() => onRemoveProduct(product)}>
                       <ClearIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
               ))}
-              <Button onClick={addProduct}>Agregar Producto</Button>
+              <Button className={classes.addProduct} color="primary" onClick={addProduct}>Agregar Producto</Button>
             </Grid>
             <Grid item xs={12} md={6}>
               <DropzoneArea
@@ -245,5 +250,23 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
     float: 'right',
     marginLeft: 16,
+  },
+  productContainer: {
+    padding: theme.spacing(0, 2),
+    '&:nth-child(even)': {
+      background: theme.palette.lightGreen.main,
+    },
+  },
+  addProduct: {
+    marginTop: theme.spacing(2),
+    float: 'right',
+  },
+  removeProduct: {
+    color: theme.palette.error.light,
+    float: 'right',
+    paddingRight: 0,
+    [theme.breakpoints.up('sm')]: {
+      paddingRight: 1,
+    },
   },
 }))

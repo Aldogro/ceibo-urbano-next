@@ -12,6 +12,7 @@ export const ActionType = {
   REMOVE_AMOUNT: 'REMOVE_AMOUNT',
   REMOVE_ITEM: 'REMOVE_ITEM',
   SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
+  CLEAR_CART: 'CLEAR_CART',
 }
 
 const reducer = (state, action) => {
@@ -61,6 +62,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         paymentMethod: action.payload,
+      }
+    case ActionType.CLEAR_CART:
+      return {
+        paymentMethod: null,
+        items: [],
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)

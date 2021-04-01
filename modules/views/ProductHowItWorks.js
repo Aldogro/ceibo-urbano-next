@@ -30,7 +30,7 @@ function ProductHowItWorks(props) {
                   alt="plant-leaf"
                   className={classes.image}
                 />
-                <Typography variant="h5" align="center">
+                <Typography className={classes.description} variant="h5" align="center">
                   Macetas coloridas y resistentes
                 </Typography>
               </div>
@@ -43,7 +43,7 @@ function ProductHowItWorks(props) {
                   alt="sprout-seed"
                   className={classes.image}
                 />
-                <Typography variant="h5" align="center">
+                <Typography className={classes.description} variant="h5" align="center">
                   Envíos a domicilio.
                 </Typography>
               </div>
@@ -56,7 +56,7 @@ function ProductHowItWorks(props) {
                   alt="cactus"
                   className={classes.image}
                 />
-                <Typography variant="h5" align="center">
+                <Typography className={classes.description} variant="h5" align="center">
                   Materias primas de primera calidad
                 </Typography>
               </div>
@@ -93,7 +93,21 @@ const styles = (theme) => ({
     padding: theme.spacing(0, 5),
   },
   title: {
-    marginBottom: theme.spacing(4),
+    textAlign: 'center',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    fontWeight: 700,
+    fontSize: '18px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '24px',
+    },
+  },
+  description: {
+    textAlign: 'center',
+    fontSize: '18px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '24px',
+    },
   },
   number: {
     fontSize: 24,

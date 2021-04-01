@@ -17,7 +17,7 @@ function ProductSmokingHero(props) {
         </Typography>
       </Button>
       <Typography variant="subtitle1" className={classes.link}>
-        No necesitás crear una cuenta, ni registrarte, o ingresar datos personales.
+        No necesitás crear una cuenta, registrarte, o ingresar datos personales.
       </Typography>
       <Stepper />
     </Container>

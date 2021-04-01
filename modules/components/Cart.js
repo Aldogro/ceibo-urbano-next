@@ -5,6 +5,7 @@ import { useCart, ActionType } from '../../services/Cart.context'
 import { useSnackbar } from 'notistack'
 
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -49,21 +50,18 @@ const Cart = () => {
     return total
   }
 
-  const generateTextForWhatsapp = () => {
-    let temp = '¡Hola!, mi pedido:%0A%0A'
-    cartState.items.forEach(item => {
-      temp += `_*${item.name}*_: $${item.price} x${item.amount} - _*$${item.price * item.amount}*_%0A`
+  const clearCart = () => {
+    cartDispatch({
+      type: ActionType.CLEAR_CART,
     })
-    temp += `%0AMétodo de pago: *${cartState.paymentMethod}*%0A%0A*Precio TOTAL $${getTotal()}*`
-    return temp
   }
 
-  const generateTextForEmail = () => {
-    let temp = '¡Hola!, mi pedido:\n\n'
+  const generateText = (br) => {
+    let temp = `¡Hola!, mi pedido:${br}${br}`
     cartState.items.forEach(item => {
-      temp += `${item.name}: $${item.price} x${item.amount} - $${item.price * item.amount}\n`
+      temp += `${item.name}: $${item.price} x${item.amount} - $${item.price * item.amount}${br}`
     })
-    temp += `\nMétodo de pago: ${cartState.paymentMethod}\n\nPrecio TOTAL $${getTotal()}`
+    temp += `${br}Método de pago: ${cartState.paymentMethod}${br}${br}Precio TOTAL $${getTotal()}`
     return temp
   }
 
@@ -75,7 +73,7 @@ const Cart = () => {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generateTextForEmail())
+    navigator.clipboard.writeText(generateText('\n'))
       .then(() => enqueueSnackbar('Se ha copiado correctamente el contenido del carrito', { variant: 'success'}))
       .catch(() => enqueueSnackbar('Ocurrió un error al intentar copiar el contenido del carrito', { variant: 'error'}))
   }
@@ -85,22 +83,28 @@ const Cart = () => {
       { cartState.items.length > 0
         ? cartState.items.map((item) => {
           return (
-            <div className={classes.cartItem} key={item.id}>
-              <p>{item.name}</p>
-              <p>${item.price}</p>
-              <p>
-                <IconButton onClick={() => onAmountRemove(item)}>
+            <Grid container cols={1} className={classes.cartItem} key={item.id}>
+              <Grid item xs={4} lg={4}>
+                <p className={classes.itemText}>{item.name}</p>
+              </Grid>
+              <Grid item xs={2} lg={2}>
+                <p className={classes.itemPrice}>${item.price}</p>
+              </Grid>
+              <Grid item xs={5} lg={5}>
+                <IconButton className={classes.modifyItem} onClick={() => onAmountRemove(item)}>
                   <RemoveCircleOutlineIcon />
                 </IconButton>
                 {item.amount}
-                <IconButton onClick={() => onAmountAdd(item)}>
+                <IconButton className={classes.modifyItem} onClick={() => onAmountAdd(item)}>
                   <AddCircleOutlineIcon />
                 </IconButton>
-              </p>
-              <IconButton onClick={() => onRemoveItem(item)}>
-                <ClearIcon />
-              </IconButton>
-            </div>
+              </Grid>
+              <Grid item xs={1} lg={1}>
+                <IconButton className={classes.removeItem} onClick={() => onRemoveItem(item)}>
+                  <ClearIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           )
         })
         : <p>El carrito está vacío</p>
@@ -114,9 +118,18 @@ const Cart = () => {
       </RadioGroup>
       * Selecciona algún método de pago para poder realizar el pedido.
       <hr />
+      { !cartState.items.length < 1 || cartState.paymentMethod
+        ?
+        <Button onClick={() => clearCart()}>
+          Limpiar carrito
+        </Button>
+        : null
+      }
+      <br />
       <br />
       Envíos gratis en Rosario con tu compra superior a $500 🎉🚛🚀
-      <br /><br/>
+      <br />
+      <br/>
       <Button
         color="primary"
         variant="contained"
@@ -124,7 +137,7 @@ const Cart = () => {
         disabled={cartState.items.length < 1 || !cartState.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=${generateTextForWhatsapp()}`}
+        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=${generateText('%0A')}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
@@ -153,6 +166,27 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     width: '25%',
+  },
+  modifyItem: {
+    padding: theme.spacing(0, 1),
+  },
+  removeItem: {
+    padding: theme.spacing(0, 1),
+    color: theme.palette.error.main,
+  },
+  itemText: {
+    fontSize: '12px',
+    textAlign: 'left',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '14px',
+    },
+  },
+  itemPrice: {
+    fontSize: '12px',
+    textAlign: 'right',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '14px',
+    },
   },
   send: {
     display: 'flex',

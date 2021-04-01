@@ -83,10 +83,10 @@ const ListProductPage = () => {
           <div className={classes.root}>
             <Typography className={classes.title} variant="h4">
               Listado de productos
-              <Button color="primary" className={classes.floatRight} onClick={() => router.push('/products/add')}>
-                Agregar Producto
-              </Button>
             </Typography>
+            <Button color="primary" className={classes.addButton} onClick={() => router.push('/products/add')}>
+              Agregar Producto
+            </Button>
             <Dialog
               isOpen={dialogOpen}
               handleConfirm={() => confirmDelete()}
@@ -145,8 +145,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
-  floatRight: {
-    float: 'right',
+  addButton: {
+    marginBottom: '2rem',
   },
   gridList: {
     width: 1200,
@@ -162,8 +162,14 @@ const useStyles = makeStyles((theme) => ({
     color: 'rgba(255, 255, 255, 0.54)',
   },
   title: {
-    marginTop: '2rem',
-    marginBottom: '2rem',
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    fontSize: '18px',
+    [theme.breakpoints.up('sm')]: {
+      marginTop: '2rem',
+      marginBottom: '1rem',
+      fontSize: '24px',
+    },
   },
   productName: {
     display: 'inline-block',

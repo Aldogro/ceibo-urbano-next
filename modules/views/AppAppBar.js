@@ -24,6 +24,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/List'
 import LoyaltyIcon from '@material-ui/icons/Loyalty'
 import ClearIcon from '@material-ui/icons/Clear'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
 import app from '../../firebase/firebase.config'
@@ -96,9 +97,10 @@ export default function PersistentDrawerLeft({ children }) {
           { auth.user.email
             ?
             <div className={classes.user}>
-              <Typography noWrap className={classes.userName}>
+              {/* <Typography noWrap className={classes.userName}>
                 {auth.user.email}
-              </Typography>
+              </Typography> */}
+              <AccountCircleIcon />
               <IconButton className={classes.logout} onClick={handleLogout}>
                 <ClearIcon />
               </IconButton>
@@ -197,8 +199,11 @@ const drawerWidth = 300
 const useStyles = makeStyles((theme) => ({
   bg: {
     backgroundColor: theme.palette.secondary.main,
-    height: 100,
     marginBottom: 0,
+    height: 60,
+    [theme.breakpoints.up('sm')]: {
+      height: 100,
+    },
   },
   brand: {
     marginLeft: 16,
@@ -267,7 +272,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    minHeight: '100px',
+    minHeight: 60,
+    [theme.breakpoints.up('sm')]: {
+      minHeight: 100,
+    },
     justifyContent: 'space-between',
   },
   cartHeader: {
@@ -286,7 +294,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around',
   },
   cartBody: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(4),
+    },
   },
   content: {
     flexGrow: 1,

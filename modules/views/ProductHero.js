@@ -45,15 +45,26 @@ const styles = (theme) => ({
   },
   button: {
     minWidth: 200,
+    textAlign: 'center',
+    fontSize: '12px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
   },
   h2: {
     marginTop: '30px',
+    fontSize: '30px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '50px',
+    },
   },
   h5: {
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(4),
+    fontSize: '20px',
     [theme.breakpoints.up('sm')]: {
       marginTop: theme.spacing(10),
+      fontSize: '35px',
     },
   },
   more: {

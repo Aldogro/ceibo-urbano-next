@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { green, red } from '@material-ui/core/colors'
+import { red, lightGreen } from '@material-ui/core/colors'
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -16,6 +16,9 @@ const theme = createMuiTheme({
     background: {
       default: '#fff',
     },
+    lightGreen: {
+      main: lightGreen[100]
+    }
   },
 })
 

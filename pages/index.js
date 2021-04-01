@@ -14,11 +14,11 @@ export default function Index() {
     <React.Fragment>
       <AppAppBar />
       <ProductHero />
-      <ProductCategories />
+      <PromoCategories />
       <ProductValues />
       <ProductSmokingHero />
       <ProductHowItWorks />
-      <PromoCategories />
+      <ProductCategories />
       {/* <ProductCTA /> */}
       <AppFooter />
     </React.Fragment>

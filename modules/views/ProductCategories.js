@@ -91,11 +91,11 @@ function ProductCategories(props) {
                     title={product.name}
                   />
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {product.name}
-                    </Typography>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography className={classes.price} gutterBottom variant="h5" component="h2">
                       ${product.price}
+                    </Typography>
+                    <Typography className={classes.name} gutterBottom variant="h5" component="h2">
+                      {product.name}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                       {product.description}
@@ -103,15 +103,14 @@ function ProductCategories(props) {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary" onClick={() => handleOnAddToCart(product)}>
+                  <Button size="small" color="primary" variant="outlined" onClick={() => handleOnAddToCart(product)}>
                     Agregar al carrito
-                    <AddCircleIcon color="primary" className={classes.chip} />
+                    {
+                      getCartItems(product)
+                      ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
+                      : null
+                    }
                   </Button>
-                  {
-                    getCartItems(product)
-                    ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
-                    : null
-                  }
                 </CardActions>
               </Card>
             </Grid>
@@ -206,6 +205,9 @@ const styles = (theme) => ({
     transition: theme.transitions.create('opacity'),
   },
   chip: {
+    right: -20,
+    top: -20,
+    position: 'absolute',
     marginLeft: theme.spacing(2),
   },
   media: {
@@ -216,8 +218,23 @@ const styles = (theme) => ({
     color: '#fff',
   },
   title: {
+    fontSize: '18px',
+    fontWeight: 700,
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '30px',
+    },
     marginBottom: theme.spacing(4),
-  }
+  },
+  price: {
+    float: 'right',
+    fontWeight: 700,
+  },
+  name: {
+    fontSize: '16px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '24px',
+    },
+  },
 })
 
 

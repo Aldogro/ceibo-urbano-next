@@ -2,6 +2,10 @@ import React, { useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { usePromo, ActionType as PromoActionType } from '../../services/Promo.context'
 import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+
+import Skeleton from '@material-ui/lab/Skeleton'
+
+import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
@@ -14,7 +18,7 @@ function PromoCategories(props) {
   const [promoState, promoDispatch] = usePromo()
   const [cartState, cartDispatch] = useCart()
 
-  const skeletons = [0, 1, 2]
+  const skeletons = ['a', 'b', 'c']
 
   useEffect(() => {
     app.firestore().collection('promos')
@@ -39,57 +43,63 @@ function PromoCategories(props) {
 
   return (
     <Container className={classes.root} component="section">
-      <Typography variant="h4" marked="center" align="center" component="h2">
+      <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
         ¡Aprovechá todas nuestras promociones!
       </Typography>
-      <div className={classes.images}>
-        {promoState.promos.map((promo) => (
-          <div
-            key={promo.name}
-            className={classes.imageWrapper}
-            style={{
-              width: '33.333%',
-            }}
-          >
-            <div
-              className={classes.imageSrc}
-              style={{
-                backgroundImage: `url(${promo.picture})`,
-              }}
-            />
-            <div className={classes.imageBackdrop} />
-            <div className={classes.imageButton}>
-              <Typography
-                component="h3"
-                variant="h6"
-                color="inherit"
-                className={classes.imageTitle}
-              >
-                {promo.name}
-                <div className={classes.imageMarked} />
-              </Typography>
-              <Typography
-                component="h3"
-                variant="h6"
-                color="inherit"
-              >
-                ${promo.price}
-              </Typography>
-              <Typography>
-                <div className={classes.description}>{promo.description}</div>
-              </Typography>
-              <Button color="secondary" onClick={() => handleOnAddToCart(promo)}>
-                Agregar al carrito
-                {
-                  getCartItems(promo)
-                  ? <Chip className={classes.chip} color="primary" label={getCartItems(promo)} />
-                  : null
-                }
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <Grid container>
+        {!promoState.promos.length
+          ?
+          skeletons.map((skeleton) => (
+            <Grid item xs={12} lg={4} key={skeleton}>
+              <Skeleton variant="rect" width={'100%'} height={118} />
+              <Skeleton variant="text" />
+              <Skeleton width="60%" />
+              <br/>
+              <Skeleton />
+            </Grid>
+          ))
+          :
+          promoState.promos.map((promo) => (
+            <Grid key={promo.name} item xs={12} md={promo.cols}>
+              <div className={classes.imageSrc} style={{ backgroundImage: `url(${promo.picture})`}}>
+                <div className={classes.backdrop}></div>
+                <Typography component="h3" variant="h6" color="inherit" className={classes.imageTitle} >
+                  {promo.name}
+                </Typography>
+                <Typography className={classes.price} component="h3" variant="h6" color="inherit">
+                  ${promo.price}
+                </Typography>
+                <Typography className={classes.discount}>
+                  {promo.discount}% OFF
+                </Typography>
+                <div className={classes.products}>
+                  {promo.products.map((product) => (
+                    <Typography className={classes.product}>
+                      {product.name} - ${product.price}
+                    </Typography>
+                  ))}
+                  {
+                    promo.partialPrice
+                    ?
+                      <Typography className={classes.partialPrice}>
+                        ¡Ahorrás {promo.partialPrice - promo.price}!
+                      </Typography>
+                    : null
+                  }
+                </div>
+                <Button color="secondary" variant="outlined" onClick={() => handleOnAddToCart(promo)}>
+                  Agregar al carrito
+                  {
+                    getCartItems(promo)
+                    ? <Chip className={classes.chip} color="primary" label={getCartItems(promo)} />
+                    : null
+                  }
+                </Button>
+              </div>
+            </Grid>
+          ))
+        }
+      </Grid>
     </Container>
   )
 }
@@ -103,81 +113,75 @@ const styles = (theme) => ({
     marginTop: theme.spacing(8),
     marginBottom: theme.spacing(4),
   },
-  images: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexWrap: 'wrap',
+  title: {
+    fontSize: '18px',
+    fontWeight: 700,
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '30px',
+    },
+    marginBottom: theme.spacing(4),
   },
-  imageWrapper: {
-    position: 'relative',
-    display: 'block',
-    borderRadius: 0,
-    height: '350px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100% !important',
-    },
-    '&:hover': {
-      zIndex: 1,
-    },
-    '&:hover $imageBackdrop': {
-      opacity: 0.15,
-    },
-    '&:hover $imageMarked': {
-      opacity: 0,
-    },
-    '&:hover $imageTitle': {
-      border: '4px solid currentColor',
-    },
-  },
-  imageButton: {
+  backdrop: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#00000055',
     position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+  },
+  imageSrc: {
+    width: '100%',
+    height: '100%',
+    padding: theme.spacing(3, 0),
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.common.white,
-  },
-  imageSrc: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center 40%',
-  },
-  imageBackdrop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    background: theme.palette.common.black,
-    opacity: 0.5,
-    transition: theme.transitions.create('opacity'),
+    position: 'relative',
+    '&:hover': {
+      opacity: 0.9,
+    },
   },
   imageTitle: {
     position: 'relative',
+    color: 'white',
+    width: '100%',
+    textAlign: 'center',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px 14px`,
-    marginBottom: '12px'
   },
-  description: {
-    padding: theme.spacing(0, 2),
+  price: {
+    fontSize: '30px',
+    color: 'white',
+    width: '100%',
+    textAlign: 'center',
+    zIndex: 3,
   },
-  imageMarked: {
-    height: 3,
-    width: 18,
-    background: theme.palette.common.white,
-    position: 'absolute',
-    bottom: -2,
-    left: 'calc(50% - 9px)',
-    transition: theme.transitions.create('opacity'),
+  discount: {
+    fontSize: '25px',
+    color: 'white',
+    width: '100%',
+    textAlign: 'center',
+    zIndex: 3,
+  },
+  products: {
+    margin: theme.spacing(2, 0),
+    zIndex: 3,
+  },
+  product: {
+    color: 'white',
+    zIndex: 3,
+  },
+  partialPrice: {
+    color: 'white',
+    marginTop: theme.spacing(3),
+    zIndex: 3,
+    textAlign: 'center',
+    fontSize: '20px',
   },
   chip: {
+    position: 'absolute',
+    right: -20,
+    top: -20,
     marginLeft: theme.spacing(2),
   }
 })

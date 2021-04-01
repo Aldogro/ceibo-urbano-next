@@ -37,8 +37,8 @@ const styles = (theme) => ({
     },
   },
   container: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(14),
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(10),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

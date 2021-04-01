@@ -27,7 +27,7 @@ function ProductValues(props) {
               <Typography variant="h6" className={classes.title}>
                 Semillas
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" className={classes.description}>
                 Sabemos lo importante que es tener semillas de buena calidad
               </Typography>
             </div>
@@ -42,7 +42,7 @@ function ProductValues(props) {
               <Typography variant="h6" className={classes.title}>
                 Fertilizantes naturales
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" className={classes.description}>
                 No utilizamos productos químicos industriales. Todos nuestros fertilizantes son orgánicos
               </Typography>
             </div>
@@ -57,7 +57,7 @@ function ProductValues(props) {
               <Typography variant="h6" className={classes.title}>
                 Herbicidas y plaguicidas
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" className={classes.description}>
                 Todo en nuestra huerta es orgánico. Incluso los plaguicidas y herbicidas.
               </Typography>
             </div>
@@ -79,8 +79,8 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.secondary.light,
   },
   container: {
-    marginTop: theme.spacing(15),
-    marginBottom: theme.spacing(30),
+    marginTop: theme.spacing(20),
+    marginBottom: theme.spacing(20),
     display: 'flex',
     position: 'relative',
   },
@@ -94,8 +94,20 @@ const styles = (theme) => ({
     height: 55,
   },
   title: {
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(5),
+    textAlign: 'center',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    fontSize: '18px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '24px',
+    },
+  },
+  description: {
+    textAlign: 'center',
+    fontSize: '16px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
   },
   curvyLines: {
     pointerEvents: 'none',

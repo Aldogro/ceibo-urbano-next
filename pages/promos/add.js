@@ -46,7 +46,13 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '90px',
   },
   title: {
-    marginTop: '2rem',
-    marginBottom: '2rem',
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    fontSize: '18px',
+    [theme.breakpoints.up('sm')]: {
+      marginTop: '2rem',
+      marginBottom: '1rem',
+      fontSize: '24px',
+    },
   },
 }))
