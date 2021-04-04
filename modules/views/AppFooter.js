@@ -46,7 +46,7 @@ export default function AppFooter() {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Grid className={classes.textCenter}  item>
-                <img height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
+                <img id="footer-ceibo" height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
                 <p className={classes.title}>CEIBO URBANO</p>
                 <p className={classes.subtitle}>Vivero</p>
               </Grid>

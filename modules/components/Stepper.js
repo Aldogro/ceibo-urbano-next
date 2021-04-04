@@ -50,14 +50,14 @@ export default function VerticalLinearStepper() {
           <TimelineItem key={step.title + index}>
             
             <TimelineOppositeContent>
-              <Typography variant="p" component="h4">{step.title}</Typography>
+              <Typography variant="h6" component="h4">{step.title}</Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="primary" className={classes.dot}>{index + 1}</TimelineDot>
               {step.connector ? <TimelineConnector className={classes.connector} /> : null}
             </TimelineSeparator>
             <TimelineContent>
-              <Typography variant="p" color="textSecondary">{step.text}</Typography>
+              <Typography variant="h6" color="textSecondary">{step.text}</Typography>
             </TimelineContent>
           </TimelineItem>
         ))}

@@ -11,7 +11,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -24,9 +24,10 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../modules/views/AppAppBar'
 import { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import { productTypes } from '../../utils/catalog'
 
 const ListProductPage = () => {
-  const classes = useStyles();
+  const classes = useStyles()
   const [auth, authDispatch] = useAuth()
   const [productState, productDispatch] = useProduct()
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -95,8 +96,8 @@ const ListProductPage = () => {
             />
             <Grid container spacing={2}>
               {productState?.products.map(product => (
-                <Grid item xs={12} lg={+product.cols} key={product.id}>
-                  <Card>
+                <Grid item xs={12} lg={+product.cols} key={product.name}>
+                  <Card className={classes.card}>
                     <CardActionArea>
                       <CardMedia
                         className={classes.media}
@@ -104,11 +105,14 @@ const ListProductPage = () => {
                         title={product.name}
                       />
                       <CardContent>
+                        <Typography className={classes.productPrice} gutterBottom variant="h4" component="h2">
+                          ${product.price}
+                        </Typography>
                         <Typography className={classes.productName} gutterBottom variant="h5" component="h2">
                           {product.name}
                         </Typography>
-                        <Typography className={classes.productPrice} gutterBottom variant="h4" component="h2">
-                          ${product.price}
+                        <Typography className={classes.productType} color="textSecondary">
+                          {productTypes[product.type]}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                           {product.description}
@@ -161,6 +165,12 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     color: 'rgba(255, 255, 255, 0.54)',
   },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
   title: {
     marginTop: '1rem',
     marginBottom: '1rem',
@@ -173,6 +183,12 @@ const useStyles = makeStyles((theme) => ({
   },
   productName: {
     display: 'inline-block',
+    width: '70%',
+    marginBottom: 0,
+  },
+  productType: {
+    fontSize: 12,
+    marginBottom: theme.spacing(1),
   },
   productPrice: {
     display: 'inline-block',

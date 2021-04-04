@@ -9,6 +9,8 @@
     "clsx": "latest",
     "final-form": "^4.20.1",
     "firebase": "^8.3.0",
+    "import": "0.0.6",
+    "material-auto-rotating-carousel": "^3.0.2",
     "material-ui-dropzone": "^3.5.0",
     "next": "latest",
     "notistack": "^1.0.5",
@@ -16,6 +18,8 @@
     "react": "latest",
     "react-dom": "latest",
     "react-final-form": "^6.5.2",
+    "react-material-ui-carousel": "^2.2.2",
+    "react-swipeable-views": "^0.13.9",
     "validator": "^13.5.2"
   },
   "scripts": {

@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react'
+
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import Switch from '@material-ui/core/Switch'
 import TextField from '@material-ui/core/TextField'
 import { DropzoneArea } from 'material-ui-dropzone'
-import Switch from '@material-ui/core/Switch'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
+
 import { makeStyles } from '@material-ui/core/styles'
-import app from '../../../firebase/firebase.config'
 import { useRouter } from 'next/router'
+
+import { productTypeOptions } from '../../../utils/catalog'
+import app from '../../../firebase/firebase.config'
 
 const FormProduct = ({ product = {}, onSubmit }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [price, setPrice] = useState('')
+  const [price, setPrice] = useState(0)
   const [cols, setCols] = useState('')
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
+  const [type, setType] = useState(null)
 
   const router = useRouter()
 
@@ -24,10 +32,11 @@ const FormProduct = ({ product = {}, onSubmit }) => {
     onSubmit({
       name,
       description,
-      price,
+      price: +price,
       cols,
       picture,
       publish,
+      type,
     })
   }
 
@@ -35,10 +44,11 @@ const FormProduct = ({ product = {}, onSubmit }) => {
     if (Object.keys(product).length !== 0) {
       setName(product.name)
       setDescription(product.description)
-      setPrice(product.price)
+      setPrice(+product.price)
       setCols(product.cols)
       setPicture(product.picture)
       setPublish(product.publish)
+      setType(product.type)
     }
   }, [product])
 
@@ -50,6 +60,10 @@ const FormProduct = ({ product = {}, onSubmit }) => {
         .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
         .then(url => setPicture(url))
     }
+  }
+
+  const isValid = () => {
+    return picture.length > 0
   }
 
   return (
@@ -104,8 +118,24 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 label="Precio"
                 type="number"
                 value={price}
-                onChange={({ target }) => setPrice(target.value)}
+                onChange={({ target }) => setPrice(+target.value)}
               />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
+              <Select
+                className={classes.fullWidth}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={type}
+                onChange={({ target }) => setType(target.value)}
+              >
+                {productTypeOptions.map(type => (
+                  <MenuItem key={type.key} value={type.key}>
+                    {type.label}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
             <Grid item xs={12} lg={6}>
               <DropzoneArea
@@ -132,6 +162,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
           <Grid item xs={12} className={classes.actions}>
             <Button
               className={classes.floatRight}
+              disabled={!isValid()}
               variant="contained"
               type="submit"
               color="primary"

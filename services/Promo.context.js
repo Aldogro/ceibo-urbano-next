@@ -6,12 +6,14 @@ export const PromoStateContext = React.createContext({})
 const initialState = {
   promo: {},
   promos: [],
+  maxDiscount: 0,
 }
 
 export const ActionType = {
   CREATE_PROMO: 'CREATE_PROMO',
   SET_PROMO: 'SET_PROMO',
   SET_PROMOS: 'SET_PROMOS',
+  GET_MAX_DISCOUNT: 'GET_MAX_DISCOUNT', 
 }
 
 
@@ -32,6 +34,15 @@ const reducer = (state, action) => {
       return {
         ...state,
         promos: action.payload || [],
+      }
+    case ActionType.GET_MAX_DISCOUNT:
+      let temp = 0
+      state.promos.forEach(promo => {
+        if (promo.discount < temp) { temp = promo.discount }
+      })
+      return {
+        ...state,
+        maxDiscount: temp * -1
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)

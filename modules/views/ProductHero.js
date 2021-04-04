@@ -4,9 +4,11 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Typography from '../components/Typography'
 import ProductHeroLayout from './ProductHeroLayout'
+import { usePromo, ActionType } from '../../services/Promo.context'
 
 function ProductHero(props) {
   const { classes } = props
+  const [promoState, promoDispatch] = usePromo()
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
@@ -16,7 +18,7 @@ function ProductHero(props) {
         ¡Embellecé tu jardín!
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-        Disfrutá de nuestras ofertas ahorrando hasta un 50%
+        {promoState.maxDiscount > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${promoState.maxDiscount}%` : ''}
       </Typography>
       <Button
         color="secondary"
@@ -24,6 +26,7 @@ function ProductHero(props) {
         size="large"
         className={classes.button}
         component="a"
+        href="#footer-ceibo"
       >
         Comunicate con nosotros
       </Button>

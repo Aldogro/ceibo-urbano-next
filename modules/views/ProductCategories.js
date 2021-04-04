@@ -1,44 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { useProduct, ActionType as ProductActionType } from '../../services/Product.context'
-import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 import Grid from '@material-ui/core/Grid'
-import Backdrop from '@material-ui/core/Backdrop'
-import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardMedia from '@material-ui/core/CardMedia'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import Button from '@material-ui/core/Button'
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import ProductItem from '../views/ProductItem'
 import Container from '@material-ui/core/Container'
 import Typography from '../components/Typography'
-import Chip from '@material-ui/core/Chip'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
 import app from '../../firebase/firebase.config'
+
+import { orderByOptions, productTypeOptions } from '../../utils/catalog'
 
 function ProductCategories(props) {
   const { classes } = props
   const [productState, productDispatch] = useProduct()
-  const [cartState, cartDispatch] = useCart()
-  const [fullScreenImage, setFullScreenImage] = useState(false)
-  const [selectedImage, setSelectedImage] = useState('')
+  const [type, setType] = useState('all')
+  const [orderBy, setOrderBy] = useState(['price', 'asc'])
 
   const skeletons = ['a', 'b', 'c']
 
   useEffect(() => {
     getProducts()
-  }, [])
-
-  const handleFullSizeImage = (image) => {
-    setSelectedImage(image)
-    setFullScreenImage(true)
-  }
+  }, [orderBy])
 
   const getProducts = () => {
-    app.firestore().collection('products')
+    app.firestore().collection('products').orderBy(orderBy[0], orderBy[1])
     .get()
     .then(snapshot => productDispatch({
       type: ProductActionType.SET_PRODUCTS,
@@ -46,26 +36,45 @@ function ProductCategories(props) {
     }))
   }
 
-  const handleOnAddToCart = (product) => {
-    cartDispatch({
-      type: CartActionType.ADD_ITEM,
-      payload: product,
-    })
-  }
-
-  const getCartItems = (product) => {
-    const item = cartState.items.filter(item => item.id === product.id)
-    return item[0]?.amount
-  }
-
   return (
     <Container className={classes.root} component="section">
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
         ¡Aprovechá todos nuestros productos!
       </Typography>
-      <Backdrop className={classes.backdrop} open={fullScreenImage} onClick={() => setFullScreenImage(false)}>
-        <img src={selectedImage} />
-      </Backdrop>
+      <Grid container className={classes.filters} spacing={3} cols={1}>
+        <Grid item xs={12} lg={4}>
+          <InputLabel id="label-filter-by-type" className={classes.filterLabel}>Filtrar por tipo</InputLabel>
+          <Select
+            className={classes.fullWidth}
+            labelId="label-filter-by-type"
+            id="filter-by-type-select"
+            value={type}
+            onChange={({ target }) => setType(target.value)}
+          >
+            {productTypeOptions.map(type => (
+              <MenuItem key={type.key} value={type.key}>
+                {type.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        <Grid item xs={12} lg={4}>
+          <InputLabel id="label-order-by" className={classes.filterLabel}>Ordenar por</InputLabel>
+          <Select
+            className={classes.fullWidth}
+            labelId="label-order-by"
+            id="order-by-select"
+            value={orderBy}
+            onChange={({ target}) => setOrderBy(target.value.split(','))}
+          >
+            {orderByOptions.map(orderBy => (
+              <MenuItem key={orderBy.key} value={orderBy.key}>
+                {orderBy.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+      </Grid>
       <Grid container spacing={2}>
         {!productState.products.length
           ?
@@ -80,40 +89,9 @@ function ProductCategories(props) {
           ))
           :
           productState.products.map((product) => (
-            product.publish
+            product.publish && (type !== 'all' ? product.type === type : true)
             ?
-            <Grid item xs={12} lg={+product.cols} key={product.id}>
-              <Card>
-                <CardActionArea onClick={() => handleFullSizeImage(product.picture)}>
-                  <CardMedia
-                    className={classes.media}
-                    image={product.picture}
-                    title={product.name}
-                  />
-                  <CardContent>
-                    <Typography className={classes.price} gutterBottom variant="h5" component="h2">
-                      ${product.price}
-                    </Typography>
-                    <Typography className={classes.name} gutterBottom variant="h5" component="h2">
-                      {product.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      {product.description}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button size="small" color="primary" variant="outlined" onClick={() => handleOnAddToCart(product)}>
-                    Agregar al carrito
-                    {
-                      getCartItems(product)
-                      ? <Chip className={classes.chip} color="primary" label={getCartItems(product)} />
-                      : null
-                    }
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+            <ProductItem product={product} key={product.id} />
             : null
           ))
         }
@@ -132,90 +110,8 @@ const styles = (theme) => ({
     marginTop: theme.spacing(8),
     marginBottom: theme.spacing(4),
   },
-  images: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  imageWrapper: {
-    position: 'relative',
-    display: 'block',
-    padding: 0,
-    borderRadius: 0,
-    height: '40vh',
-    [theme.breakpoints.down('sm')]: {
-      width: '100% !important',
-    },
-    '&:hover': {
-      zIndex: 1,
-    },
-    '&:hover $imageBackdrop': {
-      opacity: 0.15,
-    },
-    '&:hover $imageMarked': {
-      opacity: 0,
-    },
-    '&:hover $imageTitle': {
-      border: '4px solid currentColor',
-    },
-  },
-  imageButton: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.common.white,
-  },
-  imageSrc: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center 40%',
-  },
-  imageBackdrop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    background: theme.palette.common.black,
-    opacity: 0.5,
-    transition: theme.transitions.create('opacity'),
-  },
-  imageTitle: {
-    position: 'relative',
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px 14px`,
-    marginBottom: '12px'
-  },
-  imageMarked: {
-    height: 3,
-    width: 18,
-    background: theme.palette.common.white,
-    position: 'absolute',
-    bottom: -2,
-    left: 'calc(50% - 9px)',
-    transition: theme.transitions.create('opacity'),
-  },
-  chip: {
-    right: -20,
-    top: -20,
-    position: 'absolute',
-    marginLeft: theme.spacing(2),
-  },
-  media: {
-    height: 140,
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+  fullWidth: {
+    width: '100%',
   },
   title: {
     fontSize: '18px',
@@ -225,16 +121,12 @@ const styles = (theme) => ({
     },
     marginBottom: theme.spacing(4),
   },
-  price: {
-    float: 'right',
-    fontWeight: 700,
+  filters: {
+    margin: theme.spacing(2, 0),
   },
-  name: {
-    fontSize: '16px',
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '24px',
-    },
-  },
+  filterLabel: {
+    marginBottom: theme.spacing(1),
+  }
 })
 
 

@@ -121,7 +121,7 @@ const Cart = () => {
       { !cartState.items.length < 1 || cartState.paymentMethod
         ?
         <Button onClick={() => clearCart()}>
-          Limpiar carrito
+          Vaciar carrito
         </Button>
         : null
       }

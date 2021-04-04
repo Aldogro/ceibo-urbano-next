@@ -16,13 +16,14 @@ import { Typography } from '@material-ui/core'
 
 const FormPromo = ({ promo = {}, onSubmit }) => {
   const [name, setName] = useState('')
-  const [price, setPrice] = useState('')
-  const [partialPrice, setPartialPrice] = useState('')
+  const [price, setPrice] = useState(0)
+  const [partialPrice, setPartialPrice] = useState(0)
   const [cols, setCols] = useState('')
-  const [discount, setDiscount] = useState('')
+  const [discount, setDiscount] = useState(0)
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
   const [products, setProducts] = useState([])
+  const [carousel, setCarousel] = useState([])
   
   const classes = useStyles()
   const router = useRouter()
@@ -31,28 +32,34 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     e.preventDefault()
     onSubmit({
       name,
-      price,
-      partialPrice,
+      price: +price,
+      partialPrice: +partialPrice,
       cols,
-      discount,
+      discount: +discount,
       picture,
       publish,
       products,
+      carousel,
     })
   }
 
   useEffect(() => {
     if (Object.keys(promo).length !== 0) {
       setName(promo.name)
-      setPrice(promo.price)
-      setPartialPrice(promo.partialPrice)
-      setCols(promo.cols)
-      setDiscount(promo.discount)
+      setPrice(+promo.price)
+      setPartialPrice(+promo.partialPrice)
+      setCols(+promo.cols)
+      setDiscount(+promo.discount)
       setPicture(promo.picture)
       setPublish(promo.publish)
       setProducts(promo.products)
+      setCarousel(promo.carousel)
     }
   }, [promo])
+
+  useEffect(() => {
+    getDiscount()
+  }, [price, products])
 
   const addProduct = () => {
     const product = [{
@@ -66,11 +73,21 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     setProducts(products.filter(_product => _product !== product))
   }
 
-  const onFileChanges = (files) => {
+  const onFileChanges = (files, isPrimary = false) => {
     if (files.length) {
-      app.storage().ref().child('/images').child(files[0].name).put(files[0])
-        .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
-        .then(url => setPicture(url))
+      const temp = carousel
+      files.forEach(file => {
+        app.storage().ref().child('/images').child(file.name).put(file)
+          .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
+          .then(url => {
+            if (isPrimary) {
+              setPicture(url)
+            } else {
+              temp.push(url)
+              setCarousel([...carousel])
+            }
+          })
+      })
     }
   }
 
@@ -84,16 +101,19 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
     let temp = products
     temp[index].price = +target.value
     setProducts(temp)
-    getTotalPrice()
+    getDiscount()
   }
 
-  const getTotalPrice = () => {
+  const getDiscount = () => {
     let temp = 0
     products.forEach(product => {
       temp += product.price
     })
-    setPartialPrice(temp)
-    setPrice(Math.ceil(temp - ((discount * temp) / 100)))
+    setDiscount(Math.ceil(((price * 100) / temp) - 100))
+  }
+
+  const onRemoveCarouselImage = (image) => {
+    setCarousel(carousel.filter(_image => _image !== image))
   }
 
   return (
@@ -136,28 +156,24 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               <TextField
                 className={classes.fullWidth}
                 id="discount"
-                label="Descuento %"
-                type="number"
-                value={discount}
-                onChange={({ target }) => {
-                  setDiscount(target.value)
-                  getTotalPrice()
-                }}
+                label={`${discount ? discount : 'Descuento'} % - Automático`}
+                disabled
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
                 className={classes.fullWidth}
                 id="Price"
-                label={`$${price} - automático`}
-                disabled
+                label="Precio"
+                value={price}
                 type="number"
+                onChange={({ target}) => setPrice(+target.value)}
               />
             </Grid>
             <Grid item xs={12} md={12} className={classes.products}>
               <Typography>Productos</Typography>
               {products.map((product, index) => (
-                <Grid className={classes.productContainer} container cols={1} key={index}>
+                <Grid className={classes.productContainer} container spacing={1} cols={1} key={index}>
                   <Grid item xs={12} md={7}>
                     <TextField
                       className={classes.fullWidth}
@@ -189,7 +205,9 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               <DropzoneArea
                 acceptedFiles={['image/*']}
                 filesLimit={1}
-                onChange={(files) => onFileChanges(files)}
+                maxFileSize={10000000}
+                dropzoneText="Imagen principal"
+                onChange={(files) => onFileChanges(files, true)}
                 onDelete={() => setPicture('')}
               />
             </Grid>
@@ -205,6 +223,30 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               </Grid>
               : <div />
             }
+            <Grid item xs={12} md={12}>
+              <DropzoneArea
+                acceptedFiles={['image/*']}
+                filesLimit={10}
+                maxFileSize={10000000}
+                dropzoneText="Imágenes para el carrusel"
+                onChange={(files) => onFileChanges(files)}
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Typography>Imágenes del carrusel</Typography>
+              {
+                carousel
+                ? carousel.map(image => (
+                    <div key={image} className={classes.carouselImageContainer}>
+                      <IconButton className={classes.removeCarouselImage} onClick={() => onRemoveCarouselImage(image)}>
+                        <ClearIcon />
+                      </IconButton>
+                      <img className={classes.carouselImage} src={image} />
+                    </div>
+                  ))
+                : null
+              }
+            </Grid>
           </Grid>
 
           <Grid item xs={12} className={classes.actions}>
@@ -268,5 +310,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       paddingRight: 1,
     },
+  },
+  carouselImageContainer: {
+    height: '100px',
+    display: 'inline-block',
+    position: 'relative',
+  },
+  carouselImage: {
+    padding: theme.spacing(2),
+    height: '100px',
+  },
+  removeCarouselImage: {
+    color: theme.palette.error.main,
+    position: 'absolute',
+    top: 5,
+    right: 5,
   },
 }))
