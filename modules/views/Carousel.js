@@ -8,7 +8,7 @@ const ImageCarousel = ({ open, setOpen, images }) => {
 
   return (
     <Backdrop className={classes.backdrop} open={open} onClick={() => setOpen(false)}>
-      <Carousel>
+      <Carousel className={classes.carousel}>
         {images
           ?
           images.map(image => (
@@ -28,7 +28,19 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  carousel: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '60%',
+      height: '400px',
+    },
+  },
   image: {
-    height: '100%',
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '100%',
+      height: '400px',
+      objectFit: 'contain'
+    },
   }
 }))

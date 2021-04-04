@@ -24,8 +24,9 @@ import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/List'
 import LoyaltyIcon from '@material-ui/icons/Loyalty'
 import ClearIcon from '@material-ui/icons/Clear'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
 
 import app from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
@@ -97,9 +98,6 @@ export default function PersistentDrawerLeft({ children }) {
           { auth.user.email
             ?
             <div className={classes.user}>
-              {/* <Typography noWrap className={classes.userName}>
-                {auth.user.email}
-              </Typography> */}
               <AccountCircleIcon />
               <IconButton className={classes.logout} onClick={handleLogout}>
                 <ClearIcon />
@@ -154,6 +152,12 @@ export default function PersistentDrawerLeft({ children }) {
               <ListItem className={classes.listItem} component="a">
                 <ListItemIcon><LoyaltyIcon className={classes.listItem} /></ListItemIcon>
                 <ListItemText primary="Promos" />
+              </ListItem>
+            </Link>
+            <Link href="/images">
+              <ListItem className={classes.listItem} component="a">
+                <ListItemIcon><PhotoLibraryIcon className={classes.listItem} /></ListItemIcon>
+                <ListItemText primary="Imágenes" />
               </ListItem>
             </Link>
           </List>
