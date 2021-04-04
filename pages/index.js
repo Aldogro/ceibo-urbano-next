@@ -4,7 +4,6 @@ import ProductHero from '../modules/views/ProductHero'
 import ProductValues from '../modules/views/ProductValues'
 import ProductCategories from '../modules/views/ProductCategories'
 import ProductHowItWorks from '../modules/views/ProductHowItWorks'
-import ProductCTA from '../modules/views/ProductCTA'
 import ProductSmokingHero from '../modules/views/ProductSmokingHero'
 import PromoCategories from '../modules/views/PromoCategories'
 import AppFooter from '../modules/views/AppFooter'
@@ -19,7 +18,6 @@ export default function Index() {
       <ProductSmokingHero />
       <ProductHowItWorks />
       <ProductCategories />
-      {/* <ProductCTA /> */}
       <AppFooter />
     </React.Fragment>
   )

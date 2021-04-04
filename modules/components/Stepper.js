@@ -48,16 +48,15 @@ export default function VerticalLinearStepper() {
       <Timeline align="alternate">
         {steps.map((step, index) => (
           <TimelineItem key={step.title + index}>
-            
             <TimelineOppositeContent>
-              <Typography variant="h6" component="h4">{step.title}</Typography>
+              <Typography className={classes.title} component="h4">{step.title}</Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="primary" className={classes.dot}>{index + 1}</TimelineDot>
               {step.connector ? <TimelineConnector className={classes.connector} /> : null}
             </TimelineSeparator>
             <TimelineContent>
-              <Typography variant="h6" color="textSecondary">{step.text}</Typography>
+              <Typography className={classes.text} color="textSecondary">{step.text}</Typography>
             </TimelineContent>
           </TimelineItem>
         ))}
@@ -84,5 +83,18 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     height: '30px',
     width: '30px',
-  }
+  },
+  title: {
+    fontSize: '12px',
+    fontWeight: 700,
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
+  },
+  text: {
+    fontSize: '12px',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '20px',
+    },
+  },
 }));

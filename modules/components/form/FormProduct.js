@@ -141,6 +141,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
               <DropzoneArea
                 acceptedFiles={['image/*']}
                 filesLimit={1}
+                maxFileSize={10000000}
+                dropzoneText="Imagen principal"
                 onChange={(files) => onFileChanges(files)}
                 onDelete={() => setPicture('')}
               />

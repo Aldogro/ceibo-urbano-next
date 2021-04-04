@@ -220,6 +220,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   appBar: {
+    width: '100%',
+    left: 0,
+    right: 'auto',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
