@@ -20,6 +20,15 @@ const theme = createMuiTheme({
       main: lightGreen[100]
     }
   },
+  textSizes: {
+    mobile: {
+      h1: '20px',
+      h2: '18px',
+      h3: '16px',
+      h4: '14px',
+      p: '12px',
+    },
+  },
 })
 
 export default theme

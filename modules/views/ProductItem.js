@@ -95,10 +95,18 @@ const useStyles = makeStyles((theme) => ({
   backdropImage: {
     height: '100%',
     width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'auto',
   },
   backdropImageImg: {
     width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '100%',
+      height: '700px',
+      objectFit: 'contain'
+    }
   },
   card: {
     height: '100%',
