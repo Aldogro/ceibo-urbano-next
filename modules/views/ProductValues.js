@@ -112,7 +112,7 @@ const styles = (theme) => ({
   curvyLines: {
     pointerEvents: 'none',
     position: 'absolute',
-    top: -180,
+    height: '100%',
   },
 })
 

@@ -10,6 +10,8 @@ import FacebookIcon from '@material-ui/icons/Facebook'
 import InstagramIcon from '@material-ui/icons/Instagram'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 
+import { useConfig } from '../../services/Config.context'
+
 function Copyright() {
   const classes = useStyles()
   return (
@@ -38,6 +40,7 @@ const LANGUAGES = [
 
 export default function AppFooter() {
   const classes = useStyles()
+  const [config, configDispatch] = useConfig()
 
   return (
     <>
@@ -46,7 +49,7 @@ export default function AppFooter() {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Grid className={classes.textCenter}  item>
-                <img id="footer-ceibo" height="70" src="/ceibo-urbano-iso-logo.svg" alt="footer logo" />
+                <img id="footer-ceibo" height="70" src={config.icon || '/ceibo-urbano-iso-logo.svg'} alt="footer logo" />
                 <p className={classes.title}>CEIBO URBANO</p>
                 <p className={classes.subtitle}>Vivero</p>
               </Grid>
@@ -66,7 +69,7 @@ export default function AppFooter() {
                   <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
                     <FacebookIcon className={classes.icon} />
                   </a>
-                  <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0AMi nombre es" target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                  <a href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer" className={classes.icon}>
                     <WhatsAppIcon className={classes.icon} />
                   </a>
                   <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
@@ -81,7 +84,7 @@ export default function AppFooter() {
           </Grid>
         </Container>
       </Typography>
-      <a href="https://api.whatsapp.com/send?phone=+5493416871302&text=¡Hola!%0AMi nombre es" target="_blank" rel="noopener noreferrer">
+      <a href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer">
         <Fab className={classes.whatsappFab} color="primary" aria-label="add">
           <WhatsAppIcon style={{fontSize: '35px'}} />
         </Fab>

@@ -24,6 +24,8 @@ export const createItem = ({ collection, data }) => {
   return firebase.firestore().collection(collection).doc(id).set({ ...data, id })
 }
 
+export const createSettings = ({ settings }) => firebase.firestore().collection('settings').doc('settings').set(settings)
+
 export const editItem = ({ collection, id, data }) => firebase.firestore().collection(collection).doc(id).update(data)
 
 export const publishItem = ({ collection, id, publish }) => firebase.firestore().collection(collection).doc(id).update({ publish: !publish })

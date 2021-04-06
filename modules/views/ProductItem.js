@@ -51,7 +51,7 @@ const ProductItem = ({ product }) => {
           <CardActionArea onClick={() => handleFullSizeImage(product.picture)}>
             <CardMedia
               className={classes.media}
-              image={product.picture}
+              image={product.picture || '/image-placeholder.png'}
               title={product.name}
             />
             <CardContent>

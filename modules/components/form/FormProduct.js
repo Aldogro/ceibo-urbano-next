@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Switch from '@material-ui/core/Switch'
 import TextField from '@material-ui/core/TextField'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { DropzoneArea } from 'material-ui-dropzone'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -24,8 +25,21 @@ const FormProduct = ({ product = {}, onSubmit }) => {
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
   const [type, setType] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
+
+  useEffect(() => {
+    if (Object.keys(product).length !== 0) {
+      setName(product.name)
+      setDescription(product.description)
+      setPrice(+product.price)
+      setCols(product.cols)
+      setPicture(product.picture)
+      setPublish(product.publish)
+      setType(product.type)
+    }
+  }, [product])
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
@@ -40,25 +54,18 @@ const FormProduct = ({ product = {}, onSubmit }) => {
     })
   }
 
-  useEffect(() => {
-    if (Object.keys(product).length !== 0) {
-      setName(product.name)
-      setDescription(product.description)
-      setPrice(+product.price)
-      setCols(product.cols)
-      setPicture(product.picture)
-      setPublish(product.publish)
-      setType(product.type)
-    }
-  }, [product])
-
   const classes = useStyles()
 
   const onFileChanges = (files) => {
     if (files.length) {
+      setLoading(true)
+      setPicture('')
       app.storage().ref().child('/images').child(files[0].name).put(files[0])
         .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
-        .then(url => setPicture(url))
+        .then(url => {
+          setPicture(url)
+          setLoading(false)
+        })
     }
   }
 
@@ -147,18 +154,12 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 onDelete={() => setPicture('')}
               />
             </Grid>
-            {picture
-              ? <Grid item xs={12} lg={6}>
-                <div className={classes.contain}>
-                  <img
-                    className={classes.fullWidth}
-                    src={picture}
-                    alt="product image"
-                  />
-                </div>
-              </Grid>
-              : <div />
-            }
+            <Grid item xs={12} lg={6} className={classes.contain}>
+              {!picture && loading
+                ? <CircularProgress />
+                : <img className={classes.image} src={picture} alt="product image" height="100%" />
+              }
+            </Grid>
           </Grid>
 
           <Grid item xs={12} className={classes.actions}>
@@ -192,14 +193,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing('20px', 'auto'),
   },
   contain: {
-    maxHeight: '250px',
-    width: '100%',
-    display: 'flex',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    textAlign: 'center',
+  },
+  image: {
+    maxHeight: '250px'
   },
   fullWidth: {
     width: '100%',
-    maxHeigth: '100%',
-    objectFit: 'contain',
   },
   floatRight: {
     minWidth: 120,

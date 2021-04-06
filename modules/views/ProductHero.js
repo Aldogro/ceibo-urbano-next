@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Typography from '../components/Typography'
 import ProductHeroLayout from './ProductHeroLayout'
+import Collapse from '@material-ui/core/Collapse'
 import { usePromo, ActionType } from '../../services/Promo.context'
 
 function ProductHero(props) {
@@ -12,14 +13,14 @@ function ProductHero(props) {
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
-      {/* Increase the network loading priority of the background image. */}
-      <img style={{ display: 'none' }} src={backgroundImage} alt="increase priority" />
       <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
         ¡Embellecé tu jardín!
       </Typography>
-      <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-        {promoState.maxDiscount > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${promoState.maxDiscount}%` : ''}
-      </Typography>
+      <Collapse in={!!promoState.maxDiscount}>
+        <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
+          {promoState.maxDiscount > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${promoState.maxDiscount}%` : ''}
+        </Typography>
+      </Collapse>
       <Button
         color="secondary"
         variant="contained"
@@ -37,7 +38,6 @@ function ProductHero(props) {
 ProductHero.propTypes = {
   classes: PropTypes.object.isRequired,
 }
-
 const backgroundImage = '/greenhouse.jpg'
 
 const styles = (theme) => ({
@@ -45,6 +45,9 @@ const styles = (theme) => ({
     backgroundImage: `url(${backgroundImage})`,
     backgroundColor: '#7fc7d9', // Average color of the background image.
     backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
   button: {
     minWidth: 200,

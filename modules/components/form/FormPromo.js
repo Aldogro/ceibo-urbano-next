@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import Switch from '@material-ui/core/Switch'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { DropzoneArea } from 'material-ui-dropzone'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 
@@ -24,6 +25,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
   const [publish, setPublish] = useState(false)
   const [products, setProducts] = useState([])
   const [carousel, setCarousel] = useState([])
+  const [loading, setLoading] = useState(false)
   
   const classes = useStyles()
   const router = useRouter()
@@ -76,12 +78,15 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
   const onFileChanges = (files, isPrimary = false) => {
     if (files.length) {
       const temp = carousel
+      setLoading(true)
+      isPrimary ? setPicture('') : null
       files.forEach(file => {
         app.storage().ref().child('/images').child(file.name).put(file)
           .then(snapshot => app.storage().ref(snapshot.metadata.fullPath).getDownloadURL())
           .then(url => {
             if (isPrimary) {
               setPicture(url)
+              setLoading(false)
             } else {
               temp.push(url)
               setCarousel([...carousel])
@@ -211,18 +216,12 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                 onDelete={() => setPicture('')}
               />
             </Grid>
-            {picture
-              ? <Grid item xs={6}>
-                <div className={classes.contain}>
-                  <img
-                    className={classes.fullWidth}
-                    src={picture}
-                    alt="promo image"
-                  />
-                </div>
-              </Grid>
-              : <div />
-            }
+            <Grid item xs={6} className={classes.contain}>
+              {!picture && loading
+                ? <CircularProgress />
+                : <img className={classes.image} src={picture} alt="promo image"/>
+              }
+            </Grid>
             <Grid item xs={12} md={12}>
               <DropzoneArea
                 acceptedFiles={['image/*']}
@@ -279,14 +278,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing('20px', 0),
   },
   contain: {
-    maxHeight: '250px',
-    width: '100%',
-    display: 'flex',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    textAlign: 'center',
+  },
+  image: {
+    maxHeight: '250px'
   },
   fullWidth: {
     width: '100%',
-    maxHeigth: '100%',
-    objectFit: 'contain',
   },
   floatRight: {
     minWidth: 120,

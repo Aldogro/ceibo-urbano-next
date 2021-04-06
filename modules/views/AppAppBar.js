@@ -1,7 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { useCart, ActionType as CartActionType } from '../../services/Cart.context'
+import { useCart } from '../../services/Cart.context'
+import { useConfig } from '../../services/Config.context'
 
 import Link from 'next/link'
 
@@ -27,6 +28,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import app from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
@@ -38,6 +40,7 @@ export default function PersistentDrawerLeft({ children }) {
   const [cartState, cartDispatch] = useCart()
   const [open, setOpen] = React.useState(false)
   const [openCart, setOpenCart] = React.useState(false)
+  const [config, configDispatch] = useConfig()
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -91,7 +94,7 @@ export default function PersistentDrawerLeft({ children }) {
             :
             null
           }
-          <img src="/ceibo-urbano-iso-logo.svg" height="40" alt="logo" />
+          <img src={config.icon || '/ceibo-urbano-iso-logo.svg'} height="40" alt="logo" />
           <Typography className={classes.brand} variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
@@ -158,6 +161,12 @@ export default function PersistentDrawerLeft({ children }) {
               <ListItem className={classes.listItem} component="a">
                 <ListItemIcon><PhotoLibraryIcon className={classes.listItem} /></ListItemIcon>
                 <ListItemText primary="Imágenes" />
+              </ListItem>
+            </Link>
+            <Link href="/settings">
+              <ListItem className={classes.listItem} component="a">
+                <ListItemIcon><SettingsIcon className={classes.listItem} /></ListItemIcon>
+                <ListItemText primary="Configuración" />
               </ListItem>
             </Link>
           </List>

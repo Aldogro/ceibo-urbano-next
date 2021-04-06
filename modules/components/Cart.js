@@ -3,6 +3,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useCart, ActionType } from '../../services/Cart.context'
 import { useSnackbar } from 'notistack'
+import { useConfig } from '../../services/Config.context'
 
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
@@ -19,6 +20,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 const Cart = () => {
   const classes = useStyles();
   const [cartState, cartDispatch] = useCart()
+  const [config, configDispatch] = useConfig()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const onAmountAdd = (item) => {
@@ -137,7 +139,7 @@ const Cart = () => {
         disabled={cartState.items.length < 1 || !cartState.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+5493416871302&text=${generateText('%0A')}`}
+        href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=${generateText('%0A')}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />

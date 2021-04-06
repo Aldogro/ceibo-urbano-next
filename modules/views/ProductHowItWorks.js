@@ -121,9 +121,8 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(4),
   },
   curvyLines: {
-    pointerEvents: 'none',
+    height: '100%',
     position: 'absolute',
-    top: -180,
     opacity: 0.7,
   },
   button: {
