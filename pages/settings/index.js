@@ -19,7 +19,7 @@ const ListProductPage = () => {
   const classes = useStyles()
   const [auth, authDispatch] = useAuth()
   const [config, configDispatch] = useConfig()
-  const [settings, setSettings] = useState({ mainImage: '', icon: '', phone: '' })
+  const [settings, setSettings] = useState({ icon: '', phone: '' })
   const [loading, setLoading] = useState({ icon: false })
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -32,7 +32,6 @@ const ListProductPage = () => {
   
   useEffect(() => {
     setSettings({
-      mainImage: config.mainImage,
       icon: config.icon,
       phone: config.phone,
     })

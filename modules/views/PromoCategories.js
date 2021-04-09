@@ -36,7 +36,7 @@ function PromoCategories(props) {
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
         ¡Aprovechá todas nuestras promociones!
       </Typography>
-      <Grid container>
+      <Grid container spacing={2}>
         {!promoState.promos.length
           ?
           skeletons.map((skeleton) => (
