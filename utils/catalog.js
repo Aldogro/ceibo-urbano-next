@@ -47,3 +47,5 @@ export const orderByOptions = [
     label: 'Orden alfabético inverso',
   },
 ]
+
+export const isoLogo = '/ceibo-urbano-iso-logo.svg'

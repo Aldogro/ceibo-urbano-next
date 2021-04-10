@@ -10,6 +10,7 @@ import { ProductProvider } from '../services/Product.context'
 import { PromoProvider } from '../services/Promo.context'
 import { CartProvider } from '../services/Cart.context'
 import { SnackbarProvider } from 'notistack'
+import { isoLogo } from '../utils/catalog'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props
@@ -32,7 +33,7 @@ export default function MyApp(props) {
                 <PromoProvider>
                   <Head>
                     <title>Ceibo Urbano</title>
-                    <link rel="shortcut icon" href="/ceibo-urbano-iso-logo.svg" />
+                    <link rel="shortcut icon" href={isoLogo} />
                     <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
                   </Head>
                   <ThemeProvider theme={theme}>

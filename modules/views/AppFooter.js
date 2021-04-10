@@ -11,6 +11,7 @@ import InstagramIcon from '@material-ui/icons/Instagram'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 
 import { useConfig } from '../../services/Config.context'
+import { isoLogo } from '../../utils/catalog'
 
 function Copyright() {
   const classes = useStyles()
@@ -49,7 +50,7 @@ export default function AppFooter() {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Grid className={classes.textCenter}  item>
-                <img id="footer-ceibo" height="70" src={config.icon || '/ceibo-urbano-iso-logo.svg'} alt="footer logo" />
+                <img id="footer-ceibo" height="70" src={isoLogo} alt="footer logo" />
                 <p className={classes.title}>CEIBO URBANO</p>
                 <p className={classes.subtitle}>Vivero</p>
               </Grid>

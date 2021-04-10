@@ -45,7 +45,7 @@ export const ConfigProvider = ({ children }) => {
       getItem({ collection: 'settings', id: 'settings' })
         .then(snapshot => {
           if (!snapshot.data()) {
-            const settings = { phone: '', logo: '' }
+            const settings = { phone: '' }
             createSettings({ settings })
               .catch((error) => enqueueSnackbar('Ha ocurrido un error', { variant: 'error' }))
           }

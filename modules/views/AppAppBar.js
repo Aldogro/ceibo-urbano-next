@@ -32,6 +32,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 import app from '../../firebase/firebase.config'
 import { useAuth } from '../../services/Auth.context'
+import { isoLogo } from '../../utils/catalog'
 
 export default function PersistentDrawerLeft({ children }) {
   const classes = useStyles()
@@ -94,7 +95,7 @@ export default function PersistentDrawerLeft({ children }) {
             :
             null
           }
-          <img src={config.icon || '/ceibo-urbano-iso-logo.svg'} height="40" alt="logo" />
+          <img src={isoLogo} height="40" alt="logo" />
           <Typography className={classes.brand} variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
