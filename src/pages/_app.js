@@ -5,7 +5,6 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../theme'
 import { ConfigProvider } from '../services/Config.context'
-import { AuthProvider } from '../services/Auth.context'
 import { ProductProvider } from '../services/Product.context'
 import { PromoProvider } from '../services/Promo.context'
 import { CartProvider } from '../services/Cart.context'
@@ -27,24 +26,22 @@ export default function MyApp(props) {
     <React.Fragment>
       <SnackbarProvider maxSnack={3}>
         <ConfigProvider>
-          <AuthProvider>
-            <CartProvider>
-              <ProductProvider>
-                <PromoProvider>
-                  <Head>
-                    <title>Ceibo Urbano</title>
-                    <link rel="shortcut icon" href={isoLogo} />
-                    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-                  </Head>
-                  <ThemeProvider theme={theme}>
-                    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                    <CssBaseline />
-                    <Component {...pageProps} />
-                  </ThemeProvider>
-                </PromoProvider>
-              </ProductProvider>
-            </CartProvider>
-          </AuthProvider>
+          <CartProvider>
+            <ProductProvider>
+              <PromoProvider>
+                <Head>
+                  <title>Ceibo Urbano</title>
+                  <link rel="shortcut icon" href={isoLogo} />
+                  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+                </Head>
+                <ThemeProvider theme={theme}>
+                  {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </ThemeProvider>
+              </PromoProvider>
+            </ProductProvider>
+          </CartProvider>
         </ConfigProvider>
       </SnackbarProvider>
     </React.Fragment>

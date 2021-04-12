@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useAuth } from '../../services/Auth.context'
 import { useRouter } from 'next/router'
 import { usePromo, ActionType } from '../../services/Promo.context'
 import { useSnackbar } from 'notistack'
@@ -23,11 +22,12 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../components/AppAppBar'
-import { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import app, { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const ListPromoPage = () => {
   const classes = useStyles()
-  const [auth, authDispatch] = useAuth()
+  const [user, loading, error] = useAuthState(app.auth())
   const [promoState, promoDispatch] = usePromo()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
@@ -36,7 +36,7 @@ const ListPromoPage = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   
   useEffect(() => {
-    if (!auth.user.email) {
+    if (!user) {
       router.push('/login')
     }
     getPromos()
@@ -81,7 +81,7 @@ const ListPromoPage = () => {
     <React.Fragment>
       <AppAppBar />
       <Container maxWidth="lg" className={classes.marginTop}>
-        {auth.user.email ?
+        {user ?
           <div className={classes.root}>
             <Typography className={classes.title} variant="h4">
               Listado de promos

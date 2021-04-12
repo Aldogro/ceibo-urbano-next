@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useAuth } from '../../services/Auth.context'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useProduct, ActionType } from '../../services/Product.context'
@@ -23,12 +22,13 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import AppAppBar from '../../components/AppAppBar'
-import { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import app, { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { productTypes } from '../../utils/catalog'
 
 const ListProductPage = () => {
   const classes = useStyles()
-  const [auth, authDispatch] = useAuth()
+  const [user, loading, error] = useAuthState(app.auth())
   const [productState, productDispatch] = useProduct()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
@@ -38,9 +38,6 @@ const ListProductPage = () => {
   const router = useRouter()
   
   useEffect(() => {
-    if (!auth.user.email) {
-      router.push('/login')
-    }
     getProducts()
   }, [])
 
@@ -83,7 +80,7 @@ const ListProductPage = () => {
     <React.Fragment>
       <AppAppBar />
       <Container maxWidth="lg" className={classes.marginTop}>
-        {auth.user.email ?
+        {user ?
           <div className={classes.root}>
             <Typography className={classes.title} variant="h4">
               Listado de productos

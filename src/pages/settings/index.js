@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useAuth } from '../../services/Auth.context'
+import { useRouter } from 'next/router'
 import { useConfig } from '../../services/Config.context'
 import { useSnackbar } from 'notistack'
 
@@ -12,11 +12,13 @@ import Typography from '@material-ui/core/Typography'
 
 import AppAppBar from '../../components/AppAppBar'
 
-import { editItem } from '../../firebase/firebase.config'
+import app, { editItem } from '../../firebase/firebase.config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const ListProductPage = () => {
   const classes = useStyles()
-  const [auth, authDispatch] = useAuth()
+  const router = useRouter()
+  const [user] = useAuthState(app.auth())
   const [config, configDispatch] = useConfig()
   const [settings, setSettings] = useState({ phone: '' })
   const [loading, setLoading] = useState({ icon: false })
@@ -24,7 +26,7 @@ const ListProductPage = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   useEffect(() => {
-    if (!auth.user.email) {
+    if (!user) {
       router.push('/login')
     }
   }, [])
@@ -53,32 +55,35 @@ const ListProductPage = () => {
         <Typography className={classes.title} variant="h4">
           Configuraciones
         </Typography>
-        <form className={classes.stripped} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
-          <Grid container spacing={3} cols={1}>
-            <Grid item xs={12} lg={9}>
-              <TextField
-                className={classes.fullWidth}
-                error={!settings.phone.length}
-                id="Teléfono"
-                helperText="(sin guiones, 0 ni 15. Ej: 3413216549)"
-                label="Teléfono"
-                value={settings.phone}
-                onChange={({ target }) => setSettings({ ...settings, phone: target.value })}
-              />
+        { user
+          ? <form className={classes.stripped} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
+            <Grid container spacing={3} cols={1}>
+              <Grid item xs={12} lg={9}>
+                <TextField
+                  className={classes.fullWidth}
+                  error={!settings.phone.length}
+                  id="Teléfono"
+                  helperText="(sin guiones, 0 ni 15. Ej: 3413216549)"
+                  label="Teléfono"
+                  value={settings.phone}
+                  onChange={({ target }) => setSettings({ ...settings, phone: target.value })}
+                />
+              </Grid>
+              <Grid item xs={12} lg={3} className={classes.actions}>
+                <Button
+                  className={classes.fullWidth}
+                  variant="contained"
+                  disabled={settings.phone === config.phone || !settings.phone}
+                  type="submit"
+                  color="primary"
+                >
+                  Guardar
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} lg={3} className={classes.actions}>
-              <Button
-                className={classes.fullWidth}
-                variant="contained"
-                disabled={settings.phone === config.phone || !settings.phone}
-                type="submit"
-                color="primary"
-              >
-                Guardar
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+          : null
+        }
       </Container>
     </React.Fragment>
   )

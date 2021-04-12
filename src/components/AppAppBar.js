@@ -31,13 +31,13 @@ import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import app from '../firebase/firebase.config'
-import { useAuth } from '../services/Auth.context'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { isoLogo } from '../utils/catalog'
 
 export default function PersistentDrawerLeft({ children }) {
   const classes = useStyles()
   const theme = useTheme()
-  const [auth, authDispatch] = useAuth()
+  const [user, loading, error] = useAuthState(app.auth())
   const [cartState, cartDispatch] = useCart()
   const [open, setOpen] = React.useState(false)
   const [openCart, setOpenCart] = React.useState(false)
@@ -61,7 +61,7 @@ export default function PersistentDrawerLeft({ children }) {
 
   const handleLogout = () => {
     app.auth().signOut()
-    authDispatch({ type: 'removeAuthDetails' })
+    localStorage.removeItem('cu-user-info')
   }
 
   const getCartItems = () => {
@@ -81,7 +81,7 @@ export default function PersistentDrawerLeft({ children }) {
       >
         <Toolbar className={classes.bg}>
           {
-            auth.user.email
+            user
             ?
             <IconButton
               color="inherit"
@@ -99,7 +99,7 @@ export default function PersistentDrawerLeft({ children }) {
           <Typography className={classes.brand} variant="h6" noWrap>
             Ceibo Urbano
           </Typography>
-          { auth.user.email
+          { user
             ?
             <div className={classes.user}>
               <AccountCircleIcon />
@@ -122,7 +122,7 @@ export default function PersistentDrawerLeft({ children }) {
         </Toolbar>
       </AppBar>
       {
-        auth.user.email
+        user
         ?
         <Drawer
           className={classes.drawer}

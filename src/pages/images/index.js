@@ -21,10 +21,12 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
 
 import app from '../../firebase/firebase.config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const ImagesPage = () => {
   const classes = useStyles()
   const [imagesMetadata, setImagesMetadata] = useState([])
+  const [user, loading, error] = useAuthState(app.auth())
   const [selectedImage, setSelectedImage] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [backdropOpen, setBackdropOpen] = useState(false)
@@ -81,63 +83,69 @@ const ImagesPage = () => {
         <Typography className={classes.title} variant="h4">
           Listado de imágenes
         </Typography>
-        <Typography variant="body2">
-          ({imagesMetadata.length}) Imágenes - Usado {setValue().gigabytes.toFixed(4)}GB de 5GB - {setValue().percentage.toFixed(4)}%
-        </Typography>
-        <LinearProgress className={classes.progressLine} variant="determinate" value={setValue().percentage} />
-        <Dialog
-          isOpen={dialogOpen}
-          handleConfirm={() => deleteImage()}
-          handleClose={() => setDialogOpen(false)}
-          question="¿Seguro querés borrar esta imagen?"
-        />
-        <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {
-          setBackdropOpen(false)
-          setSelectedImage('')
-        }}>
-          <div className={classes.backdropImage}>
-            {
-              backdropOpen
-              ? <img className={classes.backdropImageImg} src={selectedImage} />
-              : null
-            }
-          </div>
-        </Backdrop>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead className={classes.tableHead}>
-              <TableRow>
-                <TableCell className={classes.tableHeadItems}>Nombre</TableCell>
-                <TableCell className={classes.tableHeadItems} align="right">Tamaño</TableCell>
-                <TableCell className={classes.tableHeadItems}>Tipo</TableCell>
-                <TableCell className={classes.tableHeadItems}>Modificada</TableCell>
-                <TableCell className={classes.tableHeadItems} align="center">Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                imagesMetadata.map((image) => (
-                  <TableRow key={image.fullPath}>
-                    <TableCell component="th" scope="row" className={classes.fullPath}>
-                      <span title={image.fullPath}>{image.fullPath}</span>
-                    </TableCell>
-                    <TableCell align="right">{(image.size / 1_000_000).toFixed(3)}Mb</TableCell>
-                    <TableCell>{image.contentType}</TableCell>
-                    <TableCell>{new Date(image.updated).toLocaleDateString()}</TableCell>
-                    <TableCell align="center">
-                      <IconButton onClick={() => viewImage(image)}>
-                        <FindInPageIcon color="primary" />
-                      </IconButton>
-                      <IconButton onClick={() => handleDelete(image.fullPath)}>
-                        <DeleteForeverIcon color="error" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {
+          user
+          ? <>
+              <Typography variant="body2">
+                ({imagesMetadata.length}) Imágenes - Usado {setValue().gigabytes.toFixed(4)}GB de 5GB - {setValue().percentage.toFixed(4)}%
+              </Typography>
+              <LinearProgress className={classes.progressLine} variant="determinate" value={setValue().percentage} />
+              <Dialog
+                isOpen={dialogOpen}
+                handleConfirm={() => deleteImage()}
+                handleClose={() => setDialogOpen(false)}
+                question="¿Seguro querés borrar esta imagen?"
+              />
+              <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {
+                setBackdropOpen(false)
+                setSelectedImage('')
+              }}>
+                <div className={classes.backdropImage}>
+                  {
+                    backdropOpen
+                    ? <img className={classes.backdropImageImg} src={selectedImage} />
+                    : null
+                  }
+                </div>
+              </Backdrop>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead className={classes.tableHead}>
+                    <TableRow>
+                      <TableCell className={classes.tableHeadItems}>Nombre</TableCell>
+                      <TableCell className={classes.tableHeadItems} align="right">Tamaño</TableCell>
+                      <TableCell className={classes.tableHeadItems}>Tipo</TableCell>
+                      <TableCell className={classes.tableHeadItems}>Modificada</TableCell>
+                      <TableCell className={classes.tableHeadItems} align="center">Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+                      imagesMetadata.map((image) => (
+                        <TableRow key={image.fullPath}>
+                          <TableCell component="th" scope="row" className={classes.fullPath}>
+                            <span title={image.fullPath}>{image.fullPath}</span>
+                          </TableCell>
+                          <TableCell align="right">{(image.size / 1_000_000).toFixed(3)}Mb</TableCell>
+                          <TableCell>{image.contentType}</TableCell>
+                          <TableCell>{new Date(image.updated).toLocaleDateString()}</TableCell>
+                          <TableCell align="center">
+                            <IconButton onClick={() => viewImage(image)}>
+                              <FindInPageIcon color="primary" />
+                            </IconButton>
+                            <IconButton onClick={() => handleDelete(image.fullPath)}>
+                              <DeleteForeverIcon color="error" />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          : null
+        }
       </Container>
     </>
   )

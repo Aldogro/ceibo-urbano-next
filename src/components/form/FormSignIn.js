@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper'
 import Snackbar from '@material-ui/core/Snackbar'
 import app from '../../firebase/firebase.config'
 import { useRouter } from 'next/router'
-import { useAuth } from '../../services/Auth.context'
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 
 function FormSignIn() {
   const classes = useStyles()
@@ -18,32 +18,34 @@ function FormSignIn() {
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [authState, authDispatch] = useAuth()
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useSignInWithEmailAndPassword(app.auth())
+
+  useEffect(() => {
+    if (localStorage.getItem('cu-user-info')) router.push('/')
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('cu-user-info', JSON.stringify(user))
+      router.push('/')
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (error) setOpenErrorSnackbar(true)
+  }, [error])
 
   const handleCloseSnackbar = () => {
     setOpenErrorSnackbar(false)
   }
 
-  const handleOnSubmit = (e) => {
-    e.preventDefault()
-    onSubmit({
-      email,
-      password,
-    })
-    
-  }
-  const onSubmit = async ({ email, password}) => {
-    try {
-      const response = await app.auth().signInWithEmailAndPassword(email, password)
-      authDispatch({
-        type: 'setAuthDetails',
-        payload: {
-          user: response.user,
-        },
-      })
-      router.push('/')
-    }
-    catch (error) {setOpenErrorSnackbar(true)}
+  const handleOnSubmit = () => {
+    signInWithEmailAndPassword(email, password)
   }
 
   return (
@@ -55,7 +57,7 @@ function FormSignIn() {
               <Typography variant="h4" gutterBottom marked="center" align="center">
                 Ingresar
               </Typography>
-                <form onSubmit={data => handleOnSubmit(data)} className={classes.form} noValidate>
+                <form className={classes.form} noValidate>
                   <TextField
                     fullWidth
                     label="E-mail"
@@ -75,12 +77,13 @@ function FormSignIn() {
                     onChange={({ target }) => setPassword(target.value)}
                   />
                   <Button
-                    type="submit"
                     className={classes.button}
                     size="small"
                     variant="contained"
                     color="primary"
                     fullWidth
+                    disabled={loading}
+                    onClick={() => handleOnSubmit()}
                   >
                     Entrar
                   </Button>

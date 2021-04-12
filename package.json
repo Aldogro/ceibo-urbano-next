@@ -18,6 +18,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-final-form": "^6.5.2",
+    "react-firebase-hooks": "^3.0.3",
     "react-material-ui-carousel": "^2.2.2",
     "react-swipeable-views": "^0.13.9",
     "validator": "^13.5.2"
