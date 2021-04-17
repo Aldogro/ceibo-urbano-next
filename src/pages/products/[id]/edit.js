@@ -2,17 +2,18 @@ import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
-import { useProduct, ActionType } from '../../../services/Product.context'
 
-import AppAppBar from '../../../components/AppAppBar'
+import { fetchProduct } from '../../../actions/products'
+import { connect } from 'react-redux'
+
+import MainLayout from '../../../components/MainLayout'
 import FormProduct from '../../../components/form/FormProduct'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
 import { getItem, editItem } from '../../../firebase/firebase.config'
 
-const EditProductPage = () => {
-  const [productState, productDispatch] = useProduct()
+const EditProductPage = ({ fetchProduct, products }) => {
   const classes = useStyles()
   const router = useRouter()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -20,20 +21,9 @@ const EditProductPage = () => {
   useEffect(() => {
     const { id } = router.query
     if (router.query.id) {
-      getProduct(id)
+      fetchProduct(id)
     }
   }, [router.query])
-
-  const getProduct = async (id) => {
-    try {
-      const snapshot = await getItem({ collection: 'products', id })
-      productDispatch({
-        type: ActionType.SET_PRODUCT,
-        payload: snapshot.data(),
-      })
-    }
-    catch (error) { enqueueSnackbar('Ha ocurrido un error al obtener el producto', { variant: 'error'}) }
-  }
 
   const updateProduct = async (data) => {
     try {
@@ -47,23 +37,28 @@ const EditProductPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.container}>
-        <div className={classes.root}>
-          <Typography className={classes.title} variant="h4">
-            Editar Productos
-          </Typography>
-          {productState?.product
-            ? <FormProduct onSubmit={(data) => updateProduct(data)} product={productState.product}/>
-            : null
-          }
-        </div>
-      </Container>
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.container}>
+          <div className={classes.root}>
+            <Typography className={classes.title} variant="h4">
+              Editar Productos
+            </Typography>
+            {products?.product
+              ? <FormProduct onSubmit={(data) => updateProduct(data)} product={products.product}/>
+              : null
+            }
+          </div>
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }
 
-export default EditProductPage
+const mapStateToProps = ({ products }) => {
+  return { products }
+}
+
+export default connect(mapStateToProps, { fetchProduct })(EditProductPage)
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -3,12 +3,11 @@ import { useRouter } from 'next/router'
 import { usePromo, ActionType } from '../../../services/Promo.context'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
-
-import AppAppBar from '../../../components/AppAppBar'
-import FormPromo from '../../../components/form/FormPromo'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
+import MainLayout from '../../../components/MainLayout'
+import FormPromo from '../../../components/form/FormPromo'
 import { getItem, editItem } from '../../../firebase/firebase.config'
 
 const EditPromoPage = () => {
@@ -46,16 +45,17 @@ const EditPromoPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container className={classes.container}>
-        <Typography className={classes.title} variant="h4">
-          Editar Promos
-        </Typography>
-        {promoState?.promo
-          ? <FormPromo onSubmit={(data) => updatePromo(data)} promo={promoState.promo}/>
-          : null
-        }
-      </Container>
+      <MainLayout>
+        <Container className={classes.container}>
+          <Typography className={classes.title} variant="h4">
+            Editar Promos
+          </Typography>
+          {promoState?.promo
+            ? <FormPromo onSubmit={(data) => updatePromo(data)} promo={promoState.promo}/>
+            : null
+          }
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }

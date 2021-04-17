@@ -4,11 +4,11 @@ import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 
-import AppAppBar from '../../components/AppAppBar'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import FormPromo from '../../components/form/FormPromo'
 
+import FormPromo from '../../components/form/FormPromo'
+import MainLayout from '../../components/MainLayout'
 import { createItem } from '../../firebase/firebase.config'
 
 const AddPromoPage = () => {
@@ -27,13 +27,14 @@ const AddPromoPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.root}>
-        <Typography className={classes.title} variant="h4">
-          Agregar Promo
-        </Typography>
-        <FormPromo onSubmit={(data) => createPromo(data)} />
-      </Container>
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.root}>
+          <Typography className={classes.title} variant="h4">
+            Agregar Promo
+          </Typography>
+          <FormPromo onSubmit={(data) => createPromo(data)} />
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }

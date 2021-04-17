@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
-import AppAppBar from '../../components/AppAppBar'
+import MainLayout from '../../components/MainLayout'
 
 import app, { editItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -50,41 +50,42 @@ const ListProductPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.marginTop}>
-        <Typography className={classes.title} variant="h4">
-          Configuraciones
-        </Typography>
-        { user
-          ? <form className={classes.stripped} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
-            <Grid container spacing={3} cols={1}>
-              <Grid item xs={12} lg={9}>
-                <TextField
-                  className={classes.fullWidth}
-                  error={!settings.phone.length}
-                  id="Teléfono"
-                  helperText="(sin guiones, 0 ni 15. Ej: 3413216549)"
-                  label="Teléfono"
-                  value={settings.phone}
-                  onChange={({ target }) => setSettings({ ...settings, phone: target.value })}
-                />
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.marginTop}>
+          <Typography className={classes.title} variant="h4">
+            Configuraciones
+          </Typography>
+          { user
+            ? <form className={classes.stripped} onSubmit={(data) => handleOnSubmit(data)} noValidate autoComplete="off">
+              <Grid container spacing={3} cols={1}>
+                <Grid item xs={12} lg={9}>
+                  <TextField
+                    className={classes.fullWidth}
+                    error={!settings.phone.length}
+                    id="Teléfono"
+                    helperText="(sin guiones, 0 ni 15. Ej: 3413216549)"
+                    label="Teléfono"
+                    value={settings.phone}
+                    onChange={({ target }) => setSettings({ ...settings, phone: target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} lg={3} className={classes.actions}>
+                  <Button
+                    className={classes.fullWidth}
+                    variant="contained"
+                    disabled={settings.phone === config.phone || !settings.phone}
+                    type="submit"
+                    color="primary"
+                  >
+                    Guardar
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12} lg={3} className={classes.actions}>
-                <Button
-                  className={classes.fullWidth}
-                  variant="contained"
-                  disabled={settings.phone === config.phone || !settings.phone}
-                  type="submit"
-                  color="primary"
-                >
-                  Guardar
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-          : null
-        }
-      </Container>
+            </form>
+            : null
+          }
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 
-import AppAppBar from '../../components/AppAppBar'
+import MainLayout from '../../components/MainLayout'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Table from '@material-ui/core/Table'
@@ -78,75 +78,76 @@ const ImagesPage = () => {
 
   return (
     <>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.root}>
-        <Typography className={classes.title} variant="h4">
-          Listado de imágenes
-        </Typography>
-        {
-          user
-          ? <>
-              <Typography variant="body2">
-                ({imagesMetadata.length}) Imágenes - Usado {setValue().gigabytes.toFixed(4)}GB de 5GB - {setValue().percentage.toFixed(4)}%
-              </Typography>
-              <LinearProgress className={classes.progressLine} variant="determinate" value={setValue().percentage} />
-              <Dialog
-                isOpen={dialogOpen}
-                handleConfirm={() => deleteImage()}
-                handleClose={() => setDialogOpen(false)}
-                question="¿Seguro querés borrar esta imagen?"
-              />
-              <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {
-                setBackdropOpen(false)
-                setSelectedImage('')
-              }}>
-                <div className={classes.backdropImage}>
-                  {
-                    backdropOpen
-                    ? <img className={classes.backdropImageImg} src={selectedImage} />
-                    : null
-                  }
-                </div>
-              </Backdrop>
-              <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead className={classes.tableHead}>
-                    <TableRow>
-                      <TableCell className={classes.tableHeadItems}>Nombre</TableCell>
-                      <TableCell className={classes.tableHeadItems} align="right">Tamaño</TableCell>
-                      <TableCell className={classes.tableHeadItems}>Tipo</TableCell>
-                      <TableCell className={classes.tableHeadItems}>Modificada</TableCell>
-                      <TableCell className={classes.tableHeadItems} align="center">Acciones</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.root}>
+          <Typography className={classes.title} variant="h4">
+            Listado de imágenes
+          </Typography>
+          {
+            user
+            ? <>
+                <Typography variant="body2">
+                  ({imagesMetadata.length}) Imágenes - Usado {setValue().gigabytes.toFixed(4)}GB de 5GB - {setValue().percentage.toFixed(4)}%
+                </Typography>
+                <LinearProgress className={classes.progressLine} variant="determinate" value={setValue().percentage} />
+                <Dialog
+                  isOpen={dialogOpen}
+                  handleConfirm={() => deleteImage()}
+                  handleClose={() => setDialogOpen(false)}
+                  question="¿Seguro querés borrar esta imagen?"
+                />
+                <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {
+                  setBackdropOpen(false)
+                  setSelectedImage('')
+                }}>
+                  <div className={classes.backdropImage}>
                     {
-                      imagesMetadata.map((image) => (
-                        <TableRow key={image.fullPath}>
-                          <TableCell component="th" scope="row" className={classes.fullPath}>
-                            <span title={image.fullPath}>{image.fullPath}</span>
-                          </TableCell>
-                          <TableCell align="right">{(image.size / 1_000_000).toFixed(3)}Mb</TableCell>
-                          <TableCell>{image.contentType}</TableCell>
-                          <TableCell>{new Date(image.updated).toLocaleDateString()}</TableCell>
-                          <TableCell align="center">
-                            <IconButton onClick={() => viewImage(image)}>
-                              <FindInPageIcon color="primary" />
-                            </IconButton>
-                            <IconButton onClick={() => handleDelete(image.fullPath)}>
-                              <DeleteForeverIcon color="error" />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))
+                      backdropOpen
+                      ? <img className={classes.backdropImageImg} src={selectedImage} />
+                      : null
                     }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          : null
-        }
-      </Container>
+                  </div>
+                </Backdrop>
+                <TableContainer component={Paper}>
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead className={classes.tableHead}>
+                      <TableRow>
+                        <TableCell className={classes.tableHeadItems}>Nombre</TableCell>
+                        <TableCell className={classes.tableHeadItems} align="right">Tamaño</TableCell>
+                        <TableCell className={classes.tableHeadItems}>Tipo</TableCell>
+                        <TableCell className={classes.tableHeadItems}>Modificada</TableCell>
+                        <TableCell className={classes.tableHeadItems} align="center">Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        imagesMetadata.map((image) => (
+                          <TableRow key={image.fullPath}>
+                            <TableCell component="th" scope="row" className={classes.fullPath}>
+                              <span title={image.fullPath}>{image.fullPath}</span>
+                            </TableCell>
+                            <TableCell align="right">{(image.size / 1_000_000).toFixed(3)}Mb</TableCell>
+                            <TableCell>{image.contentType}</TableCell>
+                            <TableCell>{new Date(image.updated).toLocaleDateString()}</TableCell>
+                            <TableCell align="center">
+                              <IconButton onClick={() => viewImage(image)}>
+                                <FindInPageIcon color="primary" />
+                              </IconButton>
+                              <IconButton onClick={() => handleDelete(image.fullPath)}>
+                                <DeleteForeverIcon color="error" />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            : null
+          }
+        </Container>
+      </MainLayout>
     </>
   )
 }
