@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useProduct, ActionType as ProductActionType } from '../services/Product.context'
 import Skeleton from '@material-ui/lab/Skeleton'
-import { useSnackbar } from 'notistack'
 
 import Grid from '@material-ui/core/Grid'
 import ProductItem from './ProductItem'
@@ -11,33 +9,22 @@ import Typography from '@material-ui/core/Typography'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
-import app from '../firebase/firebase.config'
+
+import { connect } from 'react-redux'
+import { fetchProducts } from '../actions/products'
 
 import { orderByOptions, productTypeOptions } from '../utils/catalog'
 
-const ProductCategories = () => {
+const ProductCategories = ({ fetchProducts, products }) => {
   const classes = useStyles()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const [productState, productDispatch] = useProduct()
   const [type, setType] = useState('all')
   const [orderBy, setOrderBy] = useState(['price', 'asc'])
 
   const skeletons = ['a', 'b', 'c']
 
   useEffect(() => {
-    getProducts()
+    fetchProducts()
   }, [orderBy])
-
-  const getProducts = async () => {
-    try {
-      const snapshot = await app.firestore().collection('products').orderBy(orderBy[0], orderBy[1]).get()
-      productDispatch({
-        type: ProductActionType.SET_PRODUCTS,
-        payload: snapshot.docs.map(doc => doc.data()),
-      })
-    }
-    catch(error) {enqueueSnackbar('Ocurrió un error al solicitar los productos', { variant: 'error'})}
-  }
 
   return (
     <Container className={classes.root} component="section">
@@ -79,7 +66,8 @@ const ProductCategories = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        {!productState.products.length
+        {console.log(products)}
+        {!products.products.length
           ?
           skeletons.map((skeleton, index) => (
             <Grid item xs={12} lg={4} key={index}>
@@ -91,7 +79,7 @@ const ProductCategories = () => {
             </Grid>
           ))
           :
-          productState.products.map((product) => (
+          products.products.map((product) => (
             product.publish && (type !== 'all' ? product.type === type : true)
             ?
             <ProductItem product={product} key={product.id} />
@@ -104,7 +92,11 @@ const ProductCategories = () => {
   )
 }
 
-export default ProductCategories
+const mapStateToProps = ({ products }) => {
+  return { products }
+}
+
+export default connect(mapStateToProps, { fetchProducts })(ProductCategories)
 
 const useStyles = makeStyles((theme) => ({
   root: {
