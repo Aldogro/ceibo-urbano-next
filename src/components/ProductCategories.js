@@ -23,7 +23,7 @@ const ProductCategories = ({ fetchProducts, products }) => {
   const skeletons = ['a', 'b', 'c']
 
   useEffect(() => {
-    fetchProducts()
+    fetchProducts(orderBy)
   }, [orderBy])
 
   return (
