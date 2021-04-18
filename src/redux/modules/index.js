@@ -1,11 +1,11 @@
 import cart from './cart'
-import config from './config'
+import settings from './settings'
 import products from './products'
 import promos from './promos'
 
 export default {
   products,
   promos,
-  config,
+  settings,
   cart,
 }

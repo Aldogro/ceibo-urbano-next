@@ -2,11 +2,9 @@ import React, { useContext, useEffect, useReducer } from 'react'
 import { createSettings, getItem } from '../firebase/firebase.config'
 import { useSnackbar } from 'notistack'
 
-
 export const ConfigStateContext = React.createContext({})
 
 const initialState = {
-  icon: '',
   phone: ''
 }
 

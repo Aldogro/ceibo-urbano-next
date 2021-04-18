@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { useConfig } from '../../services/Config.context'
 import { useSnackbar } from 'notistack'
 
 import Container from '@material-ui/core/Container'
@@ -15,15 +14,16 @@ import MainLayout from '../../components/MainLayout'
 import app, { editItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
-const ListProductPage = () => {
+import { connect } from 'react-redux'
+import { setSettings } from '../../actions/settings'
+
+const ListProductPage = ({ settings, setSettings }) => {
   const classes = useStyles()
   const router = useRouter()
   const [user] = useAuthState(app.auth())
-  const [config, configDispatch] = useConfig()
-  const [settings, setSettings] = useState({ phone: '' })
-  const [loading, setLoading] = useState({ icon: false })
+  const [phone, setPhone] = useState()
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     if (!user) {
@@ -32,21 +32,27 @@ const ListProductPage = () => {
   }, [])
   
   useEffect(() => {
-    setSettings({
-      phone: config.phone,
-    })
-  }, [config])
+    getSettings()
+  }, [])
+  
+  const getSettings = () => {
+    try {
+      setSettings()
+      setPhone(settings.settings.phone)
+    }
+    catch(error) { enqueueSnackbar('Ocurrió un error al intentar obtener las configuraciones', { variant: 'error'}) }
+  }
 
   const handleOnSubmit = async (event) => {
     event.preventDefault()
     try {
-      await editItem({ collection: 'settings', id: 'settings', data: settings })
-      localStorage.setItem('ceibo-urbano-settings', JSON.stringify(settings))
+      await editItem({ collection: 'settings', id: 'settings', data: { phone } })
       enqueueSnackbar('Se ha editado la configuración', { variant: 'success'})
+      getSettings()
+      setPhone(phone)
     }
     catch (error) { enqueueSnackbar('Ha ocurrido un error', { variant: 'error'}) }
   }
-
 
   return (
     <React.Fragment>
@@ -61,19 +67,18 @@ const ListProductPage = () => {
                 <Grid item xs={12} lg={9}>
                   <TextField
                     className={classes.fullWidth}
-                    error={!settings.phone.length}
+                    error={!settings?.settings?.phone?.length}
                     id="Teléfono"
                     helperText="(sin guiones, 0 ni 15. Ej: 3413216549)"
                     label="Teléfono"
-                    value={settings.phone}
-                    onChange={({ target }) => setSettings({ ...settings, phone: target.value })}
+                    value={phone}
+                    onChange={({ target }) => setPhone(target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} lg={3} className={classes.actions}>
                   <Button
                     className={classes.fullWidth}
                     variant="contained"
-                    disabled={settings.phone === config.phone || !settings.phone}
                     type="submit"
                     color="primary"
                   >
@@ -90,7 +95,11 @@ const ListProductPage = () => {
   )
 }
 
-export default ListProductPage
+const mapStateToProps = ({ settings }) => {
+  return { settings }
+}
+
+export default connect(mapStateToProps, { setSettings })(ListProductPage)
 
 const useStyles = makeStyles((theme) => ({
   root: {

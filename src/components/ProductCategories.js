@@ -80,9 +80,9 @@ const ProductCategories = ({ fetchProducts, products }) => {
           :
           products.products.map((product) => (
             product.publish && (type !== 'all' ? product.type === type : true)
-            ?
-            <ProductItem product={product} key={product.id} />
-            : null
+              ?
+              <ProductItem product={product} key={product.id} />
+              : null
           ))
         }
         

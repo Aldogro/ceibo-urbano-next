@@ -1,7 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { useConfig } from '../services/Config.context'
 
 import Link from 'next/link'
 
@@ -41,7 +40,6 @@ const PersistentDrawerLeft = ({ cart, children }) => {
   const [user, loading, error] = useAuthState(app.auth())
   const [open, setOpen] = React.useState(false)
   const [openCart, setOpenCart] = React.useState(false)
-  const [config, configDispatch] = useConfig()
 
   const handleDrawerOpen = () => {
     setOpen(true)

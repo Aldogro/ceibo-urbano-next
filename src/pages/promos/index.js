@@ -134,7 +134,6 @@ const ListPromoPage = ({ fetchPromos, promos }) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return { promos: state.promos }
 }
 

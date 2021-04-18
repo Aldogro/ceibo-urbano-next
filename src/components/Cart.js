@@ -2,7 +2,6 @@ import React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
-import { useConfig } from '../services/Config.context'
 
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
@@ -19,9 +18,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import { connect } from 'react-redux'
 import { clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod } from '../actions/cart'
 
-const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod, cart }) => {
+const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod, cart, settings }) => {
   const classes = useStyles();
-  const [config, configDispatch] = useConfig()
   const { enqueueSnackbar } = useSnackbar()
 
   const getTotal = () => {
@@ -108,7 +106,7 @@ const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelected
         disabled={cart.items.length < 1 || !cart.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=${generateText('%0A')}`}
+        href={`https://api.whatsapp.com/send?phone=+549${settings.settings.phone}&text=${generateText('%0A')}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
@@ -123,8 +121,8 @@ const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelected
   )
 }
 
-const mapStateToProps = ({ cart }) => {
-  return { cart }
+const mapStateToProps = ({ cart, settings }) => {
+  return { cart, settings }
 }
 
 export default connect(

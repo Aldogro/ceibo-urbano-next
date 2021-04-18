@@ -3,7 +3,6 @@ import { combineReducers } from 'redux'
 const itemsReducer = (items = [], action) => {
   switch (action.type) {
     case 'ADD_ITEM':
-      console.log(action)
       if (items.filter(item => item.id === action.payload.id).length === 0)  {
         return [...items, { ...action.payload, amount: 1 }]
       }

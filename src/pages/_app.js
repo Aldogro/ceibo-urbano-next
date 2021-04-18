@@ -6,8 +6,6 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../theme'
 import { Provider } from 'react-redux'
 import { ConfigProvider } from '../services/Config.context'
-import { PromoProvider } from '../services/Promo.context'
-import { CartProvider } from '../services/Cart.context'
 import { SnackbarProvider } from 'notistack'
 import { isoLogo } from '../utils/catalog'
 
@@ -28,18 +26,16 @@ export default function MyApp(props) {
     <React.Fragment>
       <Provider store={store}>
         <SnackbarProvider maxSnack={3}>
-          <ConfigProvider>
-            <Head>
-              <title>Ceibo Urbano</title>
-              <link rel="shortcut icon" href={isoLogo} />
-              <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-            </Head>
-            <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </ConfigProvider>
+          <Head>
+            <title>Ceibo Urbano</title>
+            <link rel="shortcut icon" href={isoLogo} />
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
         </SnackbarProvider>
       </Provider>
     </React.Fragment>

@@ -4,13 +4,19 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Collapse from '@material-ui/core/Collapse'
-import { usePromo, ActionType } from '../services/Promo.context'
 
-import connect from 'react-redux'
+import { connect } from 'react-redux'
 
 const ProductHero = ({ promos }) => {
   const classes = useStyles()
-  const [promoState, promoDispatch] = usePromo()
+
+  const getMaxDiscount = () => {
+    let temp = 0
+    promos.promos.forEach(promo => {
+      if (promo.discount < temp) { temp = promo.discount }
+    })
+    return temp * - 1
+  }
 
   return (
     <div className={classes.background}>
@@ -19,9 +25,9 @@ const ProductHero = ({ promos }) => {
         <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
           ¡Embellecé tu jardín!
         </Typography>
-        <Collapse className={classes.collapse} in={!!promoState.maxDiscount}>
+        <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-            {promoState.maxDiscount > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${promoState.maxDiscount}%` : ''}
+            {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''}
           </Typography>
         </Collapse>
         <Button
@@ -41,8 +47,8 @@ const ProductHero = ({ promos }) => {
 
 const backgroundImage = '/greenhouse.jpg'
 
-const mapStateToProps = ({ cart }) => {
-  return { cart }
+const mapStateToProps = ({ promos }) => {
+  return { promos }
 }
 
 export default connect(mapStateToProps)(ProductHero)
