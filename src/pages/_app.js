@@ -29,20 +29,16 @@ export default function MyApp(props) {
       <Provider store={store}>
         <SnackbarProvider maxSnack={3}>
           <ConfigProvider>
-            <CartProvider>
-              <PromoProvider>
-                <Head>
-                  <title>Ceibo Urbano</title>
-                  <link rel="shortcut icon" href={isoLogo} />
-                  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-                </Head>
-                <ThemeProvider theme={theme}>
-                  {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </PromoProvider>
-            </CartProvider>
+            <Head>
+              <title>Ceibo Urbano</title>
+              <link rel="shortcut icon" href={isoLogo} />
+              <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+            </Head>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
           </ConfigProvider>
         </SnackbarProvider>
       </Provider>

@@ -10,28 +10,21 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
 
-import { useCart, ActionType as CartActionType } from '../services/Cart.context'
-
 import { productTypes } from '../utils/catalog'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const ProductItem = ({ product }) => {
+import { connect } from 'react-redux'
+import { onAmountAdd } from '../actions/cart'
+
+const ProductItem = ({ product, cart, onAmountAdd }) => {
   const classes = useStyles()
-  const [cartState, cartDispatch] = useCart()
   const [selectedImage, setSelectedImage] = useState('')
   const [fullScreenImage, setFullScreenImage] = useState(false)
 
   const getCartItems = (product) => {
-    const item = cartState.items.filter(item => item.id === product.id)
+    const item = cart.items.filter(item => item.id === product.id)
     return item[0]?.amount
-  }
-
-  const handleOnAddToCart = (product) => {
-    cartDispatch({
-      type: CartActionType.ADD_ITEM,
-      payload: product,
-    })
   }
 
   const handleFullSizeImage = (image) => {
@@ -70,7 +63,7 @@ const ProductItem = ({ product }) => {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="small" color="primary" variant="outlined" onClick={() => handleOnAddToCart(product)}>
+            <Button size="small" color="primary" variant="outlined" onClick={() => onAmountAdd(product)}>
               Agregar al carrito
               {
                 getCartItems(product)
@@ -85,7 +78,11 @@ const ProductItem = ({ product }) => {
   )
 }
 
-export default ProductItem
+const mapStateToProps = ({ cart }) => {
+  return { cart }
+}
+
+export default connect(mapStateToProps, { onAmountAdd })(ProductItem)
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {

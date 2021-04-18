@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { usePromo, ActionType } from '../../services/Promo.context'
 import { useSnackbar } from 'notistack'
 
 import Card from '@material-ui/core/Card'
@@ -22,18 +21,20 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import MainLayout from '../../components/MainLayout'
-import app, { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import app, { publishItem, deleteItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
-const ListPromoPage = () => {
+import { connect } from 'react-redux'
+import { fetchPromos } from '../../actions/promos'
+
+const ListPromoPage = ({ fetchPromos, promos }) => {
   const classes = useStyles()
   const [user, loading, error] = useAuthState(app.auth())
-  const [promoState, promoDispatch] = usePromo()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
   const router = useRouter()
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   
   useEffect(() => {
     if (!user) {
@@ -42,15 +43,9 @@ const ListPromoPage = () => {
     getPromos()
   }, [])
 
-  const getPromos = async () => {
-    try {
-      const snapshot = await getCollection('promos')
-      promoDispatch({
-        type: ActionType.SET_PROMOS,
-        payload: snapshot.docs.map(doc => doc.data()),
-      })
-    }
-    catch (error) { enqueueSnackbar('Ha sucedido un error al obtener las promos', { variant: 'error'}) }
+  const getPromos = () => {
+    try { fetchPromos() }
+    catch(error) { enqueueSnackbar('Ha sucedido un error', { variant: 'error'}) }
   }
 
   const handlePublish = async ({ id, publish }) => {
@@ -96,7 +91,7 @@ const ListPromoPage = () => {
                 question="¿Seguro querés borrar esta promo?"
               />
               <Grid container spacing={2}>
-                {promoState?.promos.map(promo => (
+                {promos?.promos.map(promo => (
                   <Grid item xs={12} lg={+promo.cols} key={promo.id}>
                     <Card>
                       <CardActionArea>
@@ -138,7 +133,12 @@ const ListPromoPage = () => {
   )
 }
 
-export default ListPromoPage
+const mapStateToProps = (state) => {
+  console.log(state)
+  return { promos: state.promos }
+}
+
+export default connect(mapStateToProps, { fetchPromos })(ListPromoPage)
 
 const useStyles = makeStyles((theme) => ({
   root: {

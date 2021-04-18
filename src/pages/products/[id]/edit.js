@@ -11,19 +11,22 @@ import FormProduct from '../../../components/form/FormProduct'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import { getItem, editItem } from '../../../firebase/firebase.config'
+import { editItem } from '../../../firebase/firebase.config'
 
 const EditProductPage = ({ fetchProduct, products }) => {
   const classes = useStyles()
   const router = useRouter()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     const { id } = router.query
-    if (router.query.id) {
-      fetchProduct(id)
-    }
+    if (router.query.id) fetchProduct(id)
   }, [router.query])
+
+  const getProduct = (id) => {
+    try { fetchProduct(id) }
+    catch(error) { enqueueSnackbar('Ha ocurrido un error al intentar obtener el producto', { variant: 'error'}) }
+  }
 
   const updateProduct = async (data) => {
     try {

@@ -34,13 +34,18 @@ const ListProductPage = ({ fetchProducts, products }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   const router = useRouter()
   
   useEffect(() => {
-    fetchProducts()
+    getProducts()
   }, [])
+
+  const getProducts = () => {
+    try { fetchProducts() }
+    catch(error) { enqueueSnackbar('Ha sucedido un error al intentar obtener los productos', { variant: 'error'}) }
+  }
 
   const handlePublish = async ({ id, publish }) => {
     try {

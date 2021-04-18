@@ -6,7 +6,9 @@ import Container from '@material-ui/core/Container'
 import Collapse from '@material-ui/core/Collapse'
 import { usePromo, ActionType } from '../services/Promo.context'
 
-const ProductHero = () => {
+import connect from 'react-redux'
+
+const ProductHero = ({ promos }) => {
   const classes = useStyles()
   const [promoState, promoDispatch] = usePromo()
 
@@ -39,7 +41,11 @@ const ProductHero = () => {
 
 const backgroundImage = '/greenhouse.jpg'
 
-export default ProductHero
+const mapStateToProps = ({ cart }) => {
+  return { cart }
+}
+
+export default connect(mapStateToProps)(ProductHero)
 
 const useStyles = makeStyles((theme) => ({
   background: {

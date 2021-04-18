@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { usePromo, ActionType } from '../../../services/Promo.context'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 import Container from '@material-ui/core/Container'
@@ -8,30 +7,24 @@ import Typography from '@material-ui/core/Typography'
 
 import MainLayout from '../../../components/MainLayout'
 import FormPromo from '../../../components/form/FormPromo'
-import { getItem, editItem } from '../../../firebase/firebase.config'
+import { editItem } from '../../../firebase/firebase.config'
 
-const EditPromoPage = () => {
-  const [promoState, promoDispatch] = usePromo()
+import { connect } from 'react-redux'
+import { fetchPromo } from '../../../actions/promos'
+
+const EditPromoPage = ({ promos, fetchPromo }) => {
   const classes = useStyles()
   const router = useRouter()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     const { id } = router.query
-    if (router.query.id) {
-      getPromo(id)
-    }
+    if (router.query.id) getPromo(id)
   }, [router.query])
 
-  const getPromo = async (id) => {
-    try {
-      const snapshot = await getItem({ collection: 'promos', id })
-      promoDispatch({
-        type: ActionType.SET_PROMO,
-        payload: snapshot.data(),
-      })
-    }
-    catch (error) { enqueueSnackbar('Ha ocurrido un error al obtener la promo', { variant: 'error'}) }
+  const getPromo = (id) => {
+    try { fetchPromo(id) }
+    catch(error) { enqueueSnackbar('Ha ocurrido un error', { variant: 'error'}) }
   }
 
   const updatePromo = async (data) => {
@@ -50,8 +43,8 @@ const EditPromoPage = () => {
           <Typography className={classes.title} variant="h4">
             Editar Promos
           </Typography>
-          {promoState?.promo
-            ? <FormPromo onSubmit={(data) => updatePromo(data)} promo={promoState.promo}/>
+          {promos?.promo
+            ? <FormPromo onSubmit={(data) => updatePromo(data)} promo={promos.promo}/>
             : null
           }
         </Container>
@@ -60,7 +53,11 @@ const EditPromoPage = () => {
   )
 }
 
-export default EditPromoPage
+const mapStateToProps = ({ promos }) => {
+  return { promos }
+}
+
+export default connect(mapStateToProps, { fetchPromo })(EditPromoPage)
 
 const useStyles = makeStyles((theme) => ({
   container: {

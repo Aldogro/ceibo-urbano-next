@@ -66,7 +66,6 @@ const ProductCategories = ({ fetchProducts, products }) => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        {console.log(products)}
         {!products.products.length
           ?
           skeletons.map((skeleton, index) => (

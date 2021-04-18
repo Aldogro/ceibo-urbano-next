@@ -1,12 +1,25 @@
 import { combineReducers } from 'redux'
 
-const productsReducer = (products = [], action) => {
-  if (action.type === 'FETCH_PRODUCTS') {
-    return (action.payload)
+const promosReducer = (promos = [], action) => {
+  switch (action.type) {
+    case 'SET_PROMOS':
+      return action.payload
+    default:
+      return promos
   }
-  return []
 }
 
+const promoReducer = (promo = null, action) => {
+  switch (action.type) {
+    case 'SET_PROMO':
+      return action.payload
+    default:
+      return promo
+  }
+}
+
+
 export default combineReducers({
-  products: () => 10,
+  promos: promosReducer,
+  promo: promoReducer,
 })
