@@ -5,7 +5,6 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../theme'
 import { Provider } from 'react-redux'
-import { ConfigProvider } from '../services/Config.context'
 import { SnackbarProvider } from 'notistack'
 import { isoLogo } from '../utils/catalog'
 
