@@ -24,7 +24,7 @@ const FormProduct = ({ product = {}, onSubmit }) => {
   const [cols, setCols] = useState('')
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
-  const [type, setType] = useState(null)
+  const [type, setType] = useState('all')
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()

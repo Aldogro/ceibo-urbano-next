@@ -1,8 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { useCart } from '../services/Cart.context'
-import { useConfig } from '../services/Config.context'
 
 import Link from 'next/link'
 
@@ -34,14 +32,14 @@ import app from '../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { isoLogo } from '../utils/catalog'
 
-export default function PersistentDrawerLeft({ children }) {
+import { connect } from 'react-redux'
+
+const PersistentDrawerLeft = ({ cart, children }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [user, loading, error] = useAuthState(app.auth())
-  const [cartState, cartDispatch] = useCart()
   const [open, setOpen] = React.useState(false)
   const [openCart, setOpenCart] = React.useState(false)
-  const [config, configDispatch] = useConfig()
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -66,7 +64,7 @@ export default function PersistentDrawerLeft({ children }) {
 
   const getCartItems = () => {
     let temp = 0
-    cartState.items.forEach(item => temp += item.amount)
+    cart.items.forEach(item => temp += item.amount)
     return temp
   }
 
@@ -207,6 +205,12 @@ export default function PersistentDrawerLeft({ children }) {
     </div>
   )
 }
+
+const mapStateToProps = ({ cart }) => {
+  return { cart }
+}
+
+export default connect(mapStateToProps)(PersistentDrawerLeft)
 
 const drawerWidth = 300
 

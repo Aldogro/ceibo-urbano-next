@@ -1,9 +1,7 @@
 import React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { useCart, ActionType } from '../services/Cart.context'
 import { useSnackbar } from 'notistack'
-import { useConfig } from '../services/Config.context'
 
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
@@ -17,61 +15,28 @@ import ClearIcon from '@material-ui/icons/Clear'
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
-const Cart = () => {
+import { connect } from 'react-redux'
+import { clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod } from '../redux/actions/cart'
+
+const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod, cart, settings }) => {
   const classes = useStyles();
-  const [cartState, cartDispatch] = useCart()
-  const [config, configDispatch] = useConfig()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-
-  const onAmountAdd = (item) => {
-    cartDispatch({
-      type: ActionType.ADD_ITEM,
-      payload: item,
-    })
-  }
-
-  const onAmountRemove = (item) => {
-    cartDispatch({
-      type: ActionType.REMOVE_AMOUNT,
-      payload: item,
-    })
-  }
-
-  const onRemoveItem = (item) => {
-    cartDispatch({
-      type: ActionType.REMOVE_ITEM,
-      payload: item,
-    })
-  }
+  const { enqueueSnackbar } = useSnackbar()
 
   const getTotal = () => {
     let total = 0
-    cartState.items.forEach(item => {
+    cart.items.forEach(item => {
       total += item.amount * item.price
     })
     return total
   }
 
-  const clearCart = () => {
-    cartDispatch({
-      type: ActionType.CLEAR_CART,
-    })
-  }
-
   const generateText = (br) => {
     let temp = `¡Hola!, mi pedido:${br}${br}`
-    cartState.items.forEach(item => {
+    cart.items.forEach(item => {
       temp += `${item.name}: $${item.price} x${item.amount} - $${item.price * item.amount}${br}`
     })
-    temp += `${br}Método de pago: ${cartState.paymentMethod}${br}${br}Precio TOTAL $${getTotal()}`
+    temp += `${br}Método de pago: ${cart.paymentMethod}${br}${br}Precio TOTAL $${getTotal()}`
     return temp
-  }
-
-  const handlePaymentMethodChange = (e) => {
-    cartDispatch({
-      type: ActionType.SET_PAYMENT_METHOD,
-      payload: e.target.value,
-    })
   }
 
   const copyToClipboard = () => {
@@ -84,8 +49,8 @@ const Cart = () => {
 
   return (
     <div className={classes.alignCenter}>
-      { cartState.items.length > 0
-        ? cartState.items.map((item) => {
+      { cart.items.length > 0
+        ? cart.items.map((item) => {
           return (
             <Grid container cols={1} className={classes.cartItem} key={item.id}>
               <Grid item xs={4} lg={4}>
@@ -116,13 +81,13 @@ const Cart = () => {
       <Typography variant="h4" gutterBottom marked="center" align="center">
         Total: ${getTotal()}
       </Typography>
-      <RadioGroup aria-label="quiz" color="primary" name="quiz" value={cartState.paymentMethod} onChange={handlePaymentMethodChange}>
+      <RadioGroup aria-label="quiz" color="primary" name="quiz" value={cart.paymentMethod} onChange={(e) => {onSelectedPaymentMethod(e.target.value)}}>
         <FormControlLabel value="Mercado Pago" control={<Radio color="primary" />} label="Mercado Pago" />
         <FormControlLabel value="Efectivo" control={<Radio color="primary" />} label="Efectivo" />
       </RadioGroup>
       * Selecciona algún método de pago para poder realizar el pedido.
       <hr />
-      { !cartState.items.length < 1 || cartState.paymentMethod
+      { !cart.items.length < 1 || cart.paymentMethod
         ?
         <Button onClick={() => clearCart()}>
           Vaciar carrito
@@ -138,10 +103,10 @@ const Cart = () => {
         color="primary"
         variant="contained"
         className={classes.send}
-        disabled={cartState.items.length < 1 || !cartState.paymentMethod}
+        disabled={cart.items.length < 1 || !cart.paymentMethod}
         target="_blank"
         rel="noopener noreferrer"
-        href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=${generateText('%0A')}`}
+        href={`https://api.whatsapp.com/send?phone=+549${settings.settings.phone}&text=${generateText('%0A')}`}
       >
         Hacer pedido
         <WhatsAppIcon className={classes.wapp} />
@@ -149,14 +114,21 @@ const Cart = () => {
       <br />
       <hr />
       * Si no tenés whatsapp, no te preocupes, podés copiar el contenido del Carrito para enviarlo por email haciendo
-      <Button disabled={cartState.items.length < 1 || !cartState.paymentMethod} onClick={copyToClipboard}>
+      <Button disabled={cart.items.length < 1 || !cart.paymentMethod} onClick={copyToClipboard}>
         click aquí
       </Button>
     </div>
   )
 }
 
-export default Cart
+const mapStateToProps = ({ cart, settings }) => {
+  return { cart, settings }
+}
+
+export default connect(
+  mapStateToProps,
+  { clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod },
+)(Cart)
 
 const useStyles = makeStyles((theme) => ({
   alignCenter: {

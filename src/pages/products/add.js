@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 
-import AppAppBar from '../../components/AppAppBar'
+import MainLayout from '../../components/MainLayout'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import FormProduct from '../../components/form/FormProduct'
@@ -27,15 +27,16 @@ const AddProductPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.container}>
-        <div className={classes.root}>
-          <Typography className={classes.title} variant="h4">
-            Agregar producto
-          </Typography>
-          <FormProduct onSubmit={(data) => createProduct(data)} />
-        </div>
-      </Container>
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.container}>
+          <div className={classes.root}>
+            <Typography className={classes.title} variant="h4">
+              Agregar producto
+            </Typography>
+            <FormProduct onSubmit={(data) => createProduct(data)} />
+          </div>
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }

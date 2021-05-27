@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { usePromo, ActionType } from '../../services/Promo.context'
 import { useSnackbar } from 'notistack'
 
 import Card from '@material-ui/core/Card'
@@ -21,19 +20,21 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
-import AppAppBar from '../../components/AppAppBar'
-import app, { getCollection, publishItem, deleteItem } from '../../firebase/firebase.config'
+import MainLayout from '../../components/MainLayout'
+import app, { publishItem, deleteItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
-const ListPromoPage = () => {
+import { connect } from 'react-redux'
+import { fetchPromos } from '../../redux/actions/promos'
+
+const ListPromoPage = ({ fetchPromos, promos }) => {
   const classes = useStyles()
   const [user, loading, error] = useAuthState(app.auth())
-  const [promoState, promoDispatch] = usePromo()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
   const router = useRouter()
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   
   useEffect(() => {
     if (!user) {
@@ -42,15 +43,9 @@ const ListPromoPage = () => {
     getPromos()
   }, [])
 
-  const getPromos = async () => {
-    try {
-      const snapshot = await getCollection('promos')
-      promoDispatch({
-        type: ActionType.SET_PROMOS,
-        payload: snapshot.docs.map(doc => doc.data()),
-      })
-    }
-    catch (error) { enqueueSnackbar('Ha sucedido un error al obtener las promos', { variant: 'error'}) }
+  const getPromos = () => {
+    try { fetchPromos() }
+    catch(error) { enqueueSnackbar('Ha sucedido un error', { variant: 'error'}) }
   }
 
   const handlePublish = async ({ id, publish }) => {
@@ -79,65 +74,70 @@ const ListPromoPage = () => {
 
   return (
     <React.Fragment>
-      <AppAppBar />
-      <Container maxWidth="lg" className={classes.marginTop}>
-        {user ?
-          <div className={classes.root}>
-            <Typography className={classes.title} variant="h4">
-              Listado de promos
-            </Typography>
-            <Button color="primary" className={classes.addButton} onClick={() => router.push('/promos/add')}>
-              Agregar Promo
-            </Button>
-            <Dialog
-              isOpen={dialogOpen}
-              handleConfirm={() => confirmDelete()}
-              handleClose={() => setDialogOpen(false)}
-              question="¿Seguro querés borrar esta promo?"
-            />
-            <Grid container spacing={2}>
-              {promoState?.promos.map(promo => (
-                <Grid item xs={12} lg={+promo.cols} key={promo.id}>
-                  <Card>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media}
-                        image={promo.picture}
-                        title={promo.name}
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {promo.name}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          {promo.description}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                      <IconButton size="small" color="primary" onClick={() => router.push(`/promos/${promo.id}/edit`)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton size="small" color="primary" onClick={() => handleDelete(promo.id)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                      <IconButton size="small" color="primary" onClick={() => handlePublish(promo)}>
-                        {promo.publish ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </div>
-          : <div></div>
-        }
-      </Container>
+      <MainLayout>
+        <Container maxWidth="lg" className={classes.marginTop}>
+          {user ?
+            <div className={classes.root}>
+              <Typography className={classes.title} variant="h4">
+                Listado de promos
+              </Typography>
+              <Button color="primary" className={classes.addButton} onClick={() => router.push('/promos/add')}>
+                Agregar Promo
+              </Button>
+              <Dialog
+                isOpen={dialogOpen}
+                handleConfirm={() => confirmDelete()}
+                handleClose={() => setDialogOpen(false)}
+                question="¿Seguro querés borrar esta promo?"
+              />
+              <Grid container spacing={2}>
+                {promos?.promos.map(promo => (
+                  <Grid item xs={12} lg={+promo.cols} key={promo.id}>
+                    <Card>
+                      <CardActionArea>
+                        <CardMedia
+                          className={classes.media}
+                          image={promo.picture}
+                          title={promo.name}
+                        />
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            {promo.name}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            {promo.description}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                      <CardActions>
+                        <IconButton size="small" color="primary" onClick={() => router.push(`/promos/${promo.id}/edit`)}>
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton size="small" color="primary" onClick={() => handleDelete(promo.id)}>
+                          <DeleteForeverIcon />
+                        </IconButton>
+                        <IconButton size="small" color="primary" onClick={() => handlePublish(promo)}>
+                          {promo.publish ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </div>
+            : <div></div>
+          }
+        </Container>
+      </MainLayout>
     </React.Fragment>
   )
 }
 
-export default ListPromoPage
+const mapStateToProps = (state) => {
+  return { promos: state.promos }
+}
+
+export default connect(mapStateToProps, { fetchPromos })(ListPromoPage)
 
 const useStyles = makeStyles((theme) => ({
   root: {

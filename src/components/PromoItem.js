@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useCart, ActionType as CartActionType } from '../services/Cart.context'
 
 import Carousel from './Carousel'
 import Grid from '@material-ui/core/Grid'
@@ -12,22 +11,17 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const PromoItem = ({ promo }) => {
+import { connect } from 'react-redux'
+import { onAmountAdd } from '../redux/actions/cart'
+
+const PromoItem = ({ promo, cart, onAmountAdd }) => {
   const classes = useStyles()
-  const [cartState, cartDispatch] = useCart()
   
   const [openCarousel, setOpenCarousel] = useState(true)
   const [selectedPromo, setSelectedPromo] = useState(null)
 
-  const handleOnAddToCart = (promo) => {
-    cartDispatch({
-      type: CartActionType.ADD_ITEM,
-      payload: promo,
-    })
-  }
-
   const getCartItems = (promo) => {
-    const item = cartState.items.filter(item => item.id === promo.id)
+    const item = cart.items.filter(item => item.id === promo.id)
     return item[0]?.amount
   }
 
@@ -57,10 +51,6 @@ const PromoItem = ({ promo }) => {
                 </IconButton>
               : null
             }
-          
-          <Typography className={classes.discount}>
-            {promo.discount}% OFF
-          </Typography>
           <div className={classes.products}>
             {promo.products.map((product, index) => (
               <Typography key={index} className={classes.product}>
@@ -76,7 +66,7 @@ const PromoItem = ({ promo }) => {
               : null
             }
           </div>
-          <Button color="secondary" variant="outlined" onClick={() => handleOnAddToCart(promo)}>
+          <Button color="secondary" variant="outlined" onClick={() => onAmountAdd(promo)}>
             Agregar al carrito
             {
               getCartItems(promo)
@@ -90,7 +80,11 @@ const PromoItem = ({ promo }) => {
   )
 }
 
-export default PromoItem
+const mapStateToProps = ({ cart }) => {
+  return { cart }
+}
+
+export default connect(mapStateToProps, { onAmountAdd })(PromoItem)
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {

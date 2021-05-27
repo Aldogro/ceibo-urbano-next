@@ -10,8 +10,9 @@ import FacebookIcon from '@material-ui/icons/Facebook'
 import InstagramIcon from '@material-ui/icons/Instagram'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 
-import { useConfig } from '../services/Config.context'
 import { isoLogo } from '../utils/catalog'
+
+import { connect } from 'react-redux'
 
 function Copyright() {
   const classes = useStyles()
@@ -39,9 +40,8 @@ const LANGUAGES = [
   },
 ]
 
-export default function AppFooter() {
+const  AppFooter = ({ settings }) => {
   const classes = useStyles()
-  const [config, configDispatch] = useConfig()
 
   return (
     <>
@@ -70,7 +70,7 @@ export default function AppFooter() {
                   <a href="https://www.facebook.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
                     <FacebookIcon className={classes.icon} />
                   </a>
-                  <a href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer" className={classes.icon}>
+                  <a href={`https://api.whatsapp.com/send?phone=+549${settings.settings.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer" className={classes.icon}>
                     <WhatsAppIcon className={classes.icon} />
                   </a>
                   <a href="https://www.instagram.com/ceibourbano/" target="_blank" rel="noopener noreferrer" className={classes.icon}>
@@ -85,7 +85,7 @@ export default function AppFooter() {
           </Grid>
         </Container>
       </Typography>
-      <a href={`https://api.whatsapp.com/send?phone=+549${config.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer">
+      <a href={`https://api.whatsapp.com/send?phone=+549${settings.settings.phone}&text=¡Hola!%0AMi nombre es`} target="_blank" rel="noopener noreferrer">
         <Fab className={classes.whatsappFab} color="primary" aria-label="add">
           <WhatsAppIcon style={{fontSize: '35px'}} />
         </Fab>
@@ -93,6 +93,12 @@ export default function AppFooter() {
     </>
   )
 }
+
+const mapStateToProps = ({ settings }) => {
+  return { settings }
+}
+
+export default connect(mapStateToProps)(AppFooter)
 
 const useStyles = makeStyles((theme) => ({
   root: {

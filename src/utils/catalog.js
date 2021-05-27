@@ -8,24 +8,59 @@ export const productTypeOptions = [
     label: 'Aromáticas',
   },
   {
-    key: 'ornamental',
-    label: 'Ornamentales',
+    key: 'cactus',
+    label: 'Cactus',
   },
   {
-    key: 'interior',
-    label: 'De interior',
+    key: 'citrics',
+    label: 'Cítricos',
+  },
+  {
+    key: 'orchard',
+    label: 'Huerta',
   },
   {
     key: 'supplies',
     label: 'Insumos de jardinería',
+  },
+  {
+    key: 'interior',
+    label: 'Interior',
+  },
+  {
+    key: 'pots',
+    label: 'Macetas',
+  },
+  {
+    key: 'ornamental',
+    label: 'Ornamentales',
+  },
+  {
+    key: 'seeds',
+    label: 'Semillas',
+  },
+  {
+    key: 'substrates',
+    label: 'Sustratos',
+  },
+  {
+    key: 'succulents',
+    label: 'Suculentas',
   },
 ]
 
 export const productTypes = {
   all: 'Todos los productos',
   aromatic: 'Aromáticas',
-  ornamental: 'Ornamentales',
+  cactus: 'Cactus',
+  citrics: 'Cítricos',
   interior: 'De interior',
+  orchard: 'Huerta',
+  ornamental: 'Ornamentales',
+  pots: 'Macetas',
+  seeds: 'Semillas',
+  substrates: 'Sustratos',
+  succulents: 'Suculentas',
   supplies: 'Insumos de jardinería',
 }
 

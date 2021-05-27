@@ -1,24 +1,29 @@
-import React from 'react'
-import AppAppBar from '../components/AppAppBar'
+import React, { useEffect } from 'react'
+import MainLayout from '../components/MainLayout'
 import ProductHero from '../components/ProductHero'
-import ProductValues from '../components/ProductValues'
 import ProductCategories from '../components/ProductCategories'
 import ProductHowItWorks from '../components/ProductHowItWorks'
-import ProductSmokingHero from '../components/ProductSmokingHero'
 import PromoCategories from '../components/PromoCategories'
-import AppFooter from '../components/AppFooter'
+import { connect } from 'react-redux'
+import { setSettings } from '../redux/actions/settings'
 
-export default function Index() {
+const Index = ({ setSettings }) => {
+  useEffect(() => {
+    setSettings()
+  }, [])
+
   return (
     <React.Fragment>
-      <AppAppBar />
-      <ProductHero />
-      <PromoCategories />
-      <ProductValues />
-      <ProductSmokingHero />
-      <ProductHowItWorks />
-      <ProductCategories />
-      <AppFooter />
+      <MainLayout>
+        <ProductHero />
+        <PromoCategories />
+        <ProductHowItWorks />
+        <ProductCategories />
+      </MainLayout>
     </React.Fragment>
   )
 }
+
+
+
+export default connect(null, { setSettings })(Index)

@@ -4,34 +4,32 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Collapse from '@material-ui/core/Collapse'
-import { usePromo, ActionType } from '../services/Promo.context'
 
-const ProductHero = () => {
+import { connect } from 'react-redux'
+
+const ProductHero = ({ promos }) => {
   const classes = useStyles()
-  const [promoState, promoDispatch] = usePromo()
+
+  const getMaxDiscount = () => {
+    let temp = 0
+    promos.promos.forEach(promo => {
+      if (promo.discount < temp) { temp = promo.discount }
+    })
+    return temp * - 1
+  }
 
   return (
     <div className={classes.background}>
       <div className={classes.backdrop}></div>
       <Container className={classes.container}>
         <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
-          ¡Embellecé tu jardín!
+          Colores y aromas para vos
         </Typography>
-        <Collapse className={classes.collapse} in={!!promoState.maxDiscount}>
+        <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-            {promoState.maxDiscount > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${promoState.maxDiscount}%` : ''}
+            {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''}
           </Typography>
         </Collapse>
-        <Button
-          color="secondary"
-          variant="contained"
-          size="large"
-          className={classes.button}
-          component="a"
-          href="#footer-ceibo"
-        >
-          Comunicate con nosotros
-        </Button>
       </Container>
     </div>
   )
@@ -39,7 +37,11 @@ const ProductHero = () => {
 
 const backgroundImage = '/greenhouse.jpg'
 
-export default ProductHero
+const mapStateToProps = ({ promos }) => {
+  return { promos }
+}
+
+export default connect(mapStateToProps)(ProductHero)
 
 const useStyles = makeStyles((theme) => ({
   background: {

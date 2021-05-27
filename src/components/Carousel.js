@@ -18,7 +18,7 @@ const ImageCarousel = ({ open, setOpen, images }) => {
         {images
           ?
           images.map(image => (
-            <img className={classes.image} src={image} />
+            <img key={image} className={classes.image} src={image} />
           ))
           : null
         }

@@ -4,12 +4,11 @@ import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../theme'
-import { ConfigProvider } from '../services/Config.context'
-import { ProductProvider } from '../services/Product.context'
-import { PromoProvider } from '../services/Promo.context'
-import { CartProvider } from '../services/Cart.context'
+import { Provider } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
 import { isoLogo } from '../utils/catalog'
+
+import store from '../redux/store'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props
@@ -24,26 +23,20 @@ export default function MyApp(props) {
 
   return (
     <React.Fragment>
-      <SnackbarProvider maxSnack={3}>
-        <ConfigProvider>
-          <CartProvider>
-            <ProductProvider>
-              <PromoProvider>
-                <Head>
-                  <title>Ceibo Urbano</title>
-                  <link rel="shortcut icon" href={isoLogo} />
-                  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-                </Head>
-                <ThemeProvider theme={theme}>
-                  {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </PromoProvider>
-            </ProductProvider>
-          </CartProvider>
-        </ConfigProvider>
-      </SnackbarProvider>
+      <Provider store={store}>
+        <SnackbarProvider maxSnack={3}>
+          <Head>
+            <title>Ceibo Urbano</title>
+            <link rel="shortcut icon" href={isoLogo} />
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </SnackbarProvider>
+      </Provider>
     </React.Fragment>
   )
 }

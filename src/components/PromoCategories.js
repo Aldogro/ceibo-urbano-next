@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
-import { usePromo, ActionType as PromoActionType } from '../services/Promo.context'
 
 import Skeleton from '@material-ui/lab/Skeleton'
 import Grid from '@material-ui/core/Grid'
@@ -9,12 +8,12 @@ import PromoItem from './PromoItem'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import app from '../firebase/firebase.config'
+import { fetchPromos } from '../redux/actions/promos'
+import { connect } from 'react-redux'
 
-const PromoCategories = () => {
+const PromoCategories = ({ fetchPromos, promos }) => {
   const classes = useStyles()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const [promoState, promoDispatch] = usePromo()
+  const { enqueueSnackbar } = useSnackbar()
 
   const skeletons = ['a', 'b', 'c']
 
@@ -23,27 +22,17 @@ const PromoCategories = () => {
   }, [])
 
   const getPromos = async () => {
-    try {
-      const snapshot = await app.firestore().collection('promos').get()
-      promoDispatch({
-        type: PromoActionType.SET_PROMOS,
-        payload: snapshot.docs.map(doc => doc.data()),
-      })
-      promoDispatch({
-        type: PromoActionType.GET_MAX_DISCOUNT,
-      })
-    }
+    try { fetchPromos() }
     catch (error) {enqueueSnackbar('Ocurrió un error al solicitar las promociones', { variant: 'error'})}
-    
   }
 
   return (
     <Container className={classes.root} component="section">
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
-        ¡Aprovechá todas nuestras promociones!
+        Nuestras Promos
       </Typography>
       <Grid container spacing={2}>
-        {!promoState.promos.length
+        {!promos.promos.length
           ?
           skeletons.map((skeleton, index) => (
             <Grid item xs={12} lg={4} key={index}>
@@ -55,8 +44,10 @@ const PromoCategories = () => {
             </Grid>
           ))
           :
-          promoState.promos.map((promo, index) => (
-            <PromoItem key={index} promo={promo} />
+          promos.promos.map((promo, index) => (
+            promo.publish
+              ? <PromoItem key={index} promo={promo} />
+              : null
           ))
         }
       </Grid>
@@ -64,7 +55,11 @@ const PromoCategories = () => {
   )
 }
 
-export default PromoCategories
+const mapStateToProps = ({ promos }) => {
+  return { promos }
+}
+
+export default connect(mapStateToProps, { fetchPromos })(PromoCategories)
 
 const useStyles = makeStyles((theme) => ({
   root: {
