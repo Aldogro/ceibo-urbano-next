@@ -23,23 +23,13 @@ const ProductHero = ({ promos }) => {
       <div className={classes.backdrop}></div>
       <Container className={classes.container}>
         <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
-          ¡Embellecé tu jardín!
+          Colores y aromas para vos
         </Typography>
         <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
             {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''}
           </Typography>
         </Collapse>
-        <Button
-          color="secondary"
-          variant="contained"
-          size="large"
-          className={classes.button}
-          component="a"
-          href="#footer-ceibo"
-        >
-          Comunicate con nosotros
-        </Button>
       </Container>
     </div>
   )

@@ -1,4 +1,4 @@
-import app, { getItem } from '../firebase/firebase.config'
+import app, { getItem } from '../../firebase/firebase.config'
 
 export const fetchProducts = (orderBy = ['price', 'asc']) => async dispatch => {
   const snapshot = await app.firestore().collection('products').orderBy(orderBy[0], orderBy[1]).get()

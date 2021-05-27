@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react'
 import MainLayout from '../components/MainLayout'
 import ProductHero from '../components/ProductHero'
-import ProductValues from '../components/ProductValues'
 import ProductCategories from '../components/ProductCategories'
 import ProductHowItWorks from '../components/ProductHowItWorks'
-import ProductSmokingHero from '../components/ProductSmokingHero'
 import PromoCategories from '../components/PromoCategories'
 import { connect } from 'react-redux'
-import { setSettings } from '../actions/settings'
+import { setSettings } from '../redux/actions/settings'
 
 const Index = ({ setSettings }) => {
   useEffect(() => {
@@ -19,8 +17,6 @@ const Index = ({ setSettings }) => {
       <MainLayout>
         <ProductHero />
         <PromoCategories />
-        <ProductValues />
-        <ProductSmokingHero />
         <ProductHowItWorks />
         <ProductCategories />
       </MainLayout>

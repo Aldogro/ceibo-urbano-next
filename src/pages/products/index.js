@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 
-import { fetchProducts } from '../../actions/products'
+import { fetchProducts } from '../../redux/actions/products'
 import { connect } from 'react-redux'
 
 import Card from '@material-ui/core/Card'

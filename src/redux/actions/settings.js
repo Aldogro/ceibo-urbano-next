@@ -1,4 +1,4 @@
-import app, { getItem, createSettings } from '../firebase/firebase.config'
+import app, { getItem, createSettings } from '../../firebase/firebase.config'
 
 export const setSettings = () => async dispatch => {
   const snapshot = await getItem({ collection: 'settings', id: 'settings' })

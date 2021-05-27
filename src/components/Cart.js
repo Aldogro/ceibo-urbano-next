@@ -16,7 +16,7 @@ import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 import { connect } from 'react-redux'
-import { clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod } from '../actions/cart'
+import { clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod } from '../redux/actions/cart'
 
 const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelectedPaymentMethod, cart, settings }) => {
   const classes = useStyles();

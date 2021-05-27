@@ -15,7 +15,7 @@ import { productTypes } from '../utils/catalog'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
-import { onAmountAdd } from '../actions/cart'
+import { onAmountAdd } from '../redux/actions/cart'
 
 const ProductItem = ({ product, cart, onAmountAdd }) => {
   const classes = useStyles()

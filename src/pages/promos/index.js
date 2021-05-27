@@ -25,7 +25,7 @@ import app, { publishItem, deleteItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { connect } from 'react-redux'
-import { fetchPromos } from '../../actions/promos'
+import { fetchPromos } from '../../redux/actions/promos'
 
 const ListPromoPage = ({ fetchPromos, promos }) => {
   const classes = useStyles()

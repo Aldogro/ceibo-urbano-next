@@ -8,7 +8,7 @@ import PromoItem from './PromoItem'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import { fetchPromos } from '../actions/promos'
+import { fetchPromos } from '../redux/actions/promos'
 import { connect } from 'react-redux'
 
 const PromoCategories = ({ fetchPromos, promos }) => {
@@ -29,7 +29,7 @@ const PromoCategories = ({ fetchPromos, promos }) => {
   return (
     <Container className={classes.root} component="section">
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
-        ¡Aprovechá todas nuestras promociones!
+        Nuestras Promos
       </Typography>
       <Grid container spacing={2}>
         {!promos.promos.length

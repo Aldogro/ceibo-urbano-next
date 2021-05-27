@@ -12,7 +12,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { connect } from 'react-redux'
-import { onAmountAdd } from '../actions/cart'
+import { onAmountAdd } from '../redux/actions/cart'
 
 const PromoItem = ({ promo, cart, onAmountAdd }) => {
   const classes = useStyles()
@@ -51,10 +51,6 @@ const PromoItem = ({ promo, cart, onAmountAdd }) => {
                 </IconButton>
               : null
             }
-          
-          <Typography className={classes.discount}>
-            {promo.discount}% OFF
-          </Typography>
           <div className={classes.products}>
             {promo.products.map((product, index) => (
               <Typography key={index} className={classes.product}>

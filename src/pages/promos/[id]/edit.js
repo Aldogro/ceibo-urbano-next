@@ -10,7 +10,7 @@ import FormPromo from '../../../components/form/FormPromo'
 import { editItem } from '../../../firebase/firebase.config'
 
 import { connect } from 'react-redux'
-import { fetchPromo } from '../../../actions/promos'
+import { fetchPromo } from '../../../redux/actions/promos'
 
 const EditPromoPage = ({ promos, fetchPromo }) => {
   const classes = useStyles()

@@ -15,7 +15,7 @@ import app, { editItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { connect } from 'react-redux'
-import { setSettings } from '../../actions/settings'
+import { setSettings } from '../../redux/actions/settings'
 
 const ListProductPage = ({ settings, setSettings }) => {
   const classes = useStyles()

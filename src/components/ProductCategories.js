@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 
 import { connect } from 'react-redux'
-import { fetchProducts } from '../actions/products'
+import { fetchProducts } from '../redux/actions/products'
 
 import { orderByOptions, productTypeOptions } from '../utils/catalog'
 
@@ -29,7 +29,7 @@ const ProductCategories = ({ fetchProducts, products }) => {
   return (
     <Container className={classes.root} component="section">
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
-        ¡Aprovechá todos nuestros productos!
+        ¡Nuestros Productos!
       </Typography>
       <Grid container className={classes.filters} spacing={3} cols={1}>
         <Grid item xs={12} lg={4}>
