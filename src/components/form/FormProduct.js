@@ -14,7 +14,7 @@ import { DropzoneArea } from 'material-ui-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 
-import { productTypeOptions } from '../../utils/catalog'
+import { productTypeOptions, productSunOptions, productWaterOptions } from '../../utils/catalog'
 import app from '../../firebase/firebase.config'
 
 const FormProduct = ({ product = {}, onSubmit }) => {
@@ -25,6 +25,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
   const [picture, setPicture] = useState('')
   const [publish, setPublish] = useState(false)
   const [type, setType] = useState('all')
+  const [sun, setSun] = useState('')
+  const [water, setWater] = useState('')
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
@@ -38,6 +40,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
       setPicture(product.picture)
       setPublish(product.publish)
       setType(product.type)
+      setSun(product.sun)
+      setWater(product.water)
     }
   }, [product])
 
@@ -51,6 +55,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
       picture,
       publish,
       type,
+      sun,
+      water,
     })
   }
 
@@ -138,6 +144,38 @@ const FormProduct = ({ product = {}, onSubmit }) => {
                 {productTypeOptions.map(type => (
                   <MenuItem key={type.key} value={type.key}>
                     {type.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <InputLabel id="demo-simple-select-label">Sol</InputLabel>
+              <Select
+                className={classes.fullWidth}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sun}
+                onChange={({ target }) => setSun(target.value)}
+              >
+                {productSunOptions.map(sun => (
+                  <MenuItem key={sun.key} value={sun.key}>
+                    {sun.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <InputLabel id="demo-simple-select-label">Riego</InputLabel>
+              <Select
+                className={classes.fullWidth}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={water}
+                onChange={({ target }) => setWater(target.value)}
+              >
+                {productWaterOptions.map(water => (
+                  <MenuItem key={water.key} value={water.key}>
+                    {water.label}
                   </MenuItem>
                 ))}
               </Select>

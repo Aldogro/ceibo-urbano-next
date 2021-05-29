@@ -49,6 +49,48 @@ export const productTypeOptions = [
   },
 ]
 
+export const productSunOptions = [
+  {
+    key: 'full-sun',
+    label: 'Pleno Sol',
+  },
+  {
+    key: 'half-shadow',
+    label: 'Media Sombra',
+  },
+  {
+    key: 'shadow',
+    label: 'Sombra',
+  },
+]
+
+export const productSunTypes = {
+  'full-sun': 'Pleno Sol',
+  'half-shadow': 'Media Sombra',
+  shadow: 'Sombra',
+}
+
+export const productWaterOptions = [
+  {
+    key: 'abundant',
+    label: 'Abundante',
+  },
+  {
+    key: 'moderate',
+    label: 'Moderado',
+  },
+  {
+    key: 'low',
+    label: 'Escaso',
+  },
+]
+
+export const productWaterTypes = {
+  abundant: 'Abundante',
+  moderate: 'Moderado',
+  low: 'Escaso',
+}
+
 export const productTypes = {
   all: 'Todos los productos',
   aromatic: 'Aromáticas',

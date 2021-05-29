@@ -47,9 +47,9 @@ const ProductHowItWorks = () => {
                   Riego
                 </Typography>
                 <Typography className={classes.description} align="center">
-                  <b>Abundante:</b> la tierra debe estar húmeda en todo momento.<br/>
-                  <b>Moderado:</b> mojar la tierra sin empapar del todo.<br/>
-                  <b>Escaso:</b> dejar secar la parte superior del sustrato entre cada riego.
+                  <b>Abundante:</b> sustrato húmedo en todo momento.<br/>
+                  <b>Moderado:</b> mojar el sustrato sin empapar del todo.<br/>
+                  <b>Escaso:</b> dejar secar el sustrato entre riegos.
                 </Typography>
               </div>
             </Grid>
@@ -92,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     textAlign: 'center',
+    width: '107%',
     fontSize: '14px',
     [theme.breakpoints.up('sm')]: {
       fontSize: '20px',

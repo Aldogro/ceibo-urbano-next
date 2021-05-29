@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
 
-import { productTypes } from '../utils/catalog'
+import { productTypes, productWaterTypes, productSunTypes } from '../utils/catalog'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -60,6 +60,28 @@ const ProductItem = ({ product, cart, onAmountAdd }) => {
               <Typography variant="body2" color="textSecondary" component="p">
                 {product.description}
               </Typography>
+              {product.water
+                ? (
+                  <div className={classes.instructions}>
+                    <img height="20px" src="/water-drop.svg"/>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {productWaterTypes[product.water]}
+                    </Typography>
+                  </div>
+                )
+                : null
+              }
+              {product.sun
+                ? (
+                  <div className={classes.instructions}>
+                    <img height="20px" src="/sun.svg"/>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      {productSunTypes[product.sun]}
+                    </Typography>
+                  </div>
+                )
+                : null
+              }
             </CardContent>
           </CardActionArea>
           <CardActions>
@@ -135,5 +157,10 @@ const useStyles = makeStyles((theme) => ({
   productType: {
     fontSize: 12,
     marginBottom: theme.spacing(1),
+  },
+  instructions: {
+    margin: theme.spacing(1, 0),
+    display: 'flex',
+    alignContent: 'center',
   },
 }))

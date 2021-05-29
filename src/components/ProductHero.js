@@ -26,7 +26,7 @@ const ProductHero = ({ promos }) => {
         </Typography>
         <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-            ¡Aprovecha nuestras ofertas!
+            ¡Aprovecha nuestras promos!
             {/* {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''} */}
           </Typography>
         </Collapse>
