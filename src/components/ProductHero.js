@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Collapse from '@material-ui/core/Collapse'
@@ -23,11 +22,12 @@ const ProductHero = ({ promos }) => {
       <div className={classes.backdrop}></div>
       <Container className={classes.container}>
         <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
-          Colores y aromas para vos
+          Colores y Aromas para vos
         </Typography>
         <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-            {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''}
+            ¡Aprovecha nuestras ofertas!
+            {/* {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''} */}
           </Typography>
         </Collapse>
       </Container>
@@ -35,7 +35,8 @@ const ProductHero = ({ promos }) => {
   )
 }
 
-const backgroundImage = '/greenhouse.jpg'
+const backgroundImageDesktop = '/greenhouse-desktop.jpeg'
+const backgroundImageMobile = '/greenhouse-mobile.jpeg'
 
 const mapStateToProps = ({ promos }) => {
   return { promos }
@@ -46,12 +47,17 @@ export default connect(mapStateToProps)(ProductHero)
 const useStyles = makeStyles((theme) => ({
   background: {
     position: 'relative',
-    backgroundImage: `url(${backgroundImage})`,
     backgroundColor: '#7fc7d9', // Average color of the background image.
-    backgroundPosition: 'center',
+    backgroundImage: `url(${backgroundImageMobile})`,
+    backgroundPosition: 'center -30px',
     backgroundAttachment: 'fixed',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
+    backgroundSize: '100%',
+    [theme.breakpoints.up('sm')]: {
+      backgroundImage: `url(${backgroundImageDesktop})`,
+      backgroundPosition: 'center 80px',
+      backgroundSize: 'cover',
+    },
   },
   backdrop: {
     position: 'absolute',
@@ -64,7 +70,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(20, 0),
+    padding: theme.spacing(10, 0),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(20, 0),
+    },
   },
   button: {
     minWidth: 200,

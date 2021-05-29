@@ -31,9 +31,9 @@ const ProductCategories = ({ fetchProducts, products }) => {
       <Typography className={classes.title} variant="h4" marked="center" align="center" component="h2">
         ¡Nuestros Productos!
       </Typography>
-      <Grid container className={classes.filters} spacing={3} cols={1}>
-        <Grid item xs={12} lg={4}>
-          <InputLabel id="label-filter-by-type" className={classes.filterLabel}>Filtrar por tipo</InputLabel>
+      <Grid container className={classes.filters} cols={1}>
+        <Grid item xs={12} lg={4} className={classes.filterLabel}>
+          <InputLabel id="label-filter-by-type">Filtrar por tipo</InputLabel>
           <Select
             className={classes.fullWidth}
             labelId="label-filter-by-type"
@@ -48,8 +48,8 @@ const ProductCategories = ({ fetchProducts, products }) => {
             ))}
           </Select>
         </Grid>
-        <Grid item xs={12} lg={4}>
-          <InputLabel id="label-order-by" className={classes.filterLabel}>Ordenar por</InputLabel>
+        <Grid item xs={12} lg={4} className={classes.filterLabel}>
+          <InputLabel id="label-order-by">Ordenar por</InputLabel>
           <Select
             className={classes.fullWidth}
             labelId="label-order-by"
@@ -117,6 +117,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2, 0),
   },
   filterLabel: {
-    marginBottom: theme.spacing(1),
+    margin: theme.spacing(3, 2, 0),
   }
 }))

@@ -15,47 +15,41 @@ const ProductHowItWorks = () => {
           className={classes.curvyLines}
           alt="curvy lines"
         />
-        <Typography variant="h4" marked="center" className={classes.title} component="h2">
-          Calidad
-        </Typography>
         <div>
           <Grid container spacing={5}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>
                 <img
-                  src="/plant-leaf.svg"
-                  alt="plant-leaf"
+                  src="/sun.svg"
+                  alt="sun"
                   className={classes.image}
                 />
-                <Typography className={classes.description} variant="h5" align="center">
-                  Macetas coloridas y resistentes
+                <Typography variant="h4" marked="center" className={classes.title} component="h2">
+                  Exposición al sol
+                </Typography>
+                <Typography className={classes.description} variant="body1" align="center">
+                  <b>Pleno sol:</b> mínimo 6 hs de sol al día<br/>
+                  <b>Media sombra:</b> entre 3 y 6 horas de sol al día<br/>
+                  <b>Sombra:</b> entre 3 y 0 horas de sol al día.
                 </Typography>
               </div>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <div className={classes.item}>
                 <div className={classes.number}>2.</div>
                 <img
-                  src="/sprout-seed.svg"
-                  alt="sprout-seed"
+                  src="/water-drop.svg"
+                  alt="water-drop"
                   className={classes.image}
                 />
-                <Typography className={classes.description} variant="h5" align="center">
-                  Envíos a domicilio.
+                <Typography variant="h4" marked="center" className={classes.title} component="h2">
+                  Riego
                 </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <div className={classes.item}>
-                <div className={classes.number}>3.</div>
-                <img
-                  src="/cactus.svg"
-                  alt="cactus"
-                  className={classes.image}
-                />
-                <Typography className={classes.description} variant="h5" align="center">
-                  Materias primas de primera calidad
+                <Typography className={classes.description} align="center">
+                  <b>Abundante:</b> la tierra debe estar húmeda en todo momento.<br/>
+                  <b>Moderado:</b> mojar la tierra sin empapar del todo.<br/>
+                  <b>Escaso:</b> dejar secar la parte superior del sustrato entre cada riego.
                 </Typography>
               </div>
             </Grid>
@@ -98,9 +92,9 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     textAlign: 'center',
-    fontSize: '18px',
+    fontSize: '14px',
     [theme.breakpoints.up('sm')]: {
-      fontSize: '24px',
+      fontSize: '20px',
     },
   },
   number: {
