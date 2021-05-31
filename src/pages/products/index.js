@@ -6,17 +6,20 @@ import { useSnackbar } from 'notistack'
 import { fetchProducts } from '../../redux/actions/products'
 import { connect } from 'react-redux'
 
+import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
 import Dialog from '../../components/Dialog'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import Typography from '@material-ui/core/Typography'
 
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
@@ -26,13 +29,15 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import MainLayout from '../../components/MainLayout'
 import app, { publishItem, deleteItem } from '../../firebase/firebase.config'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { productTypes } from '../../utils/catalog'
+import { productTypes, orderByOptions, productTypeOptions } from '../../utils/catalog'
 
 const ListProductPage = ({ fetchProducts, products }) => {
   const classes = useStyles()
   const [user, loading, error] = useAuthState(app.auth())
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
+  const [type, setType] = useState('all')
+  const [orderBy, setOrderBy] = useState(['price', 'asc'])
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -41,6 +46,10 @@ const ListProductPage = ({ fetchProducts, products }) => {
   useEffect(() => {
     getProducts()
   }, [])
+
+  useEffect(() => {
+    fetchProducts(orderBy)
+  }, [orderBy])
 
   const getProducts = () => {
     try { fetchProducts() }
@@ -89,9 +98,47 @@ const ListProductPage = ({ fetchProducts, products }) => {
                 handleClose={() => setDialogOpen(false)}
                 question="¿Seguro querés borrar este producto?"
               />
+
+              <Grid container className={classes.filters} cols={1}>
+                <Grid item xs={12} lg={4} className={classes.filterLabel}>
+                  <InputLabel id="label-filter-by-type">Filtrar por tipo</InputLabel>
+                  <Select
+                    className={classes.fullWidth}
+                    labelId="label-filter-by-type"
+                    id="filter-by-type-select"
+                    value={type}
+                    onChange={({ target }) => setType(target.value)}
+                  >
+                    {productTypeOptions.map((type, index) => (
+                      <MenuItem key={index} value={type.key}>
+                        {type.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} lg={4} className={classes.filterLabel}>
+                  <InputLabel id="label-order-by">Ordenar por</InputLabel>
+                  <Select
+                    className={classes.fullWidth}
+                    labelId="label-order-by"
+                    id="order-by-select"
+                    value={orderBy}
+                    onChange={({ target}) => setOrderBy(target.value.split(','))}
+                  >
+                    {orderByOptions.map((orderBy, index) => (
+                      <MenuItem key={index} value={orderBy.key}>
+                        {orderBy.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+              </Grid>
+
               <Grid container spacing={2}>
                 {products.products.map(product => (
+                  product.type === type ?
                   <Grid item xs={12} lg={+product.cols} key={product.name}>
+                    {console.log(product.type)}
                     <Card className={classes.card}>
                       <CardActionArea>
                         <CardMedia
@@ -127,6 +174,7 @@ const ListProductPage = ({ fetchProducts, products }) => {
                       </CardActions>
                     </Card>
                   </Grid>
+                  : null
                 ))}
               </Grid>
             </div>
@@ -199,5 +247,14 @@ const useStyles = makeStyles((theme) => ({
     left: theme.spacing(2),
     bottom: theme.spacing(2),
     zIndex: theme.zIndex.drawer + 1
+  },
+  filters: {
+    margin: theme.spacing(2, 0),
+  },
+  filterLabel: {
+    margin: theme.spacing(3, 2, 0),
+  },
+  fullWidth: {
+    width: '100%',
   },
 }));
