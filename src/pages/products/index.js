@@ -136,7 +136,7 @@ const ListProductPage = ({ fetchProducts, products }) => {
 
               <Grid container spacing={2}>
                 {products.products.map(product => (
-                  product.type === type ?
+                  (type !== 'all' ? product.type === type : true) ?
                   <Grid item xs={12} lg={+product.cols} key={product.name}>
                     {console.log(product.type)}
                     <Card className={classes.card}>
