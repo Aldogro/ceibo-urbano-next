@@ -96,7 +96,7 @@ const Cart = ({ clearCart, onAmountAdd, onAmountRemove, onRemoveItem, onSelected
       }
       <br />
       <br />
-      Envíos gratis en Rosario con tu compra superior a $500 🎉🚛🚀
+      Envíos gratis en Rosario con tu compra superior a $1000 🎉🚛🚀
       <br />
       <br/>
       <Button

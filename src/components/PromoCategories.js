@@ -44,7 +44,7 @@ const PromoCategories = ({ fetchPromos, promos }) => {
             </Grid>
           ))
           :
-          promos.promos.map((promo, index) => (
+          promos.promos.map((promo, index) => (            
             promo.publish
               ? <PromoItem key={index} promo={promo} />
               : null

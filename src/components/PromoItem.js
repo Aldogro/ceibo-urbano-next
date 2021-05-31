@@ -35,15 +35,16 @@ const PromoItem = ({ promo, cart, onAmountAdd }) => {
       <Grid item xs={12} md={+promo.cols}>
         <div className={classes.imageSrc} style={{ backgroundImage: `url(${promo.picture})`}}>
           <div className={classes.backdrop}></div>
-          <Typography component="h3" variant="h6" color="inherit" className={classes.imageTitle} >
-            {promo.name}
-          </Typography>
-          <Typography className={classes.price} component="h3" variant="h6" color="inherit">
-            ${promo.price}
-          </Typography>
-            {promo.carousel
+          <div>
+            <Typography className={classes.imageTitle} component="h3" variant="h6">
+              {promo.name}
+            </Typography>
+            <Typography className={classes.price} component="h3" variant="h6">
+              ${promo.price}
+            </Typography>
+            {promo.carousel.length
               ?
-                <IconButton color="secondary" variant="outlined" onClick={() => {
+                <IconButton className={classes.carousel} color="secondary" variant="outlined" onClick={() => {
                   setSelectedPromo(promo)
                   setOpenCarousel(true)
                 }}>
@@ -51,29 +52,32 @@ const PromoItem = ({ promo, cart, onAmountAdd }) => {
                 </IconButton>
               : null
             }
+          </div>
           <div className={classes.products}>
             {promo.products.map((product, index) => (
               <Typography key={index} className={classes.product}>
                 {product.name} - ${product.price}
               </Typography>
             ))}
+          </div>
+          <div>
             {
               promo.partialPrice
               ?
                 <Typography className={classes.partialPrice}>
-                  ¡Ahorrás {promo.partialPrice - promo.price}!
+                  ¡Ahorrás ${promo.partialPrice - promo.price}!
                 </Typography>
               : null
             }
+            <Button color="secondary" variant="outlined" onClick={() => onAmountAdd(promo)}>
+              Agregar al carrito
+              {
+                getCartItems(promo)
+                ? <Chip className={classes.chip} color="primary" label={getCartItems(promo)} />
+                : null
+              }
+            </Button>
           </div>
-          <Button color="secondary" variant="outlined" onClick={() => onAmountAdd(promo)}>
-            Agregar al carrito
-            {
-              getCartItems(promo)
-              ? <Chip className={classes.chip} color="primary" label={getCartItems(promo)} />
-              : null
-            }
-          </Button>
         </div>
       </Grid>
     </>
@@ -118,11 +122,15 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px 14px`,
   },
   price: {
+    position: 'relative',
     fontSize: '30px',
     color: 'white',
     width: '100%',
+    textShadow: '0px 0px 10px black',
     textAlign: 'center',
-    zIndex: 3,
+  },
+  carousel: {
+    width: '100%',
   },
   discount: {
     fontSize: '25px',
@@ -140,9 +148,11 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 3,
   },
   partialPrice: {
+    position: 'relative',
     color: 'white',
-    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     zIndex: 3,
+    textShadow: '0px 0px 10px black',
     textAlign: 'center',
     fontSize: '20px',
   },

@@ -113,6 +113,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
       temp += product.price
     })
     setDiscount(Math.ceil(((price * 100) / temp) - 100))
+    setPartialPrice(temp)
   }
 
   const onRemoveCarouselImage = (image) => {

@@ -21,15 +21,19 @@ const ProductHero = ({ promos }) => {
     <div className={classes.background}>
       <div className={classes.backdrop}></div>
       <Container className={classes.container}>
-        <Typography color="inherit" align="center" variant="h2" marked="center" className={classes.h2}>
+        <Typography align="center" variant="h2" marked="center" className={classes.h2}>
           Colores y Aromas para vos
         </Typography>
-        <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
+        <Typography align="center" variant="h5" className={classes.h5}>
+          ¡Aprovecha nuestras promos!
+          {/* {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''} */}
+        </Typography>
+        {/* <Collapse className={classes.collapse} in={!!getMaxDiscount()}>
           <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
             ¡Aprovecha nuestras promos!
-            {/* {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''} */}
+            {getMaxDiscount() > 0 ? `Disfrutá de nuestras ofertas ahorrando hasta un ${getMaxDiscount()}%` : ''}
           </Typography>
-        </Collapse>
+        </Collapse> */}
       </Container>
     </div>
   )
@@ -95,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
   },
   h5: {
+    position: 'relative',
     color: 'white',
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(4),

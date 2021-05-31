@@ -40,8 +40,8 @@ const FormProduct = ({ product = {}, onSubmit }) => {
       setPicture(product.picture)
       setPublish(product.publish)
       setType(product.type)
-      setSun(product.sun)
-      setWater(product.water)
+      product.sun ? setSun(product.sun) : ''
+      product.water ? setWater(product.water) : ''
     }
   }, [product])
 
