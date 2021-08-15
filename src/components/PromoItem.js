@@ -56,19 +56,11 @@ const PromoItem = ({ promo, cart, onAmountAdd }) => {
           <div className={classes.products}>
             {promo.products.map((product, index) => (
               <Typography key={index} className={classes.product}>
-                {product.name} - ${product.price}
+                {product.name}
               </Typography>
             ))}
           </div>
           <div>
-            {
-              promo.partialPrice
-              ?
-                <Typography className={classes.partialPrice}>
-                  ¡Ahorrás ${promo.partialPrice - promo.price}!
-                </Typography>
-              : null
-            }
             <Button color="secondary" variant="outlined" onClick={() => onAmountAdd(promo)}>
               Agregar al carrito
               {
@@ -145,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
   },
   product: {
     color: 'white',
+    textAlign: 'center',
     zIndex: 3,
   },
   partialPrice: {

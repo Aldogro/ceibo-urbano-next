@@ -178,7 +178,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
               <Typography>Productos</Typography>
               {products.map((product, index) => (
                 <Grid className={classes.productContainer} container spacing={1} cols={1} key={index}>
-                  <Grid item xs={12} md={7}>
+                  <Grid item xs={12} md={10}>
                     <TextField
                       className={classes.fullWidth}
                       id="Name"
@@ -187,16 +187,7 @@ const FormPromo = ({ promo = {}, onSubmit }) => {
                       onChange={({target}) => productNameChange(target, index)}
                     />
                   </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField
-                      className={classes.fullWidth}
-                      id="Price"
-                      label={product.price || 'Precio $'}
-                      type="number"
-                      onChange={({target}) => productPriceChange(target, index)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={1}>
+                  <Grid item xs={12} md={2}>
                     <IconButton className={classes.removeProduct} onClick={() => onRemoveProduct(product)}>
                       <ClearIcon />
                     </IconButton>

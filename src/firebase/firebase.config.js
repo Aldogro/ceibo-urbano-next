@@ -35,3 +35,4 @@ export const deleteItem = ({ collection, selectedId }) => firebase.firestore().c
 export const getCollection = (collection) => firebase.firestore().collection(collection).get()
 
 export default firebase
+
